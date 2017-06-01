@@ -23,4 +23,13 @@ public class IntegerDemo {
         System.out.println("Spend time: " + (System.currentTimeMillis() - s));
     }
 
+    @Test
+    public void test2() {
+        long num = 1_0_0_0;
+        while (num > 0) {
+            System.out.println(num);
+            num--;
+        }
+    }
+
 }
