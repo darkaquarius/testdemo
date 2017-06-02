@@ -28,6 +28,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="hello" target="1.5" />
       <module name="myspringboot" target="1.8" />
       <module name="springinaction" target="1.8" />
       <module name="testdemo" target="1.8" />
