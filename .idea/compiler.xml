@@ -23,6 +23,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="myspringboot" />
+        <module name="myspringboot2" />
         <module name="springinaction" />
         <module name="testdemo" />
       </profile>
@@ -30,6 +31,7 @@
     <bytecodeTargetLevel>
       <module name="hello" target="1.5" />
       <module name="myspringboot" target="1.8" />
+      <module name="myspringboot2" target="1.8" />
       <module name="springinaction" target="1.8" />
       <module name="testdemo" target="1.8" />
     </bytecodeTargetLevel>
