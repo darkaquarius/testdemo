@@ -1,4 +1,4 @@
-package demo.composition;
+package composition;
 
 import java.util.Collection;
 import java.util.Iterator;

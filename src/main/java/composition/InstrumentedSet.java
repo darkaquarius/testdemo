@@ -1,24 +1,18 @@
-package demo.composition;
+package composition;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by huishen on 17/6/6.
- *
+ * Wrapper class - use composition in place of inheritance
  */
-
-// Broken - Inappropriate use of inheritance!
-public class InstrumentHashSet<E> extends HashSet<E> {
+public class InstrumentedSet<E> extends ForwardingSet<E> {
 
     private int addCount = 0;
 
-    public InstrumentHashSet() {
-
-    }
-
-    public InstrumentHashSet(int initCap, float loadFactor) {
-        super(initCap, loadFactor);
+    public InstrumentedSet(Set<E> s) {
+        super(s);
     }
 
     @Override
@@ -36,4 +30,5 @@ public class InstrumentHashSet<E> extends HashSet<E> {
     public int getAddCount() {
         return addCount;
     }
+
 }
