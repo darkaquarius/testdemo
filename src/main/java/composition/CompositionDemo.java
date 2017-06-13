@@ -16,7 +16,7 @@ public class CompositionDemo {
         s.addAll(Arrays.asList("zhangsan", "lisi", "wangwu"));
 
         int addCount = s.getAddCount();
-        System.out.println("aaddCount: " + addCount);
+        System.out.println("addCount: " + addCount);
     }
 
 
