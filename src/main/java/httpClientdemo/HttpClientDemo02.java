@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created by huishen on 17/5/17.
- *
+ * x509Certificates
  */
-public class HttpClientDemo2 {
+public class HttpClientDemo02 {
 
     private static PoolingHttpClientConnectionManager cm;
 
@@ -108,7 +108,7 @@ public class HttpClientDemo2 {
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
-        HttpClientDemo2 httpClientDemo = new HttpClientDemo2();
+        HttpClientDemo02 httpClientDemo = new HttpClientDemo02();
         // httpClientDemo.execGet();
         httpClientDemo.execPost();
         httpClientDemo.execGetSSL();
