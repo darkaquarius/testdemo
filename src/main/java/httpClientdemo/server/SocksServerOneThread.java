@@ -1,7 +1,8 @@
-package httpClientdemo;
+package httpClientdemo.server;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -126,17 +127,17 @@ public class SocksServerOneThread implements Runnable {
     }
 
     private void cache2Local(ByteArrayOutputStream cache) {
-        // OutputStream result = null;
-        // try {
-        // String fileName = System.currentTimeMillis() + "_"
-        // + Thread.currentThread().getId();
-        // result = new FileOutputStream("E:/cache/" + fileName + ".info");
-        // result.write(cache.toByteArray());
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // } finally {
-        // closeIo(result);
-        // }
+        OutputStream result = null;
+        try {
+        String fileName = System.currentTimeMillis() + "_"
+        + Thread.currentThread().getId();
+        result = new FileOutputStream("E:/cache/" + fileName + ".info");
+        result.write(cache.toByteArray());
+        } catch (Exception e) {
+        e.printStackTrace();
+        } finally {
+        closeIo(result);
+        }
     }
 
     /**
@@ -310,7 +311,7 @@ public class SocksServerOneThread implements Runnable {
      * IO操作中共同的关闭方法
      *
      * @createTime 2014年12月14日 下午7:50:56
-     * @param socket
+     // * @param socket
      */
     protected static final void closeIo(Socket closeable) {
         if (null != closeable) {
@@ -325,7 +326,7 @@ public class SocksServerOneThread implements Runnable {
      * IO操作中共同的关闭方法
      *
      * @createTime 2014年12月14日 下午7:50:56
-     * @param socket
+     // * @param socket
      */
     protected static final void closeIo(Closeable closeable) {
         if (null != closeable) {
@@ -340,7 +341,7 @@ public class SocksServerOneThread implements Runnable {
      * 数据交换.主要用于tcp协议的交换
      *
      * @createTime 2014年12月13日 下午11:06:47
-     * @param lock
+     // * @param lock
      *            锁
      * @param in
      *            输入流

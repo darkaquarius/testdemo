@@ -2,15 +2,15 @@ package httpClientdemo;
 
 /**
  * Created by huishen on 17/6/21.
- * httpclient使用socks5代理
+ * httpclient使用socks5代理来请求http和https
  */
 
 import org.apache.http.HttpHost;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.DnsResolver;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
@@ -20,19 +20,19 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
-import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.Authenticator;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 
 public class HttpClientDemo03 {
 
@@ -42,49 +42,92 @@ public class HttpClientDemo03 {
     private static String proxyName = "user";
     private static String proxyPwd = "123456";
 
+    private static PoolingHttpClientConnectionManager cm;
 
-    public static String getWithProxy(String url, Map<String, String> headers, String charset) {
-        //用户名和密码验证
-        Authenticator.setDefault(new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                PasswordAuthentication p = new PasswordAuthentication(proxyName, proxyPwd.toCharArray());
-                return p;
-            }
-        });
+    private static RequestConfig requestConfig;
 
-        Registry<ConnectionSocketFactory> reg = RegistryBuilder.<ConnectionSocketFactory>create()
-            .register("http", new MyConnectionSocketFactory())
-            .register("https", new MySSLConnectionSocketFactory(SSLContexts.createSystemDefault())).build();
-        // FakeDnsResolver!
-        // PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(reg, new FakeDnsResolver());
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(reg);
-        CloseableHttpClient httpclient = HttpClients.custom().setConnectionManager(cm).build();
+    private static SocketConfig socketConfig;
+
+    static {
+        // 用户名和密码验证
+        // Authenticator.setDefault(new Authenticator() {
+        //     protected PasswordAuthentication getPasswordAuthentication() {
+        //         return new PasswordAuthentication(proxyName, proxyPwd.toCharArray());
+        //     }
+        // });
+
+        // SSLContext
+        SSLContext context = null;
+        // 默认
+        // context = SSLContexts.createSystemDefault();
+        // 动态加载证书
         try {
-            InetSocketAddress socksaddr = new InetSocketAddress(proxyHost, proxyPort);
-            HttpClientContext context = HttpClientContext.create();
-            context.setAttribute("socks.address", socksaddr);
-            HttpGet httpget = new HttpGet(url);
-            if (headers != null) {
-                for (String key : headers.keySet()) {
-                    httpget.setHeader(key, headers.get(key));
-                }
-            }
-            CloseableHttpResponse response = httpclient.execute(httpget, context);
-            try {
-                return new String(EntityUtils.toByteArray(response.getEntity()), charset);
-            } finally {
-                response.close();
-            }
+            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            FileInputStream is = new FileInputStream("/Users/huishen/certs/xiaochen_entire_admin.p12");
+            char[] pwd = "123".toCharArray();
+            keyStore.load(is, pwd);
+            context = SSLContexts.custom().loadKeyMaterial(keyStore, pwd).build();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                httpclient.close();
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
         }
-        return null;
+
+        // try {
+        //     String pwd = "123";
+        //     // jks
+        //     KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        //     FileInputStream is = new FileInputStream("/Users/huishen/certs/xiaochen_entire_admin.p12");
+        //     keyStore.load(is, pwd.toCharArray());
+        //     TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        //     tmf.init(keyStore);
+        //     context = SSLContext.getInstance("TLS");
+        //     context.init(null, tmf.getTrustManagers(), null);
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+
+
+        // register
+        Registry<ConnectionSocketFactory> register = RegistryBuilder.<ConnectionSocketFactory>create()
+            .register("http", new MyConnectionSocketFactory())
+            .register("https", new MySSLConnectionSocketFactory(context)).build();
+
+        // HttpClientConnectionManager
+        // FakeDnsResolver!
+        cm = new PoolingHttpClientConnectionManager(register, new FakeDnsResolver());
+        // PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(register);
+
+        requestConfig = RequestConfig.custom()
+            .setConnectionRequestTimeout(2000)
+            .setConnectTimeout(1000 * 10)
+            .setSocketTimeout(1000 * 60)
+            .setRedirectsEnabled(false) //不允许重定向
+            // .setProxy(new HttpHost("45.32.21.237", 8888, "HTTP"))
+            .build();
+
+        socketConfig = SocketConfig.custom()
+            .setTcpNoDelay(true)
+            .setSoReuseAddress(true)
+            .setSoKeepAlive(true)
+            .setSoTimeout(1000 * 60)
+            .build();
+    }
+
+    public CloseableHttpClient getHttpClient() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        return HttpClients
+            .custom()
+            .setConnectionManager(cm)
+            .setDefaultRequestConfig(requestConfig)
+            .setDefaultSocketConfig(socketConfig)
+            // .setKeepAliveStrategy()
+            // .setConnectionManagerShared(true)
+            // .setProxy(new HttpHost("45.32.21.237", 8888, "HTTP"))      // 代理
+            .build();
+    }
+
+    public HttpClientContext getHttpClientContext() {
+        HttpClientContext context = HttpClientContext.create();
+        context.setAttribute("socks.address", new InetSocketAddress(proxyHost, proxyPort));
+        return context;
     }
 
     static class FakeDnsResolver implements DnsResolver {
@@ -138,23 +181,5 @@ public class HttpClientDemo03 {
         }
     }
 
-
-    // 测试一下
-    public static void main(String[] args) {
-        try {
-            String url="http://www.google.com";
-            Map<String, String> headers = new HashMap<String, String>();
-            // headers.put("Accept", "text/html, */*; q=0.01");
-            // headers.put("Accept-Encoding", "gzip, deflate, sdch");
-            // headers.put("Accept-Language", "zh-CN,zh;q=0.8");
-            // headers.put("Referer", url);
-            // headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0");
-
-            String result=HttpClientDemo03.getWithProxy(url, headers, "UTF-8");
-            System.out.println(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }
