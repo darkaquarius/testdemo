@@ -29,10 +29,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 
 public class HttpClientDemo03 {
 
@@ -112,7 +109,7 @@ public class HttpClientDemo03 {
             .build();
     }
 
-    public CloseableHttpClient getHttpClient() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    public CloseableHttpClient getHttpClient() {
         return HttpClients
             .custom()
             .setConnectionManager(cm)
