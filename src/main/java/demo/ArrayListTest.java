@@ -42,7 +42,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void test3(){
+    public void test3() {
         Set<String> hset = new HashSet<>();
         hset.add(null);
         hset.add(null);
