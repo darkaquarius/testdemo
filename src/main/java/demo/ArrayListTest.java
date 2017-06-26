@@ -4,12 +4,14 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Created by huishen on 16/10/21.
+ *
  */
 public class ArrayListTest {
 
@@ -52,5 +54,13 @@ public class ArrayListTest {
         for(String str : hset){
             System.out.println(str);
         }
+    }
+
+    // 初始化的时候，用Collections.EMPTY_LIST来避免空指针异常
+    // 类似的还有：Collections.EMPTY_MAP, Collections.EMPTY_MAP
+    @Test
+    public void test4() {
+        List list = Collections.EMPTY_LIST;
+        System.out.println(list.size());
     }
 }
