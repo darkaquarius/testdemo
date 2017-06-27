@@ -19,6 +19,7 @@ public class ScriptDemo {
     @Test
     public void test1() {
         ScriptEngineManager manager = new ScriptEngineManager();
+        // @NotNull
         ScriptEngine engine = manager.getEngineByName("JavaScript");
 
         Reader scriptReader = new InputStreamReader(ScriptDemo.class.getClassLoader().getResourceAsStream("test/TestAdd.js"));
