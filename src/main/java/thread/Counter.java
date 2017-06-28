@@ -6,12 +6,13 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by huishen on 17/2/27.
+ *
  */
 public class Counter {
 
     private static int count = 0;
 
-    public static void inc(){
+    public static void inc() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -22,15 +23,12 @@ public class Counter {
     }
 
     @Test
-    public void test1(){
+    public void test1() {
         final CountDownLatch countDownLatch = new CountDownLatch(1000);
-        for(int i=0; i<1000; i++){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Counter.inc();
-                    countDownLatch.countDown();
-                }
+        for (int i = 0; i < 1000; i++) {
+            new Thread(() -> {
+                Counter.inc();
+                countDownLatch.countDown();
             }).start();
         }
 

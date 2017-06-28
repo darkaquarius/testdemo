@@ -35,7 +35,7 @@ public class Sync {
 
 }
 
-class MyThread extends Thread{
+class MyThread extends Thread {
 
     private Sync sync;
 

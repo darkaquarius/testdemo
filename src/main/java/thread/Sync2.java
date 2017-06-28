@@ -2,6 +2,7 @@ package thread;
 
 /**
  * Created by huishen on 17/3/13.
+ *
  */
 public class Sync2 implements Runnable{
 
@@ -21,9 +22,9 @@ public class Sync2 implements Runnable{
     }
 
     public static void main(String[] args){
-        Sync2 sync2 = new Sync2();
+        // Sync2 sync2 = new Sync2();
         for (int i = 0; i < 3; i++) {
-            // Sync2 sync2 = new Sync2();
+            Sync2 sync2 = new Sync2();
             new Thread(sync2).start();
         }
     }
