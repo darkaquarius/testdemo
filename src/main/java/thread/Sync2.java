@@ -2,7 +2,8 @@ package thread;
 
 /**
  * Created by huishen on 17/3/13.
- *
+ * 1.sleep()只会让出cpu，不会让出"该对象"的同步锁
+ * 2.synchronized锁住的是对象，不是代码块
  */
 public class Sync2 implements Runnable{
 

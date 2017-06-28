@@ -2,6 +2,7 @@ package thread;
 
 /**
  * Created by huishen on 17/3/4.
+ *
  */
 public class Sync {
 
@@ -27,6 +28,7 @@ public class Sync {
     }
 
     public static void main(String args[]){
+        // Sync sync = new Sync();
         for (int i = 0; i < 3; i++){
             Sync sync = new Sync();
             new MyThread(sync).start();

@@ -2,6 +2,7 @@ package thread;
 
 /**
  * Created by huishen on 17/3/2.
+ *
  */
 public class Test1 {
     public volatile int inc = 0;

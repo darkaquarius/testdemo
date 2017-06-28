@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by huishen on 17/2/27.
+ *
  */
 public class ThreadWait {
 
@@ -18,6 +19,7 @@ public class ThreadWait {
         for (int i = 0; i < threadNumber; i++) {
             final int threadID = i;
             new Thread() {
+                @Override
                 public void run() {
                     try {
                         Thread.sleep(3000);
@@ -55,5 +57,31 @@ public class ThreadWait {
         while (Thread.activeCount()>1)
             Thread.yield();
         System.out.println("main thread finished!!");
+    }
+
+    @Test
+    public void test3() {
+        System.out.println("main thread started");
+        int count =10;
+        CountDownLatch countDownLatch = new CountDownLatch(count);
+        for (int i = 0; i < count; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + "started");
+                try {
+                    Thread.sleep(5_000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + "stop");
+                countDownLatch.countDown();
+            }, "Thread"+i).start();
+        }
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("main thread stop");
     }
 }
