@@ -63,4 +63,5 @@ public class ArrayListTest {
         List list = Collections.EMPTY_LIST;
         System.out.println(list.size());
     }
+
 }

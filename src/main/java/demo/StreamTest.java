@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -22,6 +25,16 @@ import java.util.stream.Stream;
  * StreamTest
  */
 public class StreamTest {
+
+    // personList的stream再filter, 没有修改personList本身的数据
+    @Test
+    public void test0() {
+        Person zhangsan = new Person(0, "zhangsan", 10);
+        Person lisi = new Person(1, "lisi", 20);
+        Person wangwu = new Person(2, "wangwu", 30);
+        List<Person> personList = Arrays.asList(zhangsan, lisi, wangwu);
+        List<Person> ret = personList.stream().filter(p -> p.getNo() > 0).collect(Collectors.toList());
+    }
 
     @Test
     public void test() {
@@ -174,22 +187,98 @@ public class StreamTest {
         Stream.iterate(0, n -> n + 3).limit(10).forEach(System.out::println);
     }
 
+    // 可以设置分组类型(TreeMap)，和值的类型(ArrayList)
     @Test
-    public void testCollectors1() {
-        Map<Integer, List<Person>> collect = Stream.generate(new PersonSupplier()).limit(100)
-            .collect(Collectors.groupingBy(Person::getAge));
-        Set<Map.Entry<Integer, List<Person>>> entrys = collect.entrySet();
+    public void testGroupingBy1() {
+        // Stream.generate，创建Stream
+        TreeMap<Integer, ArrayList<Person>> collect = Stream.generate(new PersonSupplier()).limit(100)
+            .collect(Collectors.groupingBy(Person::getAge, TreeMap::new, Collectors.toCollection(ArrayList::new)));
+        Set<Map.Entry<Integer, ArrayList<Person>>> entrys = collect.entrySet();
         entrys.forEach(entry -> {
             Integer age = entry.getKey();
             List<Person> persons = entry.getValue();
             persons.forEach(p -> System.out.println("age:" + age + ", person:[name-" + p.getName() + ", age-" + p.getAge() + "]"));
             System.out.println();
-            System.out.println();
         });
     }
 
     @Test
-    public void testToSet() {
+    public void testGroupingBy2() {
+        // Locale[] availableLocales = Locale.getAvailableLocales();
+
+        Map<String, List<Locale>> countryToLocales =
+            Stream.of(Locale.getAvailableLocales()).collect(Collectors.groupingBy(Locale::getCountry));
+        List<Locale> locales = countryToLocales.get("CH");
+    }
+
+    // 对map中的值进行处理，不再是List，而是Set(downstream)
+    // 还有一些：counting, maxBy, summing
+    @Test
+    public void testGroupingBy3() {
+        Map<String, Set<Locale>> setMap =
+            Stream.of(Locale.getAvailableLocales()).collect(Collectors.groupingBy(Locale::getCountry, Collectors.toSet()));
+    }
+
+    // 不用lambda表达式，而是用的Function函数式接口
+    // maxBy
+    @Test
+    public void testGroupingBy4() {
+        Person zhangsan = new Person(0, "zhangsan", 10);
+        Person lisi = new Person(1, "lisi", 20);
+        Person wangwu = new Person(2, "wangwu", 30);
+        // wangwu和wangwu2的name属性重复了!!!
+        Person wangwu2 = new Person(3, "wangwu", 40);
+
+        // Map<String, Optional<Person>> collect =
+        //     Stream.of(zhangsan, lisi, wangwu, wangwu2).collect(Collectors.groupingBy(Person::getName, Collectors.maxBy(Comparator.comparing(Person::getAge))));
+
+
+        Stream<Person> personStream = Stream.of(zhangsan, lisi, wangwu, wangwu2);
+
+        Map<String, Optional<Person>> collect = personStream.collect(Collectors.groupingBy(Person::getName, Collectors.maxBy(Comparator.comparing(new Function<Person, Integer>() {
+            @Override
+            public Integer apply(Person person) {
+                return person.getAge();
+            }
+        }))));
+    }
+
+    // 分组后，求count
+    @Test
+    public void testGroupingBy5() {
+        Map<String, Long> collect =
+            Stream.of(Locale.getAvailableLocales()).collect(Collectors.groupingBy(Locale::getCountry, Collectors.counting()));
+    }
+
+    // groupingBy()中的downstream参数是Collector类型的，还可以继续分组
+    @Test
+    public void testGroupingBy6() {
+        Person zhangsan = new Person(0, "zhangsan", 10);
+        Person lisi = new Person(1, "lisi", 20);
+        Person wangwu = new Person(2, "wangwu", 30);
+        Person zhaoliu = new Person(3, "zhaoliu", 30);
+        Map<Integer, Map<String, List<Person>>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu).collect(Collectors.groupingBy(Person::getAge, Collectors.groupingBy(Person::getName)));
+    }
+
+    // mapping
+    @Test
+    public void testGroupingBy7() {
+        Person zhangsan = new Person(0, "zhangsan", 10);
+        Person lisi = new Person(1, "lisi", 20);
+        Person wangwu = new Person(2, "wangwu", 30);
+        Person zhaoliu = new Person(3, "zhaoliu", 30);
+        Map<Integer, List<String>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu).collect(Collectors.groupingBy(Person::getAge, Collectors.mapping(Person::getName, Collectors.toList())));
+    }
+
+    // 当分类函数是一个predicate函数(即返回一个boolean类型的函数)时，partitioningBy会比groupingBy更有效率
+    @Test
+    public void testPartitioningBy() {
+        Map<Boolean, List<Locale>> en =
+            Stream.of(Locale.getAvailableLocales()).collect(Collectors.partitioningBy(l -> l.getCountry().equals("en")));
+    }
+
+    @Test
+    public void testToCollection() {
         List<String> list = Arrays.asList("zhangsan", "lisi", "wangwu");
         TreeSet<String> collect = list.stream().collect(Collectors.toCollection(TreeSet::new));
     }
@@ -199,6 +288,25 @@ public class StreamTest {
         List<String> list = Arrays.asList("zhangsan", "lisi", "wangwu");
         String ret = list.stream().collect(Collectors.joining(","));
         System.out.println(ret);
+    }
+
+    @Test
+    public void testToMap() {
+        Person zhangsan = new Person(0, "zhangsan", 10);
+        Person lisi = new Person(1, "lisi", 20);
+        Person wangwu = new Person(2, "wangwu", 30);
+        // wangwu和wangwu2的name属性重复了!!!
+        Person wangwu2 = new Person(3, "wangwu", 40);
+
+        List<Person> list = Arrays.asList(zhangsan, lisi, wangwu, wangwu2);
+
+        TreeMap<String, Person> personMap =
+            // list.stream().collect(Collectors.toMap(Person::getName, Function.identity()));  //error: Duplicate key...
+            list.stream().collect(Collectors.toMap(Person::getName,
+                Function.identity(),
+                // 根据已有的值和新值来决定键的值，重写该行为
+                (existingValue, newValue) -> newValue,
+                TreeMap::new));
     }
 
     @Test
@@ -278,32 +386,5 @@ class PersonSupplier implements Supplier<Person> {
         return new Person(index++, "StormTestUser" + index, random.nextInt(100));
     }
 }
-
-// class Person {
-//     private int no;
-//     private String name;
-//     private int age;
-//     private List<String> address;
-//     public Person (int no, String name, int age) {
-//         this.no = no;
-//         this.name = name;
-//         this.age = age;
-//     }
-//     public String getName() {
-// //        System.out.println(name);
-//         return name;
-//     }
-//     public int getAge(){
-//         return age;
-//     }
-//
-//     public List<String> getAddress() {
-//         return address;
-//     }
-//
-//     public void setAddress(List<String> address) {
-//         this.address = address;
-//     }
-// }
 
 
