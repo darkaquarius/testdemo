@@ -26,9 +26,31 @@ import java.util.stream.Stream;
  */
 public class StreamTest {
 
+    // 不干扰，这里正常
+    @Test
+    public void testNointerference1() {
+        List<String> wordList = new ArrayList<>();
+        wordList.add("zhangsan");
+        wordList.add("lisi");
+        wordList.add("wangwu");
+        Stream<String> words = wordList.stream();
+        wordList.add("zhaoliu");
+        long count = words.count();
+        System.out.println(count);
+    }
+
+    @Test
+    public void testNointerference2() {
+        List<String> wordList = new ArrayList<>();
+        wordList.add("zhangsan");
+        wordList.add("lisi");
+        wordList.add("wangwu");
+        wordList.stream().forEach(w -> wordList.remove(w));
+    }
+
     // personList的stream再filter, 没有修改personList本身的数据
     @Test
-    public void test0() {
+    public void testNoModify() {
         Person zhangsan = new Person(0, "zhangsan", 10);
         Person lisi = new Person(1, "lisi", 20);
         Person wangwu = new Person(2, "wangwu", 30);
@@ -37,7 +59,7 @@ public class StreamTest {
     }
 
     @Test
-    public void test() {
+    public void testPeek1() {
         //什么都不显示
         Stream.of("one", "two", "three", "four").peek(System.out::println);
         //显示
@@ -45,7 +67,7 @@ public class StreamTest {
     }
 
     @Test
-    public void testPeek() {
+    public void testPeek2() {
         List<String> collect = Stream.of("one", "two", "three", "four")
             .filter(e -> e.length() > 3)
             .peek(e -> System.out.println("filtered value: " + e))
@@ -105,6 +127,13 @@ public class StreamTest {
     }
 
     @Test
+    public void testReduce2() {
+        List<Integer> list = Arrays.asList(29, 5, 51, 2, 98, 21);
+        Optional<Integer> reduce = list.stream().reduce(Integer::sum);
+        reduce.ifPresent(System.out::println);
+    }
+
+    @Test
     public void testLimitAndSkip1() {
         List<Person> persons = createPersonList1();
         List<String> personList2 = persons.stream().
@@ -145,13 +174,6 @@ public class StreamTest {
         System.out.println(collect2);
         List<Integer> collect3 = list.stream().limit(2).sorted(Integer::compareTo).collect(Collectors.toList());
         System.out.println(collect3);
-    }
-
-    @Test
-    public void testReduce2() {
-        List<Integer> list = Arrays.asList(29, 5, 51, 2, 98, 21);
-        Optional<Integer> reduce = list.stream().reduce(Integer::sum);
-        reduce.ifPresent(System.out::println);
     }
 
     @Test
@@ -270,7 +292,7 @@ public class StreamTest {
         Map<Integer, List<String>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu).collect(Collectors.groupingBy(Person::getAge, Collectors.mapping(Person::getName, Collectors.toList())));
     }
 
-    // 当分类函数是一个predicate函数(即返回一个boolean类型的函数)时，partitioningBy会比groupingBy更有效率
+    // 当分类函数是一个predicate函数(即返回一个"boolean类型"的函数)时，partitioningBy会比groupingBy更有效率
     @Test
     public void testPartitioningBy() {
         Map<Boolean, List<Locale>> en =
