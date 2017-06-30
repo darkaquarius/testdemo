@@ -2,6 +2,7 @@ package thread;
 
 /**
  * Created by huishen on 17/2/27.
+ *
  */
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ class TaskWithResult implements Callable<String> {
     /**
      * 任务的具体过程，一旦任务传给ExecutorService的submit方法，则该方法自动在一个线程上执行。
      *
-     * @return
+     * @return String
      * @throws Exception
      */
     @Override
