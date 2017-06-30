@@ -15,7 +15,14 @@ import java.util.concurrent.Future;
 
 public class ExecutorServiceTest {
     public static void main(String[] args) {
+
+        // ExecutorService还有一个子类，ThreadPoolExecutor
         ExecutorService executorService = Executors.newCachedThreadPool();
+
+        // 创建一个固定大小的线程执行器，有最大线程数，
+        // 超过这个最大线程数，执行器不再创建额外的线程，剩下的任务将被阻塞直到执行器有空闲的线程
+        Executors.newFixedThreadPool(10);
+
         List<Future<String>> resultList = new ArrayList<>();
 
         // 创建10个任务并执行
