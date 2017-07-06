@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by huishen on 16/12/14.
@@ -69,5 +71,20 @@ public class ObjectMapperDemo {
         //!!!!!!
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         return objectMapper;
+    }
+
+    // jackson处理复杂类型的两种方式
+    @Test
+    public void test1() {
+        String jsonString = "['shen','hui']";
+        ObjectMapper objectMapper = new ObjectMapper();
+        JavaType javaType = objectMapper.getTypeFactory().constructCollectionType(List.class, String.class);
+        List<String> list = null;
+        try {
+            list = (List<String>) objectMapper.readValue(jsonString, javaType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
