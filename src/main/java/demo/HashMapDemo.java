@@ -60,38 +60,6 @@ public class HashMapDemo {
             System.out.println("t6 over");
         });
 
-        Thread t7 = new Thread(() -> {
-            for (int i = 0; i < 5000000; i++) {
-                map.get(i);
-            }
-
-            System.out.println("t7 over");
-        });
-
-        Thread t8 = new Thread(() -> {
-            for (int i = 0; i < 5000000; i++) {
-                map.get(i);
-            }
-
-            System.out.println("t8 over");
-        });
-
-        Thread t9 = new Thread(() -> {
-            for (int i = 0; i < 5000000; i++) {
-                map.get(i);
-            }
-
-            System.out.println("t9 over");
-        });
-
-        Thread t10 = new Thread(() -> {
-            for (int i = 0; i < 5000000; i++) {
-                map.get(i);
-            }
-
-            System.out.println("t10 over");
-        });
-
         t1.start();
         t2.start();
         t3.start();
@@ -99,10 +67,6 @@ public class HashMapDemo {
         t5.start();
 
         t6.start();
-        t7.start();
-        t8.start();
-        t9.start();
-        t10.start();
     }
 
     public static void main(String[] args) {
