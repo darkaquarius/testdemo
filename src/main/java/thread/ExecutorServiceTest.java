@@ -6,8 +6,6 @@ package thread;
  */
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +20,9 @@ public class ExecutorServiceTest {
         // 创建一个固定大小的线程执行器，有最大线程数，
         // 超过这个最大线程数，执行器不再创建额外的线程，剩下的任务将被阻塞直到执行器有空闲的线程
         Executors.newFixedThreadPool(10);
+
+        // 创建单个线程
+        Executors.newSingleThreadExecutor();
 
         List<Future<String>> resultList = new ArrayList<>();
 
@@ -51,33 +52,3 @@ public class ExecutorServiceTest {
     }
 }
 
-class TaskWithResult implements Callable<String> {
-    private int id;
-
-    public TaskWithResult(int id) {
-        this.id = id;
-    }
-
-    /**
-     * 任务的具体过程，一旦任务传给ExecutorService的submit方法，则该方法自动在一个线程上执行。
-     *
-     * @return String
-     * @throws Exception
-     */
-    @Override
-    public String call() throws Exception {
-        System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
-        if (new Random().nextBoolean())
-            throw new TaskException("Meet error in task." + Thread.currentThread().getName());
-        // 一个模拟耗时的操作
-        for (int i = 999999999; i > 0; i--)
-            ;
-        return "call()方法被自动调用，任务的结果是：" + id + "    " + Thread.currentThread().getName();
-    }
-}
-
-class TaskException extends Exception {
-    public TaskException(String message) {
-        super(message);
-    }
-}
