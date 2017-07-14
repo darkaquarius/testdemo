@@ -2,7 +2,7 @@ package thread;
 
 /**
  * Created by huishen on 17/2/27.
- *
+ * ExecutorService and Future
  */
 import java.util.ArrayList;
 import java.util.List;

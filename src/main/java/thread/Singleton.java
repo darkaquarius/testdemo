@@ -3,11 +3,11 @@ package thread;
 /**
  * Created by huishen on 17/7/1.
  *
- * double check
+ * double check 模式
  */
 public class Singleton {
 
-    // double-check模式时，使用"volatile"改进
+    // double-check模式时，使用"volatile"改进!!!
     private volatile static Singleton instance = null;
 
     private Singleton() {}

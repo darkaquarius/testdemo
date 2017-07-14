@@ -2,7 +2,9 @@ package thread;
 
 /**
  * Created by huishen on 17/3/4.
- *
+ * synchronize锁住的是代码块还是对象
+ * 是对象！！！不是代码块
+ * static synchronized 全局锁
  */
 public class Sync {
 

@@ -8,10 +8,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Created by huishen on 17/7/12.
+ * Created by huishen on 17/7/14.
  * 由于future.get()方法会阻塞，实际上变成了同步执行
  */
-public class FutureDemo02 {
+public class ExecutorServiceTest2 {
 
     public static void main(String[] args) {
         ExecutorService executorService = Executors.newCachedThreadPool();
