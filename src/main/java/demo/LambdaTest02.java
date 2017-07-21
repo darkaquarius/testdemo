@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,10 +22,29 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Created by huishen on 16/9/29.
- * StreamTest
+ * Created by huishen on 17/7/19.
+ *
  */
-public class StreamTest {
+public class LambdaTest02 {
+
+    // 可以从函数生成无限流
+    // iterate
+    @Test
+    public void testIterable() throws InterruptedException {
+        Stream.iterate(0, n -> n + 2)
+            .limit(50)
+            .forEach(System.out::println);
+    }
+
+    // 可以从函数生成无限流
+    //
+    @Test
+    public void testGenerate() {
+        Stream.generate(Math::random)
+            .limit(5)
+            .forEach(System.out::println);
+    }
+
 
     // 不干扰，这里正常
     @Test
@@ -127,13 +147,6 @@ public class StreamTest {
     }
 
     @Test
-    public void testReduce2() {
-        List<Integer> list = Arrays.asList(29, 5, 51, 2, 98, 21);
-        Optional<Integer> reduce = list.stream().reduce(Integer::sum);
-        reduce.ifPresent(System.out::println);
-    }
-
-    @Test
     public void testLimitAndSkip1() {
         List<Person> persons = createPersonList1();
         List<String> personList2 = persons.stream().
@@ -150,7 +163,7 @@ public class StreamTest {
     public void testLimitAndSkip2() {
         List<Person> persons = createPersonList1();
         //        persons.stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).limit(2).forEach(System.out::println);
-        persons.stream().sorted(Comparator.comparing(Person::getAge)).limit(2).forEach(System.out::println);
+        persons.stream().sorted(Comparator.comparingInt(Person::getAge)).limit(2).forEach(System.out::println);
     }
 
     /**
@@ -251,25 +264,27 @@ public class StreamTest {
         // wangwu和wangwu2的name属性重复了!!!
         Person wangwu2 = new Person(3, "wangwu", 40);
 
-        // Map<String, Optional<Person>> collect =
-        //     Stream.of(zhangsan, lisi, wangwu, wangwu2).collect(Collectors.groupingBy(Person::getName, Collectors.maxBy(Comparator.comparing(Person::getAge))));
+        Map<String, Optional<Person>> collect =
+            Stream.of(zhangsan, lisi, wangwu, wangwu2)
+                .collect(Collectors.groupingBy(Person::getName, Collectors.maxBy(Comparator.comparing(Person::getAge))));
 
 
-        Stream<Person> personStream = Stream.of(zhangsan, lisi, wangwu, wangwu2);
+        // Stream<Person> personStream = Stream.of(zhangsan, lisi, wangwu, wangwu2);
 
-        Map<String, Optional<Person>> collect = personStream.collect(Collectors.groupingBy(Person::getName, Collectors.maxBy(Comparator.comparing(new Function<Person, Integer>() {
-            @Override
-            public Integer apply(Person person) {
-                return person.getAge();
-            }
-        }))));
+        // Map<String, Optional<Person>> collect = personStream.collect(Collectors.groupingBy(Person::getName, Collectors.maxBy(Comparator.comparing(new Function<Person, Integer>() {
+        //     @Override
+        //     public Integer apply(Person person) {
+        //         return person.getAge();
+        //     }
+        // }))));
     }
 
     // 分组后，求count
     @Test
     public void testGroupingBy5() {
         Map<String, Long> collect =
-            Stream.of(Locale.getAvailableLocales()).collect(Collectors.groupingBy(Locale::getCountry, Collectors.counting()));
+            Stream.of(Locale.getAvailableLocales())
+                .collect(Collectors.groupingBy(Locale::getCountry, Collectors.counting()));
     }
 
     // groupingBy()中的downstream参数是Collector类型的，还可以继续分组
@@ -279,7 +294,8 @@ public class StreamTest {
         Person lisi = new Person(1, "lisi", 20);
         Person wangwu = new Person(2, "wangwu", 30);
         Person zhaoliu = new Person(3, "zhaoliu", 30);
-        Map<Integer, Map<String, List<Person>>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu).collect(Collectors.groupingBy(Person::getAge, Collectors.groupingBy(Person::getName)));
+        Map<Integer, Map<String, List<Person>>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu)
+            .collect(Collectors.groupingBy(Person::getAge, Collectors.groupingBy(Person::getName)));
     }
 
     // mapping
@@ -289,7 +305,27 @@ public class StreamTest {
         Person lisi = new Person(1, "lisi", 20);
         Person wangwu = new Person(2, "wangwu", 30);
         Person zhaoliu = new Person(3, "zhaoliu", 30);
-        Map<Integer, List<String>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu).collect(Collectors.groupingBy(Person::getAge, Collectors.mapping(Person::getName, Collectors.toList())));
+        Map<Integer, List<String>> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu)
+            .collect(Collectors.groupingBy(Person::getAge, Collectors.mapping(Person::getName, Collectors.toList())));
+    }
+
+    @Test
+    public void testGroupingBy8() {
+        List<Person> persons = createPersonList2();
+        Map<String, List<Person>> map = persons.stream()
+            .collect(Collectors.groupingBy(person -> {
+                if (person.getAge() < 20) return "YONG";
+                else return "OLD";
+            }));
+    }
+
+    @Test
+    public void testSummingInt() {
+        int sum = Stream.iterate(0, i -> i + 1)
+            .limit(10)
+            .mapToInt(Integer::intValue)
+            .sum();
+        System.out.println(sum);
     }
 
     // 当分类函数是一个predicate函数(即返回一个"boolean类型"的函数)时，partitioningBy会比groupingBy更有效率
@@ -302,7 +338,8 @@ public class StreamTest {
     @Test
     public void testToCollection() {
         List<String> list = Arrays.asList("zhangsan", "lisi", "wangwu");
-        TreeSet<String> collect = list.stream().collect(Collectors.toCollection(TreeSet::new));
+        TreeSet<String> collect = list
+            .stream().collect(Collectors.toCollection(TreeSet::new));
     }
 
     @Test
@@ -342,6 +379,8 @@ public class StreamTest {
         List<Integer> collect = inputStream.flatMap(List::stream).collect(Collectors.toList());
     }
 
+    // flatMap()与map()方法的比较
+    // flatMap()方法一定要生成一个Stream对象
     @Test
     public void testFlatMap2() {
         List<Person> persons = new ArrayList<>();
@@ -353,10 +392,21 @@ public class StreamTest {
         person2.setAddress(Arrays.asList("guangzhou", "shenzhen"));
         persons.add(person2);
 
-        List<String> collect = persons.stream().flatMap(p -> p.getAddress().stream()).collect(Collectors.toList());
-        System.out.println(collect);
+        Stream<List<String>> listStream1 = persons.stream().map(p -> p.getAddress());
+        List<List<String>> ret1 = listStream1.collect(Collectors.toList());
+
+        Stream<Stream<String>> streamStream1 = persons.stream().map(p -> p.getAddress().stream());
+        List<Stream<String>> ret2 = streamStream1.collect(Collectors.toList());
+
+        // 注意：与streamStream1比较，flatMap()方法生成的stream与父stream合并了,即：map方法产生了Stream<Stream<String>>，而flatMap产生了Stream<String>
+        Stream<String> stringStream = persons.stream().flatMap(p -> p.getAddress().stream());
+        List<String> ret3 = stringStream.collect(Collectors.toList());
+        System.out.println(ret1);
+        System.out.println(ret2);
+        System.out.println(ret3);
     }
 
+    // Stream转换成IntStream
     @Test
     public void testMaptoInt1() {
         List<Person> person = createPersonList2();
@@ -373,11 +423,42 @@ public class StreamTest {
     }
 
     @Test
+    public void testIntStream() {
+        List<Person> personList = createPersonList2();
+        // 转换成IntStream
+        IntStream intStream = personList
+            .stream()
+            .mapToInt(person -> person.getAge());
+        // 转换成对象流
+        Stream<Integer> boxed = intStream.boxed();
+    }
+
+    @Test
     public void testIntBinaryOperator() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
         Integer reduce = list.stream().reduce(0, (l, r) -> l + r);
         System.out.println(reduce);
     }
+
+    // 两个Function用andThen()方法连接起来
+    @Test
+    public void testFunction() {
+        Function<Integer, Integer> f = x -> x + 1;
+        Function<Integer, Integer> g = f.andThen(x -> x * 2);
+        Integer ret = g.apply(10);
+        System.out.println(ret);
+    }
+
+    // 流只能遍历一次
+    @Test
+    public void test() {
+        List<String> list = Arrays.asList("a", "b", "c");
+        Stream<String> stream = list.stream();
+        stream.forEach(System.out::println);
+        // error！流已经被消费掉了
+        stream.forEach(System.out::println);
+    }
+
 
     public List<Person> createPersonList2() {
         List<Person> list = Arrays.asList(new Person(1, "name1", 10),
@@ -397,16 +478,45 @@ public class StreamTest {
         return persons;
     }
 
-}
-
-class PersonSupplier implements Supplier<Person> {
-    private int index = 0;
-    private Random random = new Random();
-
-    @Override
-    public Person get() {
-        return new Person(index++, "StormTestUser" + index, random.nextInt(100));
+    @Test
+    public void testSummarizingInt() {
+        List<Person> persons = createPersonList2();
+        IntSummaryStatistics summaryStatistics = persons
+            .stream()
+            .collect(Collectors.summarizingInt(Person::getAge));
+        System.out.println(summaryStatistics);
     }
-}
 
+    @Test
+    public void testReducing01() {
+        List<Person> persons = createPersonList2();
+        String s = persons
+            .stream()
+            .map(Person::getName)
+            .collect(Collectors.reducing((s1, s2) -> s1 + ", " + s2))
+            .get();
+        System.out.println(s);
+    }
+
+    @Test
+    public void testReducing02() {
+        List<Person> persons = createPersonList2();
+        String collect = persons
+            .stream()
+            .collect(Collectors.reducing("", Person::getName, (s1, s2) -> (s1 + ", " + s2)));
+        System.out.println(collect);
+
+    }
+
+    public static class PersonSupplier implements Supplier<Person> {
+        private int index = 0;
+        private Random random = new Random();
+
+        @Override
+        public Person get() {
+            return new Person(index++, "StormTestUser" + index, random.nextInt(100));
+        }
+    }
+
+}
 

@@ -1,5 +1,6 @@
 package httpClientdemo;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -38,8 +39,11 @@ public class HttpClientUtil {
 
     }
 
+    // 这里把get和post请求合并到一起写了
+    // get和post请求的区别是传入的参数
     public static void execute(HttpUriRequest request) {
         CloseableHttpResponse response = null;
+        HttpEntity entity = null;
         try {
             if (context != null) {
                 response = httpClient.execute(request, context);
@@ -52,13 +56,16 @@ public class HttpClientUtil {
                 System.out.println("response-error");
             }
 
-            String res = EntityUtils.toString(response.getEntity(), Charset.defaultCharset());
+            entity = response.getEntity();
+            String res = EntityUtils.toString(entity, Charset.defaultCharset());
             System.out.println(res);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                httpClient.close();
+                EntityUtils.consume(entity);
+                // 使用连接池的话，这里的httpClient不用close
+                // httpClient.close();
                 if (response != null)   response.close();
             } catch (IOException e) {
                 e.printStackTrace();

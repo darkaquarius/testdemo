@@ -1,6 +1,5 @@
 package thread;
 
-import java.util.Random;
 import java.util.concurrent.Callable;
 
 /**
@@ -24,8 +23,9 @@ public class TaskWithResult implements Callable<String> {
     @Override
     public String call() throws Exception {
         System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
-        if (new Random().nextBoolean())
-            throw new TaskException("Meet error in task." + Thread.currentThread().getName());
+        // 模拟一个错误
+        // if (new Random().nextBoolean())
+        //     throw new TaskException("Meet error in task." + Thread.currentThread().getName());
         // 一个模拟耗时的操作
         for (int i = 999999999; i > 0; i--)
             ;

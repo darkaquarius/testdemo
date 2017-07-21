@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * Created by huishen on 17/2/27.
- *
+ * ThreadLocal
  */
 public class ThreadLocalDemo implements Runnable {
     // 创建线程局部变量studentLocal，在后面你会发现用来保存Student对象
@@ -53,8 +53,12 @@ public class ThreadLocalDemo implements Runnable {
         ThreadLocalDemo td = new ThreadLocalDemo();
         Thread t1 = new Thread(td, "a");
         Thread t2 = new Thread(td, "b");
+        Thread t3 = new Thread(td, "c");
+        Thread t4 = new Thread(td, "d");
         t1.start();
         t2.start();
+        t3.start();
+        t4.start();
     }
 
 }

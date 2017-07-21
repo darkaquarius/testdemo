@@ -6,11 +6,11 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by huishen on 17/2/27.
- *
+ * 主线程等待子线程执行完毕
  */
 public class ThreadWait {
 
-    //主线程等待子线程执行完毕
+    // countDownLatch.await();
     @Test
     public void test1() throws InterruptedException {
         System.out.println("main thread started!!");
@@ -38,8 +38,9 @@ public class ThreadWait {
         System.out.println("main thread finished!!");
     }
 
+    // Thread.activeCount()>1
     @Test
-    public void test2(){
+    public void test2() {
         System.out.println("main thread started!!");
         int threadNumber = 10;
         for (int i = 0; i < threadNumber; i++) {
@@ -54,15 +55,16 @@ public class ThreadWait {
             });
         }
 
-        while (Thread.activeCount()>1)
+        while (Thread.activeCount() > 1)
             Thread.yield();
         System.out.println("main thread finished!!");
     }
 
+    // countDownLatch.await();
     @Test
     public void test3() {
         System.out.println("main thread started");
-        int count =10;
+        int count = 10;
         CountDownLatch countDownLatch = new CountDownLatch(count);
         for (int i = 0; i < count; i++) {
             new Thread(() -> {
@@ -74,7 +76,7 @@ public class ThreadWait {
                 }
                 System.out.println(Thread.currentThread().getName() + "stop");
                 countDownLatch.countDown();
-            }, "Thread"+i).start();
+            }, "Thread" + i).start();
         }
 
         try {
