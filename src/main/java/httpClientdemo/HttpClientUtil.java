@@ -63,10 +63,12 @@ public class HttpClientUtil {
             e.printStackTrace();
         } finally {
             try {
-                EntityUtils.consume(entity);
                 // 使用连接池的话，这里的httpClient不用close
                 // httpClient.close();
-                if (response != null)   response.close();
+                if (response != null) {
+                    response.close();
+                    EntityUtils.consume(entity);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

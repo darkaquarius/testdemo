@@ -3,11 +3,17 @@ package httpClientdemo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +40,15 @@ public class HttpClientMainTest {
         // httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0");
 
         HttpClientUtil.execute(httpGet);
+    }
+
+    private static void execPost2(String url) throws UnsupportedEncodingException {
+        HttpPost httpPost = new HttpPost(url);
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("username", "vip"));
+        nvps.add(new BasicNameValuePair("password", "secret"));
+        httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+        HttpClientUtil.execute(httpPost);
     }
 
     private static void execPost(String url) {

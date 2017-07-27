@@ -19,6 +19,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**
@@ -329,6 +330,7 @@ public class LambdaTest02 {
     }
 
     // 当分类函数是一个predicate函数(即返回一个"boolean类型"的函数)时，partitioningBy会比groupingBy更有效率
+    // 分区
     @Test
     public void testPartitioningBy() {
         Map<Boolean, List<Locale>> en =
@@ -497,6 +499,15 @@ public class LambdaTest02 {
             .get();
         System.out.println(s);
     }
+
+
+    @Test
+    public void parallelRangedSum1() {
+        long reduce = LongStream.rangeClosed(1, Integer.MAX_VALUE)
+            .reduce(0L, Long::sum);
+        System.out.println(reduce);
+    }
+
 
     @Test
     public void testReducing02() {
