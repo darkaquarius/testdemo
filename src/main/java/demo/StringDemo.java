@@ -1,5 +1,6 @@
 package demo;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -103,6 +104,12 @@ public class StringDemo {
         }
         String ret = sb.deleteCharAt(sb.length() - 1).toString();
         System.out.println(ret);
+    }
+
+    @Test
+    public void testLength() {
+        int length = "320482199002080115".length();
+        Assert.assertEquals(length, 18);
     }
 
 }
