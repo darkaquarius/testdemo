@@ -48,8 +48,22 @@ public class HttpClientDemo {
             .setSoTimeout(3000)
             .build();
 
-        // CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).setDefaultRequestConfig(requestConfig).setDefaultSocketConfig(socketConfig).build();
-        CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig).setDefaultSocketConfig(socketConfig).build();
+        // CloseableHttpClient httpClient = HttpClients
+        //     .custom()
+        //     .setConnectionManager(cm)
+        //     .setDefaultRequestConfig(requestConfig)
+        //     .setDefaultSocketConfig(socketConfig)
+        //     .setRetryHandler(myRetryHandler)
+        //     .build();
+
+        CloseableHttpClient httpClient = HttpClients
+            .custom()
+            .setDefaultRequestConfig(requestConfig)
+            .setDefaultSocketConfig(socketConfig)
+            // .setRetryHandler(new MyRetryHandler())
+            // .setRetryHandler(new StandardHttpRequestRetryHandler())
+            // .setRedirectStrategy()
+            .build();
 
         String[] urisToGet = {
             "http://test.api.fangsdai.com:81/api/v1/activity/trainingDataSave",
