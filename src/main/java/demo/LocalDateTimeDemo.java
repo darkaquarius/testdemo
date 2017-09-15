@@ -2,6 +2,7 @@ package demo;
 
 import org.junit.Test;
 
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -25,6 +26,14 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
  */
 public class LocalDateTimeDemo {
 
+    // 转时间戳
+    @Test
+    public void test04() {
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+        System.out.println(timestamp.toString());   // 2017-09-13 11:55:18.121
+        System.out.println(new Date().getTime());   // 1505275055626
+    }
+
     @Test
     public void test(){
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(-1);
@@ -33,14 +42,14 @@ public class LocalDateTimeDemo {
     }
 
     @Test
-    public void test2(){
+    public void test02(){
         System.out.println(System.currentTimeMillis());
         System.out.println(System.nanoTime());
         System.out.println(new Date().getTime());
     }
 
     @Test
-    public void test3(){
+    public void test03(){
         LocalDateTime time1 = LocalDateTime.now(ZoneId.of("America/New_York"));
         System.out.println(time1);
         LocalDateTime time2 = LocalDateTime.now();

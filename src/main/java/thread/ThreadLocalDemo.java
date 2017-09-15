@@ -4,7 +4,8 @@ import java.util.Random;
 
 /**
  * Created by huishen on 17/2/27.
- * ThreadLocal
+ * ThreadLocal, 线程局部变量
+ * sleep前后，age属性中的值不变
  */
 public class ThreadLocalDemo implements Runnable {
     // 创建线程局部变量studentLocal，在后面你会发现用来保存Student对象
@@ -18,22 +19,25 @@ public class ThreadLocalDemo implements Runnable {
      * 示例业务方法，用来测试
      */
     public void accessStudent() {
-        //获取当前线程的名字
         String currentThreadName = Thread.currentThread().getName();
         System.out.println(currentThreadName + " is running!");
-        //产生一个随机数并打印
-        Random random = new Random();
-        int age = random.nextInt(100);
-        System.out.println("thread " + currentThreadName + " set age to:" + age);
-        //获取一个Student对象，并将随机数年龄插入到对象属性中
+
+        // 1.产生一个随机数并打印
+        int age = new Random().nextInt(100);
+
+        // 2.获取一个Student对象，并将随机数age插入到对象属性中
         getStudent().setAge(age);
         System.out.println("thread " + currentThreadName + " first read age is:" + getStudent().getAge());
+
+        // 3.sleep
         try {
             Thread.sleep(500);
         }
         catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+
+        // 4.获取age,看看有没有变化
         System.out.println("thread " + currentThreadName + " second read age is:" + getStudent().getAge());
     }
 

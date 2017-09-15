@@ -112,4 +112,20 @@ public class StringDemo {
         Assert.assertEquals(length, 18);
     }
 
+    @Test
+    public void test10() {
+        String oldStr = null;
+        String newStr = "123";
+        if (newStr.equals(oldStr)) {
+            System.out.println(1);
+        }
+    }
+
+    @Test
+    public void test11() {
+        String key = "loan:idfa:com.loan.yi";
+        String[] split = key.split(":", 3);
+        System.out.println(split[2]);
+    }
+
 }

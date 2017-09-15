@@ -64,4 +64,10 @@ public class ArrayListTest {
         System.out.println(list.size());
     }
 
+    @Test
+    public void test5() {
+        List list = Arrays.asList(1, 2, 3);
+        System.out.println(list.size());    // 3
+    }
+
 }
