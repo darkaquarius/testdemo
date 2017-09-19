@@ -3,11 +3,13 @@ package demo;
 import lombok.Data;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by huishen on 16/11/25.
+ *
  */
 
 @Data
@@ -35,6 +37,14 @@ public class Demo {
         if(aDouble == v){
             System.out.println("true");
         }
+    }
+
+    @Test
+    public void test01() {
+        String s = LocalDate.now().toString();
+        System.out.println(s);
+        // new StringBuffer().append("key").append("com.loan.test").append(LocalDate.now()).toString();
+
     }
 
 }

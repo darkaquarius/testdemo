@@ -110,6 +110,11 @@ public class HttpClientDemo03 {
     }
 
     public CloseableHttpClient getHttpClient() {
+
+        // setRoutePlanner
+        // HttpHost proxy = new HttpHost("localhost", 8888);
+        // DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+
         return HttpClients
             .custom()
             .setConnectionManager(cm)
@@ -118,6 +123,7 @@ public class HttpClientDemo03 {
             // .setKeepAliveStrategy()
             // .setConnectionManagerShared(true)
             // .setProxy(new HttpHost("45.32.21.237", 8888, "HTTP"))      // 代理
+            // .setRoutePlanner(routePlanner)
             .build();
     }
 
