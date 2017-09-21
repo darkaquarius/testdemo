@@ -39,6 +39,7 @@ public class HttpClientDemo {
             .setConnectTimeout(2000)
             .setSocketTimeout(3000)
             .setRedirectsEnabled(false) //不允许重定向
+            // .setCookieSpec(CookieSpecs.DEFAULT)  // cookie
             .build();
 
         SocketConfig socketConfig = SocketConfig.custom()
@@ -48,16 +49,10 @@ public class HttpClientDemo {
             .setSoTimeout(3000)
             .build();
 
-        // CloseableHttpClient httpClient = HttpClients
-        //     .custom()
-        //     .setConnectionManager(cm)
-        //     .setDefaultRequestConfig(requestConfig)
-        //     .setDefaultSocketConfig(socketConfig)
-        //     .setRetryHandler(myRetryHandler)
-        //     .build();
 
         CloseableHttpClient httpClient = HttpClients
             .custom()
+            // .setConnectionManager(cm)
             .setDefaultRequestConfig(requestConfig)
             .setDefaultSocketConfig(socketConfig)
             // .setRetryHandler(new MyRetryHandler())
