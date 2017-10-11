@@ -1,8 +1,10 @@
-package enumtest;
+package enumtest.test1;
 
 /**
  * Created by huishen on 17/4/19.
+ *
  */
+
 public enum PayType {
     UNDEFINED(false),//0
     WEI_APP_PAY(true),//1 微信APP支付

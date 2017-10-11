@@ -1,8 +1,10 @@
-package enumtest;
+package enumtest.test1;
 
 /**
  * Created by huishen on 17/4/19.
+ *
  */
+
 public class Client {
 
     public static void main(String[] args) {

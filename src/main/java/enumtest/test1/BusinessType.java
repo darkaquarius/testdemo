@@ -1,17 +1,13 @@
-package enumtest;
-
-import static enumtest.PayType.ALI_WAP_PAY;
-import static enumtest.PayType.BALANCE_PAY;
-import static enumtest.PayType.OSB_PAY;
-import static enumtest.PayType.SCORE_PAY;
-import static enumtest.PayType.WEI_APP_PAY;
+package enumtest.test1;
 
 /**
  * Created by huishen on 17/4/19.
+ *
  */
+
 public enum BusinessType {
     UNDEFINED(new PayType[]{}),
-    ONESHOP(new PayType[]{WEI_APP_PAY, ALI_WAP_PAY, BALANCE_PAY, SCORE_PAY, OSB_PAY}),
+    ONESHOP(new PayType[]{PayType.WEI_APP_PAY, PayType.ALI_WAP_PAY, PayType.BALANCE_PAY, PayType.SCORE_PAY, PayType.OSB_PAY}),
     DSP(new PayType[]{}),
     ONERECHARGE(new PayType[]{PayType.ALI_WAP_PAY, PayType.WEI_APP_PAY});
 
