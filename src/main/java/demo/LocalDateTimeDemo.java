@@ -109,6 +109,9 @@ public class LocalDateTimeDemo {
         System.out.println("");
         System.out.println("---截断时间精确位--");
         System.out.println(timePoint);
+        LocalDateTime truncatedTimeToHours = timePoint
+            .truncatedTo(ChronoUnit.HOURS);
+        System.out.println(truncatedTimeToHours);
         LocalDateTime truncatedTimeToMinutes = timePoint
             .truncatedTo(ChronoUnit.MINUTES);
         System.out.println(truncatedTimeToMinutes);
