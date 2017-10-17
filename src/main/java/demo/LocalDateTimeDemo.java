@@ -31,7 +31,9 @@ public class LocalDateTimeDemo {
     public void test04() {
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         System.out.println(timestamp.toString());   // 2017-09-13 11:55:18.121
+        // 使用System.currentTimeMillis()代替new Date().getTime()！
         System.out.println(new Date().getTime());   // 1505275055626
+        System.out.println(System.currentTimeMillis());  // 1505275055626
     }
 
     @Test
@@ -45,7 +47,9 @@ public class LocalDateTimeDemo {
     public void test02(){
         System.out.println(System.currentTimeMillis());
         System.out.println(System.nanoTime());
+        // 使用System.currentTimeMillis()代替new Date().getTime()！
         System.out.println(new Date().getTime());
+        System.out.println(System.currentTimeMillis());
     }
 
     @Test
@@ -71,6 +75,13 @@ public class LocalDateTimeDemo {
         System.out.println(duration1.toMinutes());
         System.out.println("hours:"+duration1.toHours());
         System.out.println("hours:"+duration2.toHours());
+
+    }
+
+    @Test
+    public void test05() {
+        LocalDateTime time1 = LocalDateTime.now();
+        System.out.println(time1.getHour());
 
     }
 
