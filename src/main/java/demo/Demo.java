@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by huishen on 16/11/25.
@@ -45,6 +46,11 @@ public class Demo {
         System.out.println(s);
         // new StringBuffer().append("key").append("com.loan.test").append(LocalDate.now()).toString();
 
+    }
+
+    @Test
+    public void test02() {
+        System.out.println(Objects.equals("a", "a"));
     }
 
 }

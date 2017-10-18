@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by huishen on 16/10/21.
@@ -68,6 +69,28 @@ public class ArrayListTest {
     public void test5() {
         List list = Arrays.asList(1, 2, 3);
         System.out.println(list.size());    // 3
+    }
+
+    // [-3, -2, -1] [-2, 0, 2]
+    // list.remove(i)选择调用重载方法list.remove(int index), 从指定位置删除元素
+    // 重载方法
+    @Test
+    public void test6() {
+        Set<Integer> set = new TreeSet<>();
+        List<Integer> list = new ArrayList<>();
+
+        for (int i = -3; i < 3; i++) {
+            set.add(i);
+            list.add(i);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            set.remove(i);
+            list.remove(i);
+            // 应该改为
+            // list.remove(Integer.valueOf(i));
+        }
+        System.out.println(set + " " + list);
     }
 
 }

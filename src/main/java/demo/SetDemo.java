@@ -35,7 +35,6 @@ public class SetDemo {
         if(((relativeSize - restSize) / (double)size) > 0.3){
             System.out.println("true");
         }
-
-
     }
+
 }

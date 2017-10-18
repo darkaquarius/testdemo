@@ -4,6 +4,7 @@ package thread;
  * Created by huishen on 17/2/27.
  * ExecutorService and Future
  */
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,10 +30,19 @@ public class ExecutorServiceTest {
         // 创建单个线程
         // Executors.newSingleThreadExecutor();
 
+        // ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+        //     .setNameFormat("demo-pool-%d").build();
+        //
+        // //Common Thread Pool
+        // ExecutorService executorService = new ThreadPoolExecutor(5, 200,
+        //     0L, TimeUnit.MILLISECONDS,
+        //     new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
         List<Future<String>> resultList = new ArrayList<>();
 
         // 创建10个任务并执行
-        for (int i = 0; i < 10; i++) {
+        final int maxThreads = 10;
+        for (int i = 0; i < maxThreads; i++) {
             Future<String> future = executorService.submit(new TaskWithResult(i));
             resultList.add(future);
         }

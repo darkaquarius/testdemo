@@ -4,7 +4,9 @@ import org.junit.Test;
 
 /**
  * Created by huishen on 16/11/18.
+ *
  */
+
 public class EnumTest {
 
     @Test
@@ -27,7 +29,6 @@ public class EnumTest {
                 break;
         }
         System.out.println(age.toString());
-
     }
 
 }
