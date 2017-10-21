@@ -14,6 +14,7 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -82,7 +83,22 @@ public class LocalDateTimeDemo {
     public void test05() {
         LocalDateTime time1 = LocalDateTime.now();
         System.out.println(time1.getHour());
+    }
 
+    @Test
+    public void test06() {
+        LocalDateTime now = LocalDateTime.now();
+
+        System.out.println(now.toString());
+        System.out.println(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        // all the same
+        System.out.println(DateTimeFormatter.BASIC_ISO_DATE.format(now));
+        System.out.println(now.format(DateTimeFormatter.BASIC_ISO_DATE));
+
+        System.out.println(DateTimeFormatter.ISO_DATE.format(now));
+        System.out.println(DateTimeFormatter.ISO_DATE_TIME.format(now));
+        System.out.println(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(now));
     }
 
     public static void main(String[] args) {
