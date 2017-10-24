@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 /**
  * Created by huishen on 16/10/21.
@@ -91,6 +92,42 @@ public class ArrayListTest {
             // list.remove(Integer.valueOf(i));
         }
         System.out.println(set + " " + list);
+    }
+
+    /**
+     * 测试Collections.sort(List)
+     */
+    @Test
+    public void testsort1() {
+        List<String> list = new ArrayList<>();
+        list.add("28");
+        list.add("32");
+        list.add("2");
+        list.add("71");
+        list.add("02");
+        Collections.sort(list);
+        list.forEach(System.out::println);
+    }
+
+    /**
+     *  测试Arrays.sort(array)
+     */
+    @Test
+    public void testsort2() {
+        List<String> list = new ArrayList<>();
+        list.add("28");
+        list.add("32");
+        list.add("2");
+        list.add("71");
+        list.add("02");
+        String[] array = list.toArray(new String[]{});
+        Arrays.sort(array);
+        // 集合中的元素是否排序    集合没有排序
+        System.out.println("items in list: ");
+        list.forEach(str -> System.out.print(str.concat("\t")));
+        // 数组中的元素是否排序    数组已经排序
+        System.out.println("items in array: ");
+        Stream.of(array).forEach(str -> System.out.print(str.concat("\t")));
     }
 
 }
