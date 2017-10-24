@@ -2,8 +2,10 @@ package demo;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,6 +35,25 @@ public class CollectionsDemo {
         for (String str : ret) {
             System.out.println(str);
         }
+    }
+
+    @Test
+    public void testBinarySearch() {
+        List<String> list = new ArrayList<>();
+        list.add("v");
+        list.add("p");
+        list.add("q");
+        list.add("g");
+        list.add("g");
+        list.add("a");
+        // step1: sort排序
+        Collections.sort(list);
+        list.stream().forEach(str -> System.out.print(str.concat("\t")));
+        System.out.println();
+
+        // step2: 二分查找
+        int p = Collections.binarySearch(list, "g");
+        System.out.println(p);
     }
 
 }
