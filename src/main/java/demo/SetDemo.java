@@ -7,11 +7,13 @@ import java.util.Set;
 
 /**
  * Created by huishen on 17/3/7.
+ *
  */
+
 public class SetDemo {
 
     @Test
-    public void test(){
+    public void test01(){
         Set<String> keywords = new HashSet<>();
         keywords.add("a");
         keywords.add("b");
