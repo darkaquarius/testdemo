@@ -15,18 +15,31 @@ public class Sync {
     // synchronized锁住的是括号里的对象，而不是代码
 
     // 如果真的想锁住这段代码，要怎么做？
-    // 比较多的做法是让synchronized锁这个类对应的Class对象
-    // static synchronized方法也相当于全局锁，相当于锁住了代码段
+    // 方法1：比较多的做法是让synchronized锁这个类对应的Class对象
+    // 方法2：static synchronized方法也相当于全局锁，相当于锁住了代码段
 
+    // 方法1,详见Sync2
+    // public static synchronized void test(){
+    //     System.out.println("start");
+    //     try {
+    //         Thread.sleep(1000);
+    //     } catch (InterruptedException e) {
+    //         e.printStackTrace();
+    //     }
+    //     System.out.println("end");
+    // }
 
-    public static synchronized void test(){
-        System.out.println("start");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    // 方法2
+    public synchronized void test() {
+        synchronized (Sync.class) {
+            System.out.println("start");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("end");
         }
-        System.out.println("end");
     }
 
     public static void main(String args[]){
