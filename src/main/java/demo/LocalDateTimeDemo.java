@@ -136,6 +136,8 @@ public class LocalDateTimeDemo {
         System.out.println("");
         System.out.println("---截断时间精确位--");
         System.out.println(timePoint);
+        LocalDateTime truncatedTimeToDays = timePoint.truncatedTo(ChronoUnit.DAYS);
+        System.out.println(truncatedTimeToDays);
         LocalDateTime truncatedTimeToHours = timePoint
             .truncatedTo(ChronoUnit.HOURS);
         System.out.println(truncatedTimeToHours);
