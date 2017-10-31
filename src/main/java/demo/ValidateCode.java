@@ -14,6 +14,7 @@ import java.util.Random;
  * 参考：http://blog.csdn.net/zhulin40/article/details/51899487
  */
 
+@SuppressWarnings("Duplicates")
 public class ValidateCode {
 
     // 图片的宽度。
