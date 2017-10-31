@@ -73,4 +73,9 @@ public class HashMapDemo {
         new HashMapDemo();
     }
 
+    public void testArrayListPair() {
+        // TODO: 17/10/21 Chapter05 Line300
+        // List<Pair>>
+    }
+
 }
