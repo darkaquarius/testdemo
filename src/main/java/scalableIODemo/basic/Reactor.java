@@ -35,15 +35,18 @@ public class Reactor implements Runnable {
         try {
             while (!Thread.interrupted()) {
                 // 等待事件
-                int n = selector.select(500);
+                int n = selector.select(2000);
                 if (n == 0) {
                     continue;
                 }
                 Set<SelectionKey> set = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = set.iterator();
                 while (iterator.hasNext()) {
+                    System.out.println("SelectionKey-next-start");
                     // Reactor负责dispatch收到的事件
                     dispatch(iterator.next());
+                    System.out.println("SelectionKey-next-end");
+                    System.out.println();
                 }
                 set.clear();
             }
@@ -53,15 +56,24 @@ public class Reactor implements Runnable {
     }
 
     private void dispatch(SelectionKey k) {
-        Runnable runnable = (Runnable) k.attachment();
+        Thread runnable = (Thread) k.attachment();
         if (runnable != null) {
-            runnable.run();
+            // runnable.run();
+            runnable.start();
+        }
+        for (int i = 0; i < 100000; i++) {
+            for (int j = 0; j < 10000; j++) {
+                for (int z = 0; z < 10000; z++) {
+
+                }
+            }
         }
     }
 
-    class Acceptor implements Runnable {
+    class Acceptor extends Thread {
         @Override
         public void run() {
+            System.out.println("Acceptor-run-start");
             try {
                 // 接收请求
                 SocketChannel c = serverSocketChannel.accept();
@@ -72,10 +84,11 @@ public class Reactor implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.println("Acceptor-run-end");
         }
     }
 
-    final class Handler implements Runnable {
+    final class Handler extends Thread {
 
         final SocketChannel socket;
         final SelectionKey key;
@@ -97,6 +110,7 @@ public class Reactor implements Runnable {
 
         @Override
         public void run() {
+            System.out.println("Handler-run-start");
             try {
                 if (state == READING) {
                     read();
@@ -106,6 +120,7 @@ public class Reactor implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("Handler-run-end");
         }
 
         boolean inputIsComplete() {
