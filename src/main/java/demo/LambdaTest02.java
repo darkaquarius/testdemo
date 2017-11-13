@@ -114,13 +114,24 @@ public class LambdaTest02 {
         //        }
         Optional<String> text1 = Optional.ofNullable(text);
 
-        //        ifPresent
-        //        text1.ifPresent(System.out::println);
-        text1.ifPresent(e -> {
-            System.out.println(e);
-            System.out.println(e);
+        // ifPresent
+        text1.ifPresent(t -> {
+            System.out.println(t);
         });
 
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testOptional() {
+        // String text = "Hello World";
+        String text = null;
+        byte[] bytes = Optional.ofNullable(text)
+            .map(t -> {
+                return t.getBytes();
+            }).orElse(new byte[]{});
     }
 
     @Test
