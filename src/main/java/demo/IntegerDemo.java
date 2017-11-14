@@ -32,4 +32,20 @@ public class IntegerDemo {
         }
     }
 
+    @Test
+    public void test3() {
+        long maxLong = Long.MAX_VALUE;
+        maxLong += 1;
+        // -9223372036854775808
+        System.out.println(maxLong);
+    }
+
+    @Test
+    public void test4() {
+        int maxInteger = Integer.MAX_VALUE;
+        maxInteger += 1;
+        // -2147483648
+        System.out.println(maxInteger);
+    }
+
 }

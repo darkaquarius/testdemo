@@ -130,4 +130,15 @@ public class ArrayListTest {
         Stream.of(array).forEach(str -> System.out.print(str.concat("\t")));
     }
 
+    /**
+     * Collections.emptyList()建立的是AbstractList，不能添加元素
+     * UnsupportedOperationException
+     */
+    @Test
+    public void testEmpty() {
+        List<String> list = Collections.emptyList();
+        list.add("1");
+        Arrays.toString(list.toArray());
+    }
+
 }

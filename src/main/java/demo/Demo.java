@@ -110,5 +110,18 @@ public class Demo {
         String[] split = str.split("::");
     }
 
+    @Test
+    public void test08() {
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            for (int j = 0; j < 10000; j++) {
+                for (int k = 0; k < 10000; k++) {
+
+                }
+            }
+        }
+        System.out.println("spend:" + (System.currentTimeMillis() - s));
+    }
+
 
 }

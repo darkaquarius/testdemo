@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
@@ -27,9 +29,21 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
  */
 public class LocalDateTimeDemo {
 
-    // 转时间戳
+    /**
+     * 时间戳转LocalDateTime
+     */
     @Test
-    public void test04() {
+    public void test01() {
+        long currentTimeMillis = System.currentTimeMillis();
+        LocalDateTime dateTime =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
+
+        System.out.println(dateTime);
+    }
+
+    // LocalDateTime转时间戳
+    @Test
+    public void test02() {
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         System.out.println(timestamp.toString());   // 2017-09-13 11:55:18.121
         // 使用System.currentTimeMillis()代替new Date().getTime()！
@@ -38,14 +52,14 @@ public class LocalDateTimeDemo {
     }
 
     @Test
-    public void test(){
+    public void test03(){
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(-1);
         boolean b = localDateTime.isBefore(LocalDateTime.now());
         System.out.println(b);
     }
 
     @Test
-    public void test02(){
+    public void test04(){
         System.out.println(System.currentTimeMillis());
         System.out.println(System.nanoTime());
         // 使用System.currentTimeMillis()代替new Date().getTime()！
@@ -53,8 +67,11 @@ public class LocalDateTimeDemo {
         System.out.println(System.currentTimeMillis());
     }
 
+    /**
+     * the duration between two temporal objects
+     */
     @Test
-    public void test03(){
+    public void test05(){
         LocalDateTime time1 = LocalDateTime.now(ZoneId.of("America/New_York"));
         System.out.println(time1);
         LocalDateTime time2 = LocalDateTime.now();
@@ -80,13 +97,13 @@ public class LocalDateTimeDemo {
     }
 
     @Test
-    public void test05() {
+    public void test06() {
         LocalDateTime time1 = LocalDateTime.now();
         System.out.println(time1.getHour());
     }
 
     @Test
-    public void test06() {
+    public void test07() {
         LocalDateTime now = LocalDateTime.now();
 
         System.out.println(now.toString());
