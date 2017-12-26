@@ -30,36 +30,92 @@ import static java.time.temporal.TemporalAdjusters.previousOrSame;
 public class LocalDateTimeDemo {
 
     /**
-     * 时间戳转LocalDateTime
+     * LocalDateTime ---> String
+     * LocalDateTime转换成String的各种日期格式
      */
     @Test
     public void test01() {
-        long currentTimeMillis = System.currentTimeMillis();
-        LocalDateTime dateTime =
-            LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
+        LocalDateTime now = LocalDateTime.now();
 
-        System.out.println(dateTime);
+        System.out.println("LocalDateTime ---> String:");
+        System.out.println(now.toString());
+        System.out.println(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        System.out.println();
+
+        // all the same
+        System.out.println(DateTimeFormatter.BASIC_ISO_DATE.format(now));
+        System.out.println(now.format(DateTimeFormatter.BASIC_ISO_DATE));
+        System.out.println();
+
+        System.out.println(DateTimeFormatter.ISO_DATE.format(now));
+        System.out.println(DateTimeFormatter.ISO_DATE_TIME.format(now));
+        System.out.println(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(now));
+
+        System.out.println("String ---> LocalDateTime:");
+
     }
 
-    // LocalDateTime转时间戳
+    /**
+     * Date ---> LocalDateTime
+     * LocalDateTime ---> Date
+     * attention: Instant类，Zone类，另外加上Duration类
+     */
     @Test
     public void test02() {
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-        System.out.println(timestamp.toString());   // 2017-09-13 11:55:18.121
-        // 使用System.currentTimeMillis()代替new Date().getTime()！
-        System.out.println(new Date().getTime());   // 1505275055626
-        System.out.println(System.currentTimeMillis());  // 1505275055626
+        Date date = new Date(System.currentTimeMillis());
+        System.out.println("new Date(): ");
+        System.out.println(date);
+
+        LocalDateTime localDateTime
+            = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        System.out.println("Date ---> LocalDateTime: ");
+        System.out.println(localDateTime);
+
+        Date date1 = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        System.out.println("LocalDateTime ---> Date: ");
+        System.out.println(date1);
     }
 
+    /**
+     * 时间戳 ---> LocalDateTime
+     * LocalDateTime ---> 时间戳
+     */
     @Test
-    public void test03(){
+    public void test03() {
+        // long currentTimeMillis = System.currentTimeMillis();
+        long currentTimeMillis = 1513739939053L;
+        LocalDateTime localDateTime =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
+        System.out.println("时间戳 ---> LocalDateTime:");
+        System.out.println(localDateTime);
+
+        LocalDateTime localDateTime1 = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(localDateTime1);
+        System.out.println("LocalDateTime ---> 时间戳:");
+        System.out.println(timestamp.toString());   // 2017-09-13 11:55:18.121
+
+        long l = localDateTime1.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        System.out.println(l);
+    }
+
+    /**
+     * LocaDateTime加减n天
+     * LocalDateTime比较两个日期前后关系
+     */
+    @Test
+    public void test04(){
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(-1);
         boolean b = localDateTime.isBefore(LocalDateTime.now());
         System.out.println(b);
     }
 
+    /**
+     * 使用System.currentTimeMillis()代替new Date().getTime()！
+     * System.currentTimeMillis()
+     * System.nanoTime()
+     */
     @Test
-    public void test04(){
+    public void test05(){
         System.out.println(System.currentTimeMillis());
         System.out.println(System.nanoTime());
         // 使用System.currentTimeMillis()代替new Date().getTime()！
@@ -71,7 +127,7 @@ public class LocalDateTimeDemo {
      * the duration between two temporal objects
      */
     @Test
-    public void test05(){
+    public void test06(){
         LocalDateTime time1 = LocalDateTime.now(ZoneId.of("America/New_York"));
         System.out.println(time1);
         LocalDateTime time2 = LocalDateTime.now();
@@ -88,34 +144,12 @@ public class LocalDateTimeDemo {
         Duration duration1 = Duration.between(timeUTC, time1);
         Duration duration2 = Duration.between(timeUTC, time2);
 
+        System.out.println();
         System.out.println(duration1.toDays());
         System.out.println(duration1.toHours());
         System.out.println(duration1.toMinutes());
-        System.out.println("hours:"+duration1.toHours());
-        System.out.println("hours:"+duration2.toHours());
-
-    }
-
-    @Test
-    public void test06() {
-        LocalDateTime time1 = LocalDateTime.now();
-        System.out.println(time1.getHour());
-    }
-
-    @Test
-    public void test07() {
-        LocalDateTime now = LocalDateTime.now();
-
-        System.out.println(now.toString());
-        System.out.println(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-
-        // all the same
-        System.out.println(DateTimeFormatter.BASIC_ISO_DATE.format(now));
-        System.out.println(now.format(DateTimeFormatter.BASIC_ISO_DATE));
-
-        System.out.println(DateTimeFormatter.ISO_DATE.format(now));
-        System.out.println(DateTimeFormatter.ISO_DATE_TIME.format(now));
-        System.out.println(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(now));
+        System.out.println("hours: " + duration1.toHours());
+        System.out.println("hours: " + duration2.toHours());
     }
 
     public static void main(String[] args) {

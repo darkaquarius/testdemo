@@ -8,9 +8,12 @@ import java.util.Random;
  * sleep前后，age属性中的值不变
  */
 public class ThreadLocalDemo implements Runnable {
-    // 创建线程局部变量studentLocal，在后面你会发现用来保存Student对象
+    /**
+     * 创建线程局部变量studentLocal，在后面你会发现用来保存Student对象
+     */
     private final static ThreadLocal<Student> studentLocal = new ThreadLocal<>();
 
+    @Override
     public void run() {
         accessStudent();
     }

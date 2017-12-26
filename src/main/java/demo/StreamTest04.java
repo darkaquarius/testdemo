@@ -10,7 +10,7 @@ import java.util.stream.Stream;
  * Created by huishen on 17/7/21.
  *
  */
-public class LambdaTest04 {
+public class StreamTest04 {
 
     public static long iterativeSum(long n) {
         long result = 0;
@@ -67,32 +67,32 @@ public class LambdaTest04 {
     // 3
     @Test
     public void test1() {
-        System.out.println("iterativeSum spends: " + measureSumPerf(LambdaTest04::iterativeSum, 10_000_000));
+        System.out.println("iterativeSum spends: " + measureSumPerf(StreamTest04::iterativeSum, 10_000_000));
     }
 
     // 142
     @Test
     public void test2() {
-        System.out.println("sequentialSum spends: " + measureSumPerf(LambdaTest04::sequentialSum, 10_000_000));
+        System.out.println("sequentialSum spends: " + measureSumPerf(StreamTest04::sequentialSum, 10_000_000));
     }
 
     // 与上面方法比较，拆箱的开销
     // 8
     @Test
     public void test2_2() {
-        System.out.println("rangedSum spends: " + measureSumPerf(LambdaTest04::rangedSum, 10_000_000));
+        System.out.println("rangedSum spends: " + measureSumPerf(StreamTest04::rangedSum, 10_000_000));
     }
 
     // 393
     @Test
     public void test3() {
-        System.out.println("parallelSum spends: " + measureSumPerf(LambdaTest04::parallelSum, 10_000_000));
+        System.out.println("parallelSum spends: " + measureSumPerf(StreamTest04::parallelSum, 10_000_000));
     }
 
     // 2
     @Test
     public void test3_2() {
-        System.out.println("parallelSum spends: " + measureSumPerf(LambdaTest04::parallelRangedSum, 10_000_000));
+        System.out.println("parallelSum spends: " + measureSumPerf(StreamTest04::parallelRangedSum, 10_000_000));
     }
 
 

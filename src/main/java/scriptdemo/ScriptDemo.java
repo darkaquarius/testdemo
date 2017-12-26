@@ -13,6 +13,8 @@ import java.io.Reader;
 /**
  * Created by huishen on 17/6/26.
  *
+ * java运行js
+ *
  */
 public class ScriptDemo {
 
@@ -22,14 +24,14 @@ public class ScriptDemo {
         // @NotNull
         ScriptEngine engine = manager.getEngineByName("JavaScript");
 
-        Reader scriptReader = new InputStreamReader(ScriptDemo.class.getClassLoader().getResourceAsStream("test/TestAdd.js"));
+        Reader scriptReader = new InputStreamReader(ScriptDemo.class.getClassLoader().getResourceAsStream("test/bit_socket_api.js"));
 
         if (engine != null) {
             try {
                 engine.eval(scriptReader);
                 if (engine instanceof Invocable) {
                     Invocable invocable = (Invocable) engine;
-                    Object result = invocable.invokeFunction("add", 1, 2);
+                    Object result = invocable.invokeFunction("getTicker");
                     System.out.println("The result is: " + result);
                 }
             } catch (ScriptException | NoSuchMethodException e) {

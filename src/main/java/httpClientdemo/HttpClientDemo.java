@@ -24,6 +24,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class HttpClientDemo {
 
+    /**
+     * 用多线程来执行HttpClient
+     */
     @Test
     public void test1() throws InterruptedException,ExecutionException, IOException {
         long s = System.currentTimeMillis();

@@ -13,6 +13,7 @@ public class InstanceOfDemo {
     public void test() {
         Father father = new Father();
         Child child = new Child();
+        System.out.println(child.getClass().equals(Child.class));
         GrandChild grandChild = new GrandChild();
         System.out.println(father instanceof Father);   // true
         System.out.println(child instanceof Father);    // true

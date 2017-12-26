@@ -4,7 +4,8 @@
  */
 
 function add(a, b) {
-    print("the first param is: " + a);
-    print("the second param is: " + b);
+    //print("the first param is: " + a);
+    //print("the second param is: " + b);
+    //console.log('result:' + (a + b));
     return a+b;
 }

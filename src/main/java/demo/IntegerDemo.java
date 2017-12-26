@@ -48,4 +48,14 @@ public class IntegerDemo {
         System.out.println(maxInteger);
     }
 
+    /**
+     * Integer --> double
+     */
+    @Test
+    public void test5() {
+        Integer number = 14924;
+        double d = (double) number;
+        System.out.println(number);
+    }
+
 }

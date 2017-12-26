@@ -5,6 +5,7 @@ import org.junit.Test;
 
 /**
  * Created by huishen on 16/12/18.
+ *
  */
 public class StringDemo {
 
@@ -71,7 +72,7 @@ public class StringDemo {
     public void test6(){
         String url = "https://itunes.apple.com/us/genre/id6014";
         int idIndex = url.indexOf("id");
-        String genreId = url.substring(idIndex+2);
+        String genreId = url.substring(idIndex + 2);
         System.out.println(genreId);
     }
 
@@ -126,6 +127,102 @@ public class StringDemo {
         String key = "loan:idfa:com.loan.yi";
         String[] split = key.split(":", 3);
         System.out.println(split[2]);
+    }
+
+    // 60406
+    // 210719
+    @Test
+    public void test12() {
+        long s = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+            String strA = "a";
+            String strB = "b";
+            String strC = "c";
+            String strD = "d";
+            String strE = "e";
+            String result = strA + strB + strC + strD + strE;
+        }
+        System.out.println("spend:" + (System.nanoTime() - s));
+    }
+
+    // 73752
+    // 99660
+    @Test
+    public void test12_1() {
+        long s = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+            String strA = "a";
+            String strB = "b";
+            String strC = "c";
+            String strD = "d";
+            String strE = "e";
+            String result = strA.concat(strB).concat(strC).concat(strD).concat(strE);
+        }
+
+        System.out.println("spend:" + (System.nanoTime() - s));
+    }
+
+    /**
+     * test13(), test14(), test15(), test16() 分别比较了在循环条件下，
+     * "+"操作符， concat()方法， StringBuffer,  StringBuilder  的性能差异
+     */
+
+    // 9623
+    @Test
+    public void test13() {
+        String result = "";
+
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            result = result + "*";
+        }
+        System.out.println("spend: " + (System.currentTimeMillis() - s));
+    }
+
+    // 3716
+    @Test
+    public void test14() {
+        String result = "";
+
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            result = result.concat("*");
+        }
+        System.out.println("spend: " + (System.currentTimeMillis() - s));
+    }
+
+    // 32
+    @Test
+    public void test15() {
+        String result = "";
+
+        StringBuffer sb = new StringBuffer();
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            sb.append("*");
+        }
+        result = sb.toString();
+        System.out.println("spend: " + (System.currentTimeMillis() - s));
+    }
+
+    // 15
+    @Test
+    public void test16() {
+        String result = "";
+
+        StringBuilder sb = new StringBuilder();
+        long s = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            sb.append("*");
+        }
+        result = sb.toString();
+        System.out.println("spend: " + (System.currentTimeMillis() - s));
+    }
+
+    @Test
+    public void test17() {
+        String url = "tLTCBTC";
+        String substring = url.substring(1, url.length());
     }
 
 }

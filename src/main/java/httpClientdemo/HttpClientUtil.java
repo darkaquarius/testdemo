@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by huishen on 17/6/24.
  * HttpClientUtil
+ * 用不同得到 HttpClient
  */
 
 public class HttpClientUtil {

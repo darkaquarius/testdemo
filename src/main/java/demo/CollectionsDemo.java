@@ -56,4 +56,20 @@ public class CollectionsDemo {
         System.out.println(p);
     }
 
+    /**
+     * shuffle, 随机
+     */
+    @Test
+    public void test() {
+        List<Integer> list = new ArrayList<>();
+        list.add(5);
+        list.add(10);
+        list.add(2);
+        list.add(11);
+        list.add(79);
+        Collections.shuffle(list);
+        list.forEach(l -> System.out.print(l + "\t"));
+
+    }
+
 }
