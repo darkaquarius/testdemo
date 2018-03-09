@@ -51,4 +51,20 @@ public class DoubleDemo {
         int ret = money / 3;
         System.out.println(ret);
     }
+
+    @Test
+    public void test5() {
+        double pre = 1.3;
+        double now = 1.1;
+
+        double ret = (now - pre) / pre;
+        System.out.println(ret);
+    }
+
+    @Test
+    public void test6() {
+        double ret = Double.parseDouble("0.0000004037");
+        System.out.println(ret);
+    }
+
 }

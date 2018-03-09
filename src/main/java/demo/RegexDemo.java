@@ -14,7 +14,8 @@ public class RegexDemo {
     //判断手机号是否合法
     @Test
     public void test1() {
-        String regex = "^1\\d{10}$";
+        // String regex = "^1\\d{10}$";
+        String regex = "^1[34578]\\d{9}$";
 
         if (!"13888888888".matches(regex)) {
             System.out.println("false");

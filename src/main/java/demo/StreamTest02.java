@@ -144,6 +144,14 @@ public class StreamTest02 {
     }
 
     @Test
+    public void testOptional3() {
+        // String origin = "hello";
+        String origin = null;
+        String str = Optional.ofNullable(origin).orElse(null);
+        System.out.println(str);
+    }
+
+    @Test
     public void testReduce() {
         String reduce = Stream.of("A", "B", "C", "D").reduce("", String::concat);
         System.out.println(reduce);
@@ -538,6 +546,19 @@ public class StreamTest02 {
             .ifPresent(System.out::println);
     }
 
+    /**
+     * lambda表达式异常处理
+     * 没有抛出来
+     */
+    @Test
+    public void testCatch() {
+        Arrays.asList("1", "2", "3")
+            .stream()
+            .map(l -> {
+                throw new NullPointerException();
+            });
+    }
+
     public static class PersonSupplier implements Supplier<Person> {
         private int index = 0;
         private Random random = new Random();
@@ -547,6 +568,7 @@ public class StreamTest02 {
             return new Person(index++, "StormTestUser" + index, random.nextInt(100));
         }
     }
+
 
 }
 

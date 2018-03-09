@@ -83,19 +83,33 @@ public class LocalDateTimeDemo {
     @Test
     public void test03() {
         // long currentTimeMillis = System.currentTimeMillis();
-        long currentTimeMillis = 1513739939053L;
+        long currentTimeMillis = 1516579200000L;
         LocalDateTime localDateTime =
             LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
         System.out.println("时间戳 ---> LocalDateTime:");
         System.out.println(localDateTime);
 
-        LocalDateTime localDateTime1 = LocalDateTime.now();
+        LocalDateTime localDateTime1 = LocalDateTime.of(2017, 12, 27, 15, 00);
+        // LocalDateTime localDateTime1 = LocalDateTime.now();
         Timestamp timestamp = Timestamp.valueOf(localDateTime1);
         System.out.println("LocalDateTime ---> 时间戳:");
         System.out.println(timestamp.toString());   // 2017-09-13 11:55:18.121
 
         long l = localDateTime1.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         System.out.println(l);
+    }
+
+    @Test
+    public void test() {
+        long l = System.currentTimeMillis();
+        LocalDateTime now =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(l), TimeZone.getDefault().toZoneId());
+        System.out.println(now);
+        l  = l - 1000 * 60 * 30;
+        LocalDateTime before =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(l), TimeZone.getDefault().toZoneId());
+        System.out.println(before);
+
     }
 
     /**

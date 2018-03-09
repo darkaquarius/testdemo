@@ -3,6 +3,7 @@ package demo;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -91,6 +92,38 @@ public class HashMapDemo {
         Set<String> keySet1 = map.keySet();
         map.put("key2", "value2");
         Set<String> keySet2 = map.keySet();
+    }
+
+    @Test
+    public void test1() {
+        HashMap<String, String> map = new HashMap<String, String>() {
+            {
+                put("k1", "v1");
+                put("k2", "v2");
+                put("k3", "v3");
+            }
+        };
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (entry.getValue().equals("v1")) {
+                map.remove(entry.getKey());
+            }
+
+        }
+    }
+
+    @Test
+    public void test2() {
+        HashMap<String, String> map = new HashMap<String, String>() {
+            {
+                put("k1", "v1");
+                put("k2", "v2");
+                put("k3", "v3");
+            }
+        };
+
+        String str = map.get("k4");
+        System.out.println(str);
     }
 
 }

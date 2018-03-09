@@ -225,4 +225,43 @@ public class StringDemo {
         String substring = url.substring(1, url.length());
     }
 
+    /**
+     * charAt
+     */
+    @Test
+    public void testCharAt() {
+        String str = "asdf";
+        System.out.println(str.charAt(0));    // a
+        System.out.println(str.charAt(1));    // s
+        System.out.println(str.charAt(2));    // d
+        System.out.println(str.charAt(3));    // f
+    }
+
+
+    /**
+     * charAt, indexof
+     */
+    @Test
+    public void test18() {
+        String[] ret = findPrefixRange("abg");
+        System.out.println(ret);
+    }
+
+    private String[] findPrefixRange(String prefix) {
+        String VALID_CHARACTERS = "`abcdefghijklmnopqrstuvwxyz{";
+        int posn = VALID_CHARACTERS.indexOf(prefix.charAt(prefix.length() - 1));
+        char suffix = VALID_CHARACTERS.charAt(posn > 0 ? posn - 1 : 0);
+        String start = prefix.substring(0, prefix.length() - 1) + suffix + '{';
+        String end = prefix + '{';
+        return new String[]{start, end};
+    }
+
+    @Test
+    public void test19() {
+        // a--97, b--98
+        String str = new String(new char[]{(char) 97, (char) 98});
+        System.out.println(str);
+    }
+
+
 }

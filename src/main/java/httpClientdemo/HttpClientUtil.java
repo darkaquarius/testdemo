@@ -9,9 +9,6 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by huishen on 17/6/24.
@@ -26,17 +23,17 @@ public class HttpClientUtil {
     private static HttpClientContext context;
 
     static {
-        HttpClientDemo02 httpClientDemo = new HttpClientDemo02();
-        // HttpClientDemo03 httpClientDemo = new HttpClientDemo03();
+        // HttpClientDemo02 httpClientDemo = new HttpClientDemo02();
+        HttpClientDemo03 httpClientDemo = new HttpClientDemo03();
 
-        try {
+        // try {
             httpClient = httpClientDemo.getHttpClient();
 
             // HttpClientContext, only for HttpClientDemo03 instance
-            // context = httpClientDemo.getHttpClientContext();
-        } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
-            e.printStackTrace();
-        }
+            context = httpClientDemo.getHttpClientContext();
+        // } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
+        //     e.printStackTrace();
+        // }
 
     }
 

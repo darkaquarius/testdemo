@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -89,6 +90,20 @@ public class HttpClientMainTest {
             e.printStackTrace();
         }
         return new StringEntity(s, "utf-8");
+    }
+
+    @Test
+    public void test() {
+        String url = "http://www.google.com";
+        HttpGet httpGet = new HttpGet(url);
+        HttpClientUtil.execute(httpGet);
+    }
+
+    @Test
+    public void test1() {
+        String url = "https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=15m";
+        HttpGet httpGet = new HttpGet(url);
+        HttpClientUtil.execute(httpGet);
     }
 
 }
