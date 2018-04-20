@@ -13,4 +13,11 @@ public class MathTest {
         System.out.println(ret);
     }
 
+    @Test
+    public void test2() {
+        int hashCode = "group_symbol_data_bittrex".hashCode();
+        int ret = Math.abs(hashCode) % 50;
+        System.out.println("ret: " + ret);
+    }
+
 }

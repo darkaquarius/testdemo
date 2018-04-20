@@ -215,7 +215,7 @@ public class StreamTest02 {
         boolean b1 = list.stream().allMatch(p -> p.getAge() < 1);
         System.out.println("allMatch: " + b1);
 
-        boolean b2 = list.stream().anyMatch(p -> p.getAge() == 22);
+        boolean b2 = list.stream().anyMatch(p -> p.getAge() == 21);
         System.out.println("anyMatch: " + b2);
 
         boolean b3 = list.stream().noneMatch(p -> p.getAge() == 21);

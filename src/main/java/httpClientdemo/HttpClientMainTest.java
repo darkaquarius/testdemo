@@ -94,7 +94,11 @@ public class HttpClientMainTest {
 
     @Test
     public void test() {
-        String url = "http://www.google.com";
+        // String url = "http://www.baidu.com";
+        // String url = "https://www.google.com";
+        // String url = "https://www.facebook.com";
+        String url = "https://twitter.com/";
+        // String url = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=ethereum&count=2";
         HttpGet httpGet = new HttpGet(url);
         HttpClientUtil.execute(httpGet);
     }

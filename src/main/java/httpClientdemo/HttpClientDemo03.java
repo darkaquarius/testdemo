@@ -22,20 +22,18 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 
 import javax.net.ssl.SSLContext;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.KeyStore;
 
 public class HttpClientDemo03 {
 
     // 依次是代理地址，代理端口号，用户密码
     private static String proxyHost = "127.0.0.1";
-    private static int proxyPort = 1080;
+    private static int proxyPort = 1086;
     private static String proxyName = "user";
     private static String proxyPwd = "123456";
 
@@ -56,17 +54,17 @@ public class HttpClientDemo03 {
         // SSLContext
         SSLContext context = null;
         // 默认
-        // context = SSLContexts.createSystemDefault();
+        context = SSLContexts.createSystemDefault();
         // 动态加载证书
-        try {
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            FileInputStream is = new FileInputStream("/Users/huishen/certs/xiaochen_entire_admin.p12");
-            char[] pwd = "123".toCharArray();
-            keyStore.load(is, pwd);
-            context = SSLContexts.custom().loadKeyMaterial(keyStore, pwd).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        //     FileInputStream is = new FileInputStream("/Users/huishen/certs/xiaochen_entire_admin.p12");
+        //     char[] pwd = "123".toCharArray();
+        //     keyStore.load(is, pwd);
+        //     context = SSLContexts.custom().loadKeyMaterial(keyStore, pwd).build();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
 
         // try {
         //     String pwd = "123";
@@ -90,8 +88,8 @@ public class HttpClientDemo03 {
 
         // HttpClientConnectionManager
         // FakeDnsResolver!
-        cm = new PoolingHttpClientConnectionManager(register, new FakeDnsResolver());
-        // PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(register);
+        // cm = new PoolingHttpClientConnectionManager(register, new FakeDnsResolver());
+        cm = new PoolingHttpClientConnectionManager(register);
 
         requestConfig = RequestConfig.custom()
             .setConnectionRequestTimeout(2000)
