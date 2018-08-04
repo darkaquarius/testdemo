@@ -2,9 +2,7 @@ package demo;
 
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,14 +62,6 @@ public class SetDemo {
         set.add("1");
         set.add("2");
         String collect = set.stream().collect(Collectors.joining());
-    }
-
-    @Test
-    public void testt() {
-        Map<String, String> map = new HashMap<>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-
-        }
     }
 
 }

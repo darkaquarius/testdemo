@@ -3,6 +3,14 @@ package thread;
 /**
  * Created by huishen on 17/2/27.
  * ExecutorService and Future
+ *
+ * ExecutorService是线程池的抽象。
+ * ScheduledExecutorService可以理解为线程池＋调度的抽象。它在ExecutorService基础上多了schedule的功能。
+ *
+ * ScheduledExecutorService与ExecutorService接口的实例底层实现都是ThreadPoolExecutor。
+ *
+ * ExecutorService是Executor子类
+ *
  */
 
 import org.junit.Test;
@@ -14,29 +22,51 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class ExecutorServiceTest {
 
     // Future
     @Test
     public void test() {
-        // ExecutorService还有一个子类，ThreadPoolExecutor
-        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        // 创建单个线程
+        // ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         // 创建一个固定大小的线程执行器，有最大线程数，
         // 超过这个最大线程数，执行器不再创建额外的线程，剩下的任务将被阻塞直到执行器有空闲的线程
-        // Executors.newFixedThreadPool(10);
+        // ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-        // 创建单个线程
-        // Executors.newSingleThreadExecutor();
+        // ExecutorService还有一个子类，ThreadPoolExecutor
+        // ExecutorService executorService = Executors.newCachedThreadPool();
+        // Executor executorService1 = Executors.newCachedThreadPool();
+
+        // ScheduledExecutorService
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(100);
+
 
         // ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
         //     .setNameFormat("demo-pool-%d").build();
-        //
-        // //Common Thread Pool
-        // ExecutorService executorService = new ThreadPoolExecutor(5, 200,
-        //     0L, TimeUnit.MILLISECONDS,
-        //     new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+
+        // custome Thread Pool 自定义线程池
+        ExecutorService executorService =
+            new ThreadPoolExecutor(
+                5,
+                200,
+                0L,
+                TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(1024),
+                runnable -> new Thread(runnable, "MyThread"),
+                new ThreadPoolExecutor.AbortPolicy()
+            );
+
+
+        // newWorkStealingPool
+        ExecutorService executorService1 = Executors.newWorkStealingPool();
 
         List<Future<String>> resultList = new ArrayList<>();
 
@@ -72,6 +102,8 @@ public class ExecutorServiceTest {
         List<FutureTask<String>> taskList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
+            // FutureTask 是Runnable和Future的子类，FutureTask也有一个构造方法接收Runnable或者Callable类型的参数
+            // FutureTask是对Runnable或者Callable的包装
             FutureTask<String> task = new FutureTask<>(new TaskWithResult(i));
             taskList.add(task);
             executorService.submit(task);

@@ -24,7 +24,7 @@ public class LocalDateDemo {
     @Test
     public void test(){
         LocalDate now = LocalDate.now();
-        LocalDate past = LocalDate.now().plusDays(-1);
+        LocalDate past = LocalDate.now().minusDays(1000);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String today = now.format(dateFormatter);
         String pastDay = past.format(dateFormatter);
@@ -36,6 +36,12 @@ public class LocalDateDemo {
     public void test2() {
         LocalDate date = LocalDate.now();
         System.out.println(date.toString());
+    }
+
+    @Test
+    public void test3() {
+        LocalDate min = LocalDate.MIN;
+        System.out.println(min);
     }
 
 }

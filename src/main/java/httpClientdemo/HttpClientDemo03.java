@@ -84,7 +84,8 @@ public class HttpClientDemo03 {
         // register
         Registry<ConnectionSocketFactory> register = RegistryBuilder.<ConnectionSocketFactory>create()
             .register("http", new MyConnectionSocketFactory())
-            .register("https", new MySSLConnectionSocketFactory(context)).build();
+            .register("https", new MySSLConnectionSocketFactory(context))
+            .build();
 
         // HttpClientConnectionManager
         // FakeDnsResolver!

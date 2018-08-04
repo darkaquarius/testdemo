@@ -3,6 +3,7 @@ package demo;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by huishen on 17/6/16.
@@ -65,6 +66,41 @@ public class HashMapDemo02 {
         int ret2 = hashCode2 & 16;
         int ret3 = hashCode3 & 16;
         int ret4 = hashCode4 & 16;
+    }
+
+    /**
+     * 新值会覆盖旧值
+     */
+    @Test
+    public void testPutAll() {
+        Map<String, Integer> map1 = new HashMap<String, Integer>() {{put("A", 1); put("B", 2);}};
+        Map<String, Integer> map2 = new HashMap<String, Integer>() {{put("A", 2); put("C", 3);}};
+        map1.putAll(map2);
+    }
+
+    @Test
+    public void testMerge() {
+        Map<String, Integer> map1 = new HashMap<String, Integer>() {{put("A", 1); put("B", 2);}};
+        Map<String, Integer> map2 = new HashMap<String, Integer>() {{put("A", 2); put("C", 3);}};
+        // map1.merge()
+        // for (Map.Entry<String, Integer> entry : map2.entrySet()) {
+        //     map1.merge(entry.getKey(), entry.getValue(), (value, newValue) -> {
+        //         if (value != null && newValue != null) {
+        //             return value + newValue;
+        //         } else if (value != null) {
+        //             return value;
+        //         } else if (newValue != null) {
+        //             return newValue;
+        //         } else {
+        //             throw new RuntimeException();
+        //         }
+        //     });
+        // }
+
+        // Map<String, Double> collect = Stream.concat(map1.entrySet().stream(), map2.entrySet().stream())
+        //     .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.summingDouble(Map.Entry::getValue)));
+
+
     }
 
 }

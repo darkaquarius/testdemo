@@ -81,9 +81,9 @@ public class ParallelStreamsDemo {
         // 7
         // System.out.println("ranged sum done in:" + measureSumPerf(ParallelStreamsDemo::rangedSum, 10_000_000));
         // 3
-        // System.out.println("parallel ranged sum done in:" + measureSumPerf(ParallelStreamsDemo::parallelRangedSum, 10_000_000));
+        System.out.println("parallel ranged sum done in:" + measureSumPerf(ParallelStreamsDemo::parallelRangedSum, 10_000_000));
 
-        System.out.println("SideEffect parallel sum done in:" + measureSumPerf(ParallelStreamsDemo::sideEffectSum, 10_000_000));
+        // System.out.println("SideEffect parallel sum done in:" + measureSumPerf(ParallelStreamsDemo::sideEffectSum, 10_000_000));
     }
 
     public static class Accumulator {

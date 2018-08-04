@@ -23,6 +23,7 @@ public class HttpClientUtil {
     private static HttpClientContext context;
 
     static {
+        // HttpClientDemo httpClientDemo = new HttpClientDemo03();
         // HttpClientDemo02 httpClientDemo = new HttpClientDemo02();
         HttpClientDemo03 httpClientDemo = new HttpClientDemo03();
 

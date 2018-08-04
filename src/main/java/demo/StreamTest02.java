@@ -340,6 +340,16 @@ public class StreamTest02 {
     }
 
     @Test
+    public void testGroupingBy9() {
+        Person zhangsan = new Person(0, "zhangsan", 10);
+        Person lisi = new Person(1, "lisi", 20);
+        Person wangwu = new Person(2, "wangwu", 30);
+        Person zhaoliu = new Person(3, "zhaoliu", 30);
+        Map<Integer, Integer> collect = Stream.of(zhangsan, lisi, wangwu, zhaoliu)
+            .collect(Collectors.groupingBy(Person::getAge, Collectors.summingInt(Person::getAge)));
+    }
+
+    @Test
     public void testSummingInt() {
         int sum = Stream.iterate(0, i -> i + 1)
             .limit(10)
@@ -388,7 +398,6 @@ public class StreamTest02 {
                 (existingValue, newValue) -> newValue,
                 TreeMap::new));
     }
-
     @Test
     public void testFlatMap1() {
         Stream<List<Integer>> inputStream = Stream.of(
@@ -461,14 +470,26 @@ public class StreamTest02 {
         System.out.println(reduce);
     }
 
-    // 两个Function用andThen()方法连接起来
+    // 两个Function用andThen()方法连接起来, g(f(x))
     @Test
-    public void testFunction() {
+    public void testFunction1() {
         Function<Integer, Integer> f = x -> x + 1;
         Function<Integer, Integer> g = f.andThen(x -> x * 2);
-        Integer ret = g.apply(10);
+        Integer ret = g.apply(1);
         System.out.println(ret);
     }
+
+    /**
+     * f(g(x))
+     */
+    @Test
+    public void testFunction2() {
+        Function<Integer, Integer> f = x -> x + 1;
+        Function<Integer, Integer> g = f.compose(x -> x * 2);
+        Integer ret = g.apply(1);
+        System.out.println(ret);
+    }
+
 
     // 流只能遍历一次
     @Test
@@ -557,6 +578,26 @@ public class StreamTest02 {
             .map(l -> {
                 throw new NullPointerException();
             });
+    }
+
+    /**
+     * random生成整数随机数流
+     * limit短路
+     */
+    @Test
+    public void testRandomAndLimit() {
+        Random random = new Random();
+        List<Integer> collect = random
+            .ints(0, 10)
+            .map(i -> {
+                System.out.println(i);
+                return i;
+            })
+            .distinct()
+            .limit(5)
+            // .distinct()
+            .boxed()
+            .collect(Collectors.toList());
     }
 
     public static class PersonSupplier implements Supplier<Person> {

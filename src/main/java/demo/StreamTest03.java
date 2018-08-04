@@ -42,7 +42,10 @@ public class StreamTest03 {
         List<Transaction> ret1 = transactions
             .stream()
             .filter(t -> 2011 == t.getYear())
-            .sorted(Comparator.comparing(Transaction::getValue).reversed())
+            .sorted(Comparator.comparing(Transaction::getValue)
+                .reversed()
+                .thenComparing(Transaction::getYear)
+            )
             .collect(Collectors.toList());
         System.out.println(ret1);
     }

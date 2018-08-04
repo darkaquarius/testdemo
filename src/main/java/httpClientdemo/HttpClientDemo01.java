@@ -32,15 +32,18 @@ public class HttpClientDemo01 {
     @Test
     public void test01() throws IOException {
 
-        String url = "https://www.baidu.com";
+        // String url = "https://www.baidu.com";
+        String url = "https://api.binance.com/api/v1/klines?symbol=BTCUSDT&interval=15m";
         HttpGet httpGet = new HttpGet(url);
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         CloseableHttpResponse response = httpClient.execute(httpGet);
 
-        System.out.println(response.getStatusLine().getStatusCode());
-        System.out.println(EntityUtils.toString(response.getEntity(), Charset.defaultCharset()));
+        int statusCode = response.getStatusLine().getStatusCode();
+        String respStr = EntityUtils.toString(response.getEntity(), Charset.defaultCharset());
+        System.out.println(statusCode);
+        System.out.println(respStr);
         response.close();
     }
 

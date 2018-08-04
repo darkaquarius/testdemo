@@ -83,7 +83,7 @@ public class LocalDateTimeDemo {
     @Test
     public void test03() {
         // long currentTimeMillis = System.currentTimeMillis();
-        long currentTimeMillis = 1523364182000L;
+        long currentTimeMillis = 1533005228799L;
         LocalDateTime localDateTime =
             LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
         System.out.println("时间戳 ---> LocalDateTime:");
@@ -118,7 +118,10 @@ public class LocalDateTimeDemo {
      */
     @Test
     public void test04(){
-        LocalDateTime localDateTime = LocalDateTime.now().plusDays(-1);
+        // LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.of(2018, 7, 25, 0, 0);
+        LocalDateTime localDateTime = time.plusDays(-1000);
+        System.out.println(localDateTime);
         boolean b = localDateTime.isBefore(LocalDateTime.now());
         System.out.println(b);
     }
@@ -240,4 +243,29 @@ public class LocalDateTimeDemo {
         System.out.println(timePoint.plus(sixHours));
         System.out.println("");
     }
+
+    @Test
+    public void test1() {
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+
+        System.out.println(now.toString());
+
+        int tmp = now.getMinute() / 5 * 5;
+        LocalDateTime minute5 = now.withMinute(tmp);
+
+        System.out.println(minute5.toString());
+
+        LocalDateTime hour1 = now.truncatedTo(ChronoUnit.HOURS);
+
+        System.out.println(hour1.toString());
+    }
+
+    @Test
+    public void test2() {
+        LocalDateTime min = LocalDateTime.MIN;
+        System.out.println(min);
+        boolean before = !LocalDateTime.now().isBefore(min);
+        System.out.println(before);
+    }
+
 }
