@@ -263,4 +263,13 @@ public class StringDemo {
         System.out.println(str);
     }
 
+    @Test
+    public void test20() {
+        String str = "http://images.diaoqianyaner.com.cn/img_appointment/20161205CK55HEWE.jpg";
+        String[] split = str.split("/");
+        System.out.println(split[4]);
+    }
+
+
+
 }

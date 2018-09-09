@@ -83,7 +83,7 @@ public class LocalDateTimeDemo {
     @Test
     public void test03() {
         // long currentTimeMillis = System.currentTimeMillis();
-        long currentTimeMillis = 1533005228799L;
+        long currentTimeMillis = 1536039598795L;
         LocalDateTime localDateTime =
             LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
         System.out.println("时间戳 ---> LocalDateTime:");
@@ -266,6 +266,16 @@ public class LocalDateTimeDemo {
         System.out.println(min);
         boolean before = !LocalDateTime.now().isBefore(min);
         System.out.println(before);
+    }
+
+    @Test
+    public void test3() throws InterruptedException {
+        long l1 = System.currentTimeMillis();
+        long l2 = System.nanoTime();
+        Thread.sleep(1000);
+        System.out.println(System.currentTimeMillis() - l1);
+        long ret = (System.nanoTime() - l2) / 1_000_000;
+        System.out.println(ret);
     }
 
 }
