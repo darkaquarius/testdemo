@@ -2,13 +2,21 @@ package lettucedemo;
 
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisFuture;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.codec.StringCodec;
+import io.lettuce.core.output.NestedMultiOutput;
+import io.lettuce.core.protocol.CommandArgs;
 import io.lettuce.core.support.ConnectionPoolSupport;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Test;
+
+import javax.naming.directory.SearchResult;
+import java.util.List;
 
 /**
  * @author huishen
@@ -96,6 +104,30 @@ public class LettuceDemo {
         }
         pool.close();
         client.shutdown();
+    }
+
+    /**
+     * Lettuce提供了自定义指令接口。实现自定义指令需要提供3个东西：指令名称，参数，结果解码器
+     */
+    @Test
+    public void testCustomCommand() {
+        RedisURI redisURI = RedisURI.Builder.redis("cqaso-redis", 6678).withPassword("cqaso@chuangqi").withDatabase(0).build();
+        RedisClient client = RedisClient.create(redisURI);
+        RedisCodec<String, String> codec = StringCodec.UTF8;
+
+        StatefulRedisConnection<String, String> connection = client.connect();
+        RedisCommands<String, String> commands = connection.sync();
+        CommandArgs<String, String> args = new CommandArgs<>(codec);
+        args
+            .add("AppDown")
+            // .add("@name:hello@genreId:36")
+            .add("@country:CN@date:[20180828,20180828]")
+            .add("LANGUAGE").add("chinese")
+            .add("SORTBY").add("appId").add("DESC")
+            .add("LIMIT").add(0).add(20);
+        List<Object> list = (List<Object>) commands.dispatch(new RediSearchCommands.SingleNodeCommands().getSearchCommand(), new NestedMultiOutput<>(codec), args);
+        RediSearchResult sr = new RediSearchResult(list, true, false, false);
+
     }
 
 }
