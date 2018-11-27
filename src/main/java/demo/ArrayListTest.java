@@ -141,4 +141,41 @@ public class ArrayListTest {
         Arrays.toString(list.toArray());
     }
 
+    @Test
+    public void testRemove1() {
+        ArrayList<String> list = new ArrayList<>(8);
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        System.out.println(list);
+        list.remove("2");
+        list.add("2");
+        System.out.println(list);
+        list.remove("5");
+        list.add("5");
+        System.out.println(list);
+    }
+
+    /**
+     * remove()方法删除的是int类型的元素的时候，记得装箱
+     *
+     * remove()有两种形式：
+     * 1. public boolean remove(Object o)
+     * 2. public E remove(int index)
+     */
+    @Test
+    public void testRemove2() {
+        ArrayList<Integer> list = new ArrayList<>(8);
+        list.add(10);
+        list.add(20);
+        list.add(30);
+        System.out.println(list);
+        list.remove((Integer)20);
+        list.add(20);
+        System.out.println(list);
+        list.remove((Integer)50);
+        list.add(50);
+        System.out.println(list);
+    }
+
 }

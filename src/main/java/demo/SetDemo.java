@@ -2,7 +2,9 @@ package demo;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,4 +66,20 @@ public class SetDemo {
         String collect = set.stream().collect(Collectors.joining());
     }
 
+    @Test
+    public void testLinkedHashSet() {
+        LinkedHashSet<String> set = new LinkedHashSet<String>(8);
+        set.add("1");
+        set.add("2");
+        set.add("3");
+        System.out.println(set);
+        set.add("4");
+        System.out.println(set);
+        set.remove("3");
+        set.add("3");
+        System.out.println(set);
+        set.remove("5");
+        set.add("5");
+        System.out.println(set);
+    }
 }

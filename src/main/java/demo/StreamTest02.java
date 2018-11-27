@@ -375,9 +375,18 @@ public class StreamTest02 {
 
     @Test
     public void testJoin() {
+        final String DELIMITER = "&";
         List<String> list = Arrays.asList("zhangsan", "lisi", "wangwu");
-        String ret = list.stream().collect(Collectors.joining(","));
+        String ret = list.stream().collect(Collectors.joining(DELIMITER));
         System.out.println(ret);
+    }
+
+    @Test
+    public void testSplit() {
+        final String DELIMITER = "&";
+        String str = "zhangsan&lisi&wangwu";
+        String[] split = str.split(DELIMITER);
+        System.out.println(split);
     }
 
     @Test

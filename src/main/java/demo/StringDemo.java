@@ -1,7 +1,10 @@
 package demo;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by huishen on 16/12/18.
@@ -270,6 +273,25 @@ public class StringDemo {
         System.out.println(split[4]);
     }
 
+    /**
+     * unicode转换
+     * StringEscapeUtils.unescapeJava()方法可以传入有unicode编码或者没有unicode编码的字符串，也能传null
+     */
+    @Test
+    public void test21() {
+        // String unicodeStr = "\u540c\u7a0b\u827a\u9f99\u9152\u5e97\u673a\u7968\u706b\u8f66";
+        String unicodeStr = "hello world";
+        String str = StringEscapeUtils.unescapeJava(unicodeStr);
+        System.out.println(str);
+    }
+
+    @Test
+    public void main() {
+        String day = "2018/10/10";
+        String replace = day.replace("/", "");
+        Integer ret = Integer.valueOf(replace);
+        System.out.println(ret);
+    }
 
 
 }

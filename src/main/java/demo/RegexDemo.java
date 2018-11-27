@@ -24,22 +24,44 @@ public class RegexDemo {
         }
     }
 
+    /**
+     * 2个括号是分开的
+     */
     @Test
     public void test2() {
         String text = "John writes about this, and John Doe writes about that,"
             + " and John Wayne writes about everything.";
         String regex = "(John) (.+?) ";
+        matcher(text, regex);
+    }
+
+    /**
+     * 2个括号有包含关系
+     */
+    @Test
+    public void test3() {
+        String text = "John writes about this, and John Doe writes about that,"
+            + " and John Wayne writes about everything.";
+        String regex = "(John (.+?))";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
-        boolean isFind = matcher.find();
-        int start = matcher.start();
-        int end = matcher.end();
-        System.out.println("start = " + start);
-        System.out.println("end = " + end);
-        // 0代表全部匹配
-        System.out.println("found group: group(0) is " + matcher.group(0));
-        // 1代表匹配第一个括号内的内容，2代表匹配第2个括号内的内容
-        System.out.println("found group: group(1) is " + matcher.group(1) + ", group(2) is " + matcher.group(2));
+        matcher(text, regex);
+    }
+
+    private void matcher(String text, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            System.out.println("start = " + start);
+            System.out.println("end = " + end);
+            // 0代表全部匹配
+            System.out.println("found group: group(0) is: " + matcher.group(0));
+            // 1代表匹配第一个括号内的内容，2代表匹配第2个括号内的内容
+            System.out.println("found group: group(1) is: " + matcher.group(1));
+            System.out.println("found group: group(2) is: " + matcher.group(2));
+        }
     }
 
 }
