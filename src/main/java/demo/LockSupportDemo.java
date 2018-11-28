@@ -4,6 +4,7 @@ package demo;
 import org.junit.Test;
 
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Consumer;
 
 /**
  * @author huishen
@@ -33,6 +34,8 @@ public class LockSupportDemo {
         LockSupport.unpark(thread);
         LockSupport.park();
         System.out.println("unblock");
+        System.out.println("the interrupt is: " + Thread.currentThread().isInterrupted());
+        System.out.println("the interrupt is: " + Thread.interrupted());
     }
 
     /**
@@ -50,9 +53,25 @@ public class LockSupportDemo {
         System.out.println("c");
     }
 
-    @SuppressWarnings("all")
+    /**
+     * 中断线程, t的interrupt返回true，说明中断导致t被唤醒，但是不会重置interrupt，仍然为true，并且不会抛出InterruptedException
+     */
     @Test
     public void test4() throws Exception {
+        lockSupport((Thread t) -> t.interrupt());
+    }
+
+    /**
+     * unpark方法唤醒线程t，interrupt返回false
+     */
+    @Test
+    public void test5() throws Exception {
+        lockSupport((Thread t) -> LockSupport.unpark(t));
+    }
+
+
+    @SuppressWarnings("all")
+    private void lockSupport(Consumer<Thread> consumer) throws Exception {
         Thread t = new Thread(new Runnable() {
             private int count = 0;
             @Override
@@ -66,13 +85,15 @@ public class LockSupportDemo {
                 System.out.println("after 1 second.count=" + count);
                 //等待或许许可
                 LockSupport.park();
-                System.out.println("thread over." + Thread.currentThread().isInterrupted());
+                System.out.println("thread over. interrupt: " + Thread.currentThread().isInterrupted());
+                System.out.println("thread over. interrupt: " + Thread.interrupted());
             }
         });
         t.start();
         Thread.sleep(2000);
-        // 中断线程
-        t.interrupt();
+
+        consumer.accept(t);
+
         System.out.println("main over");
     }
 
