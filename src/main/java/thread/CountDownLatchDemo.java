@@ -66,8 +66,13 @@ public class CountDownLatchDemo {
         }
 
         lock.lock();
-        count++;
-        lock.unlock();
+        try {
+            count++;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
