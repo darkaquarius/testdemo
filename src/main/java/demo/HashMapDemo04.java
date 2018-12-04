@@ -4,19 +4,17 @@ import java.util.HashMap;
 
 /**
  * Created by huishen on 17/12/6.
- *
  */
 public class HashMapDemo04 {
 
     /**
      * equals()相等，hashCode()一定相等
      * equals()不等，hashCode()不一定不等
-     *
-     *
+     * <p>
+     * <p>
      * hashCode方法 默认  是将对象的存储地址进行映射
-     *
+     * <p>
      * 修改equals()，也要同时修改hashCode()，不然有可能equals()相等，hashCode()不等
-     *
      */
     public static void main(String[] args) {
 
@@ -33,31 +31,32 @@ public class HashMapDemo04 {
         System.out.println(hashMap.get(p1));
     }
 
+    public static class People {
+        private String name;
+        private int age;
+
+        public People(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+
+        @Override
+        public int hashCode() {
+            // TODO Auto-generated method stub
+            return name.hashCode() * 37 + age;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            // TODO Auto-generated method stub
+            return this.name.equals(((People) obj).name) && this.age == ((People) obj).age;
+        }
+    }
 
 }
 
-class People{
-    private String name;
-    private int age;
 
-    public People(String name,int age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    public void setAge(int age){
-        this.age = age;
-    }
-
-    @Override
-    public int hashCode() {
-        // TODO Auto-generated method stub
-        return name.hashCode()*37+age;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        // TODO Auto-generated method stub
-        return this.name.equals(((People)obj).name) && this.age== ((People)obj).age;
-    }
-}

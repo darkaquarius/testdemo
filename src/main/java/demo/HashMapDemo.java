@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by huishen on 17/6/15.
@@ -77,11 +78,6 @@ public class HashMapDemo {
         new HashMapDemo();
     }
 
-    public void testArrayListPair() {
-        // TODO: 17/10/21 Chapter05 Line300
-        // List<Pair>>
-    }
-
     /**
      * 每次调用keySet()方法，返回的都是同一个实例
      */
@@ -124,6 +120,24 @@ public class HashMapDemo {
 
         String str = map.get("k4");
         System.out.println(str);
+    }
+
+    @Test
+    @SuppressWarnings("all")
+    public void test3() {
+        final HashMap<String, String> map = new HashMap<String, String>();
+        for (int i = 0; i < 10000; i++) {
+            new Thread(() -> {
+                map.put(UUID.randomUUID().toString(), "");
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
+        System.out.println(map);
     }
 
 }

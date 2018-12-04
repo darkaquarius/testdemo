@@ -3,20 +3,20 @@ package thread;
 /**
  * Created by huishen on 17/2/27.
  * ExecutorService and Future
- *
+ * <p>
  * ExecutorService是线程池的抽象。
  * ScheduledExecutorService可以理解为线程池＋调度的抽象。它在ExecutorService基础上多了schedule的功能。
- *
+ * <p>
  * ScheduledExecutorService与ExecutorService接口的实例底层实现都是ThreadPoolExecutor。
- *
+ * <p>
  * ExecutorService是Executor子类
- *
  */
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,7 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ExecutorServiceTest {
 
-    // Future
+    /**
+     * Future
+     */
     @Test
     public void test() {
 
@@ -93,7 +95,9 @@ public class ExecutorServiceTest {
         }
     }
 
-    // FutureTask
+    /**
+     * FutureTask
+     */
     @Test
     public void test2() {
 
@@ -112,11 +116,42 @@ public class ExecutorServiceTest {
         for (FutureTask<String> task : taskList) {
             try {
                 System.out.println(task.get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    static class TaskWithResult implements Callable<String> {
+
+        private int id;
+
+        public TaskWithResult(int id) {
+            this.id = id;
+        }
+
+        /**
+         * 任务的具体过程，一旦任务传给ExecutorService的submit方法，则该方法自动在一个线程上执行。
+         *
+         * @return String
+         * @throws Exception
+         */
+        @Override
+        public String call() throws Exception {
+            System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
+            // 模拟一个错误
+            // if (new Random().nextBoolean())
+            //     throw new TaskException("Meet error in task." + Thread.currentThread().getName());
+            // 一个模拟耗时的操作
+            Thread.sleep(1000);
+            return "call()方法被自动调用，任务的结果是：" + id + "    " + Thread.currentThread().getName();
+        }
+
+    }
+
+    static class TaskException extends Exception {
+        public TaskException(String message) {
+            super(message);
         }
     }
 
