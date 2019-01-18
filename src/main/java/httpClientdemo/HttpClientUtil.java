@@ -23,15 +23,17 @@ public class HttpClientUtil {
     private static HttpClientContext context;
 
     static {
-        // HttpClientDemo httpClientDemo = new HttpClientDemo03();
+        // HttpClientDemo01 httpClientDemo = new HttpClientDemo01();
         // HttpClientDemo02 httpClientDemo = new HttpClientDemo02();
-        HttpClientDemo03 httpClientDemo = new HttpClientDemo03();
+        // HttpClientDemo03 httpClientDemo = new HttpClientDemo03();
+        HttpClientDemo04 httpClientDemo = new HttpClientDemo04();
 
         // try {
             httpClient = httpClientDemo.getHttpClient();
 
             // HttpClientContext, only for HttpClientDemo03 instance
-            context = httpClientDemo.getHttpClientContext();
+            // context = httpClientDemo.getHttpClientContext();
+
         // } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
         //     e.printStackTrace();
         // }
@@ -40,7 +42,9 @@ public class HttpClientUtil {
 
     // 这里把get和post请求合并到一起写了
     // get和post请求的区别是传入的参数
-    public static void execute(HttpUriRequest request) {
+    public static int execute(HttpUriRequest request) {
+        // 每次拿不同的 httpClient
+        // CloseableHttpClient httpClient = new HttpClientDemo04().getHttpClient();
         CloseableHttpResponse response = null;
         HttpEntity entity = null;
         try {
@@ -57,7 +61,9 @@ public class HttpClientUtil {
 
             entity = response.getEntity();
             String res = EntityUtils.toString(entity, Charset.defaultCharset());
-            System.out.println(res);
+            // System.out.println(res);
+            System.out.println(httpClient);
+            return statusCode;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -81,6 +87,7 @@ public class HttpClientUtil {
             }
 
         }
+        return -1;
     }
 
 }

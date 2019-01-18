@@ -33,6 +33,7 @@ public class ExecutorServiceTest {
      * Future
      */
     @Test
+    @SuppressWarnings("Duplicates")
     public void test() {
 
         // 创建单个线程
@@ -84,7 +85,7 @@ public class ExecutorServiceTest {
         for (Future<String> fs : resultList) {
             try {
                 //如果Executor后台线程池还没有完成Callable的计算，这调用返回Future对象的get()方法，会阻塞直到计算完成!!!
-                System.out.println(fs.get()); // 打印各个线程（任务）执行的结果
+                System.out.println(fs.get());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -120,6 +121,28 @@ public class ExecutorServiceTest {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Test
+    @SuppressWarnings("Duplicates")
+    public void test3() {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        List<Future<String>> resultList = new ArrayList<>();
+
+        // 创建10个任务并执行
+        final int maxThreads = 10;
+        for (int i = 0; i < maxThreads; i++) {
+            Future<String> future = executorService.submit(new TaskWithResult(i));
+            resultList.add(future);
+        }
+        executorService.shutdown();
+
+        // todo
+        // for () {
+            //  CompletableFutureDemo
+        // }
+
     }
 
     static class TaskWithResult implements Callable<String> {

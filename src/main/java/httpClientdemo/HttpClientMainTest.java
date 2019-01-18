@@ -2,6 +2,7 @@ package httpClientdemo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.util.concurrent.RateLimiter;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by huishen on 17/6/22.
@@ -133,5 +136,73 @@ public class HttpClientMainTest {
         HttpClientUtil.execute(httpGet);
     }
 
+    @SuppressWarnings("Duplicates")
+    @Test
+    public void testIOS12() {
+        // final RateLimiter rateLimiter = RateLimiter.create(1.5);
+        String uri = "https://api-edge.apps.apple.com/v1/catalog/cn/search?" +
+            "platform=iphone" +
+            "&extend=editorialBadgeInfo,messagesScreenshots,minimumOSVersion,requiredCapabilities,screenshotsByType,supportsFunCamera,videoPreviewsByType" +
+            "&include=apps,top-apps" +
+            "&bubble[search]=apps,developers,groupings,editorial-items,app-bundles,in-apps" +
+            "&l=zh-Hans-CN" +
+            "&term=qq";
+        HttpGet httpGet = new HttpGet(uri);
+        httpGet.setHeader("Authorization", "Bearer eyJraWQiOiJGNDdEWk4xOEYwIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJBUzI4UjdHMTdNIiwiaWF0IjoxNTQ2OTMyMjM2LCJleHAiOjE1NDk1MjQyMzZ9.J_mpKOQ45NLLJ7SZDVlsic1f8DrqiMMhQ6y9ShXStcljgX2bYpH77TJFscglyUAFHnng7neZjVK7eeHFSLFgOg");
+        httpGet.setHeader("User-Agent", "AppStore/3.0 iOS/12.1.1 model/iPhone9,1 hwp/t8010 build/16C50 (6; dt:137) AMS/1");
+        httpGet.setHeader("X-Apple-Store-Front", "143465-19,29");
+
+        long s = System.currentTimeMillis();
+        int statusCode;
+        // rateLimiter.acquire();
+        statusCode = HttpClientUtil.execute(httpGet);
+        System.out.println("thread:" + Thread.currentThread().getName());
+        System.out.println("statusCode: " + statusCode);
+        System.out.println("spends: " + (System.currentTimeMillis() - s));
+
+    }
+
+
+    @SuppressWarnings("Duplicates")
+    @Test
+    public void testIOS12_1() {
+        final RateLimiter rateLimiter = RateLimiter.create(1.5);
+        String uri = "https://api-edge.apps.apple.com/v1/catalog/cn/search?" +
+            "platform=iphone" +
+            "&extend=editorialBadgeInfo,messagesScreenshots,minimumOSVersion,requiredCapabilities,screenshotsByType,supportsFunCamera,videoPreviewsByType" +
+            "&include=apps,top-apps" +
+            "&bubble[search]=apps,developers,groupings,editorial-items,app-bundles,in-apps" +
+            "&l=zh-Hans-CN" +
+            "&term=qq";
+        HttpGet httpGet = new HttpGet(uri);
+        httpGet.setHeader("Authorization", "Bearer eyJraWQiOiJGNDdEWk4xOEYwIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJBUzI4UjdHMTdNIiwiaWF0IjoxNTQ2OTMyMjM2LCJleHAiOjE1NDk1MjQyMzZ9.J_mpKOQ45NLLJ7SZDVlsic1f8DrqiMMhQ6y9ShXStcljgX2bYpH77TJFscglyUAFHnng7neZjVK7eeHFSLFgOg");
+        httpGet.setHeader("User-Agent", "AppStore/3.0 iOS/12.1.1 model/iPhone9,1 hwp/t8010 build/16C50 (6; dt:137) AMS/1");
+        httpGet.setHeader("X-Apple-Store-Front", "143465-19,29");
+
+        long s = System.currentTimeMillis();
+
+        final int size = 25;
+        ExecutorService executorService = Executors.newFixedThreadPool(size);
+        for (int i = 0 ; i < size; i++) {
+            executorService.submit(() -> {
+                int statusCode;
+                int count = 0;
+                do {
+                    rateLimiter.acquire();
+                    statusCode = HttpClientUtil.execute(httpGet);
+                    count++;
+                    System.out.println("thread:" + Thread.currentThread().getName() + ", status: " + statusCode);
+                } while (statusCode != 429);
+                System.out.println("thread:" + Thread.currentThread().getName());
+                System.out.println("statusCode: " + statusCode);
+                System.out.println("spends: " + (System.currentTimeMillis() - s));
+                System.out.println("count: " + count);
+            });
+        }
+
+        while(Thread.activeCount() > 1) {
+            Thread.yield();
+        }
+    }
 
 }

@@ -1,16 +1,17 @@
 package thread;
 
 import lombok.Data;
+import lombok.NonNull;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -18,134 +19,61 @@ import java.util.stream.Collectors;
  * @date 18/5/5 下午2:12
  */
 
-@SuppressWarnings("all")
 public class CompletableFutureDemo {
 
-    private static Random random = new Random();
-
-    private List<Shop> shops = Arrays.asList(
-        new Shop("BestPrice"),
-        new Shop("LetsSaveBig"),
-        new Shop("MyFavouriteShop"),
-        new Shop("BuyItAll"),
-        new Shop("newShop")
+    private List<Car> cars = Arrays.asList(
+        new Car("长安", 100, 0.1),
+        new Car("本田", 200, 0.2),
+        new Car("宝马", 300, 0.3),
+        new Car("奔驰", 400, 0.4),
+        new Car("福特", 500, 0.5)
     );
 
     private final Executor executor =
-        Executors.newFixedThreadPool(Math.min(shops.size(), 100), new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                // 使用守护线程-这种方式不会阻止程序的关停
-                t.setDaemon(true);
-                return t;
-            }
+        Executors.newFixedThreadPool(Math.min(cars.size(), 100), (runnable) -> {
+            Thread t = new Thread(runnable);
+            // 使用守护线程-这种方式不会阻止程序的关停
+            t.setDaemon(true);
+            return t;
         });
 
     /**
      * 顺序流调用同步api
      */
-    public List<String> findPrices1(String product) {
-        return shops
-            .stream()
-            .map(shop -> shop.getPrice(product))
-            .map(Quote::parse)
-            .map(Discount::applyDiscount)
-            .collect(Collectors.toList());
+    @Test
+    public void test1() {
+        System.out.println(findPrices1());
     }
 
     /**
      * 并行流调用同步api
      */
-    public List<String> findPrices2(String product) {
-        return shops
-            .parallelStream()
-            .map(shop -> shop.getPrice(product))
-            .map(Quote::parse)
-            .map(Discount::applyDiscount)
-            .collect(Collectors.toList());
+    @Test
+    public void test2() {
+        System.out.println(findPrices2());
     }
 
     /**
      * CompletableFuture
      * 异步方式调用同步api
      */
-    public List<String> findPrices3(String product) {
-        List<CompletableFuture<String>> priceFutures =
-            shops
-                .stream()
-                // supplyAsync()方法的第二个参数，接收一个executor
-                .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor))
-                .map(future -> future.thenApply(Quote::parse))
-                .map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)))
-                .collect(Collectors.toList());
-        // // 同上
-        // List<CompletableFuture<String>> priceFutures = shops
-        //     .stream()
-        //     .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor).thenApply(Quote::parse).thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)))
-        //     .collect(Collectors.toList());
-
-
-        return priceFutures
-            .stream()
-            // CompletableFuture中的join()方法和Future中的get()方法类似，唯一的不同是join()方法不会抛出checked exception
-            .map(CompletableFuture::join)
-            .collect(Collectors.toList());
-    }
-
-
-    public void findPrices4(String product) {
-        long start = System.currentTimeMillis();
-        CompletableFuture[] futures = shops
-            .stream()
-            .map(shop -> CompletableFuture.supplyAsync(() -> shop.getPrice(product), executor))
-            .map(future -> future.thenApply(Quote::parse))
-            .map(future -> future.thenCompose(quote -> CompletableFuture.supplyAsync(() -> Discount.applyDiscount(quote), executor)))
-            .map(f -> f.thenAccept(s -> {
-                System.out.println(s + " (done in) " + (System.currentTimeMillis() - start) + "ms");
-            }))
-            .toArray(size -> new CompletableFuture[size]);
-        CompletableFuture.allOf(futures).join();    // 等待所有的CompletableFuture对象执行完毕
-        CompletableFuture.anyOf(futures).join();    // 任意一个CompletableFuture对象执行完毕就停止，不再等待
-
-
-    }
-
-    // 10221 ms
-    @Test
-    public void test1() {
-        long start = System.currentTimeMillis();
-        System.out.println(findPrices1("myPhone"));
-        System.out.println("Done in " + (System.currentTimeMillis() - start) + " ms");
-    }
-
-    // 4187 ms
-    @Test
-    public void test2() {
-        long start = System.currentTimeMillis();
-        System.out.println(findPrices2("myPhone"));
-        System.out.println("Done in " + (System.currentTimeMillis() - start) + " ms");
-    }
-
-    // 2174 ms
     @Test
     public void test3() {
-        long start = System.currentTimeMillis();
-        System.out.println(findPrices3("myPhone"));
-        System.out.println("Done in " + (System.currentTimeMillis() - start) + " ms");
+        System.out.println(findPrices3());
     }
-
 
     @Test
     public void test4() {
-        findPrices4("myPhone");
+        System.out.println(findPrices4());
     }
 
-
-    public static void main(String args[]) {
-        Shop shop = new Shop("BeatShop");
+    /**
+     *
+     */
+    public static void main(String[] args) {
+        Car car = new Car("BeatCar", 1000, 0.15);
         long start = System.nanoTime();
-        Future<Double> futurePrice = shop.getPriceAsync("my favourite product");
+        Future<Double> futurePrice = car.getPriceAsync("my favourite product");
         long invocationTime = (System.nanoTime() - start) / 1_000_000;
         System.out.println("Invocation returned after " + invocationTime + " ms");
 
@@ -162,6 +90,69 @@ public class CompletableFutureDemo {
         System.out.println("Price return after " + retrivevalTime + " ms");
     }
 
+    private List<String> findPrices1() {
+        return cars
+            .stream()
+            .map(Car::getPrice)
+            .map(Quote::parse)
+            .map(CompletableFutureDemo::applyDiscount)
+            .collect(Collectors.toList());
+    }
+
+    private List<String> findPrices2() {
+        return cars
+            .parallelStream()
+            .map(Car::getPrice)
+            .map(Quote::parse)
+            .map(CompletableFutureDemo::applyDiscount)
+            .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("Duplicates")
+    private List<String> findPrices3() {
+        return cars
+            .stream()
+            .map(car -> CompletableFuture
+                .supplyAsync(car::getPrice, executor)
+                .thenApply(Quote::parse)
+                .thenCompose(quote -> CompletableFuture.supplyAsync(() -> applyDiscount(quote), executor)))
+            // CompletableFuture中的join()方法和Future中的get()方法类似，唯一的不同是join()方法不会抛出checked exception
+            .map(CompletableFuture::join)
+            .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("Duplicates")
+    private List<String> findPrices4() {
+        // long start = System.currentTimeMillis();
+        CompletableFuture<String>[] futures = cars
+            .stream()
+            .map(car -> CompletableFuture
+                .supplyAsync(car::getPrice, executor)
+                .thenApply(Quote::parse)
+                .thenCompose(quote -> CompletableFuture.supplyAsync(() -> applyDiscount(quote), executor)))
+            // .map(f -> f.thenAccept(s -> {
+            //     System.out.println(s + " (done in) " + (System.currentTimeMillis() - start) + "ms");
+            // }))
+            .toArray((IntFunction<CompletableFuture<String>[]>) CompletableFuture[]::new);
+        // 等待所有的CompletableFuture对象执行完毕
+        // Void join = CompletableFuture.allOf(futures).join();
+        // 任意一个CompletableFuture对象执行完毕就停止，不再等待
+        // Object join1 = CompletableFuture.anyOf(futures).join();
+
+        return Arrays
+                .stream(futures)
+                .map(f -> {
+                    try {
+                        return f.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .collect(Collectors.toList());
+
+    }
+
     // sleep 2s
     private static void doSomeThingElse() {
         try {
@@ -171,30 +162,30 @@ public class CompletableFutureDemo {
         }
     }
 
-    // sleep 1s
-    public static void randomDelay() {
+    private static void delay(long millis) {
         try {
-            int delay = 500 + random.nextInt(2000);
-            Thread.sleep(delay);
+            Thread.sleep(millis);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private static String applyDiscount(Quote quote) {
+        delay(2000);
+        return quote.getCarName() + " price is " + (quote.getPrice() * (1 - quote.getDiscount()));
+    }
 
     @Data
-    public static class Shop {
-
+    static class Car {
+        @NonNull
         private String name;
+        @NonNull
+        private int price;
+        @NonNull
+        private double discount;
 
-        public Shop(String name) {
-            this.name = name;
-        }
-
-        public String getPrice(String product) {
-            double price = calculatePrice(product);
-            Discount.Code code = Discount.Code.values()[random.nextInt(Discount.Code.values().length)];
-            return String.format("%s:%.2f:%s", name, price, code);
+        String getPrice() {
+            return String.format("%s:%s:%s", name, price, discount);
         }
 
         /**
@@ -222,62 +213,32 @@ public class CompletableFutureDemo {
          * 使用supplyAsync()创建CompletableFuture
          * 和getPriceAsync0()完全等价
          */
-        public CompletableFuture<Double> getPriceAsync(String product) {
+        CompletableFuture<Double> getPriceAsync(String product) {
             return CompletableFuture.supplyAsync(() -> calculatePrice(product));
         }
 
         private double calculatePrice(String product) {
-            randomDelay();
-            return random.nextDouble() * product.charAt(0) + product.charAt(1);
-        }
-
-    }
-
-
-    public static class Discount {
-
-        public enum Code {
-            NONE(0), SILVER(5), GOLD(10), PLATINUM(15), DIAMOND(20);
-
-            private final int percentage;
-
-            Code(int percentage) {
-                this.percentage = percentage;
-            }
-        }
-
-        public static String applyDiscount(Quote quote) {
-            return quote.getShopName() + " price is "
-                + Discount.apply(quote.getPrice(), quote.getDiscountCode());
-        }
-
-        private static double apply(double price, Code code) {
-            randomDelay();
-            return price * (100 - code.percentage) / 100;
+            delay(1000);
+            return 100;
         }
 
     }
 
     @Data
-    public static class Quote {
-        private final String shopName;
-        private final double price;
-        private final Discount.Code discountCode;
+    static class Quote {
+        @NonNull
+        private String carName;
+        @NonNull
+        private int price;
+        @NonNull
+        private double discount;
 
-        public Quote(String shopName, double price, Discount.Code code) {
-            this.shopName = shopName;
-            this.price = price;
-            this.discountCode = code;
-        }
-
-        public static Quote parse(String s) {
+        static Quote parse(String s) {
             String[] split = s.split(":");
-            String shopName = split[0];
-            double price = Double.parseDouble(split[1]);
-            Discount.Code discountCode = Discount.Code.valueOf(split[2]);
-            return new Quote(shopName, price, discountCode);
+            String carName = split[0];
+            int price = Integer.parseInt(split[1]);
+            double discount = Double.parseDouble(split[2]);
+            return new Quote(carName, price, discount);
         }
-
     }
-
 }

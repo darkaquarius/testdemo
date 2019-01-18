@@ -6,7 +6,7 @@ import org.junit.Test;
  * Created by huishen on 16/11/5.
  *
  */
-public class java8Test {
+public class Java8Test {
 
     @Test
     public void testFunctionalInterface1(){
@@ -30,11 +30,9 @@ public class java8Test {
         System.out.println(c);
     }
 
+    @FunctionalInterface
+    interface Convert<F, T> {
+        T convert(F from);
+    }
 
 }
-
-@FunctionalInterface
-interface Convert<F, T> {
-    T convert(F from);
-}
-

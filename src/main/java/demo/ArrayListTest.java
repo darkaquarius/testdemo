@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -178,4 +179,10 @@ public class ArrayListTest {
         System.out.println(list);
     }
 
+    @Test
+    public void subList() {
+        List<Integer> collect = Stream.iterate(0, n -> n + 1)
+            .limit(100)
+            .collect(Collectors.toList());
+    }
 }

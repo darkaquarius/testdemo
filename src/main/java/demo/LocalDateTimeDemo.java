@@ -82,8 +82,11 @@ public class LocalDateTimeDemo {
      */
     @Test
     public void test03() {
-        // long currentTimeMillis = System.currentTimeMillis();
-        long currentTimeMillis = 1537863308631L;
+        long currentTimeMillis = System.currentTimeMillis();
+        // long currentTimeMillis = 1547024478544L;
+        // long currentTimeMillis = 1547102532482L;
+        System.out.println("currentTimeMillis: " + currentTimeMillis);
+
         LocalDateTime localDateTime =
             LocalDateTime.ofInstant(Instant.ofEpochMilli(currentTimeMillis), TimeZone.getDefault().toZoneId());
         System.out.println("时间戳 ---> LocalDateTime:");

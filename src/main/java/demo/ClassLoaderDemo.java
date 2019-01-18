@@ -3,7 +3,6 @@ package demo;
 import org.junit.Test;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import sun.misc.Launcher;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,13 +14,6 @@ import java.util.Properties;
  *
  */
 public class ClassLoaderDemo {
-
-    public static void main(String[] args) {
-        URL[] urLs = Launcher.getBootstrapClassPath().getURLs();
-        for (int i = 0; i < urLs.length; i++) {
-            System.out.println(urLs[i].toExternalForm());
-        }
-    }
 
     @Test
     public void test() {
