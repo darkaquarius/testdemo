@@ -81,7 +81,7 @@ public class HttpClientDemo04 {
             .setConnectionManager(cm)
             .setDefaultRequestConfig(requestConfig)
             .setDefaultSocketConfig(socketConfig)
-            .setProxy(new HttpHost("103.60.137.2", 22056, "HTTP"))      // http代理
+            .setProxy(new HttpHost("123.134.183.107", 5412, "HTTP"))      // http代理
             .build();
     }
 

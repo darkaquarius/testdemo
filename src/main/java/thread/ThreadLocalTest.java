@@ -9,12 +9,12 @@ public class ThreadLocalTest {
     /**
      * 设置默认值
      */
-    ThreadLocal<Long> longLocal = ThreadLocal.withInitial(() -> Thread.currentThread().getId());
+    private ThreadLocal<Long> longLocal = ThreadLocal.withInitial(() -> Thread.currentThread().getId());
 
     /**
      * 设置默认值
      */
-    ThreadLocal<String> stringLocal = ThreadLocal.withInitial(() -> Thread.currentThread().getName());
+    private ThreadLocal<String> stringLocal = ThreadLocal.withInitial(() -> Thread.currentThread().getName());
 
     public void set() {
         longLocal.set(Thread.currentThread().getId());

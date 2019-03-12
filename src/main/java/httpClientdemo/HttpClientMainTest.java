@@ -148,7 +148,7 @@ public class HttpClientMainTest {
             "&l=zh-Hans-CN" +
             "&term=qq";
         HttpGet httpGet = new HttpGet(uri);
-        httpGet.setHeader("Authorization", "Bearer eyJraWQiOiJGNDdEWk4xOEYwIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJBUzI4UjdHMTdNIiwiaWF0IjoxNTQ2OTMyMjM2LCJleHAiOjE1NDk1MjQyMzZ9.J_mpKOQ45NLLJ7SZDVlsic1f8DrqiMMhQ6y9ShXStcljgX2bYpH77TJFscglyUAFHnng7neZjVK7eeHFSLFgOg");
+        httpGet.setHeader("Authorization", "Bearer eyJraWQiOiJGNDdEWk4xOEYwIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJBUzI4UjdHMTdNIiwiaWF0IjoxNTUyMzgyNjcwLCJleHAiOjE1NTQ5NzQ2NzB9.Ws1r9fj0lfd97C4XhOs5O7hknIy51QxYavJyOxeZgi28XJxcmDc5n--zfdu3fwMqdnMQmeRLj9xHutL-P7E1Ow");
         httpGet.setHeader("User-Agent", "AppStore/3.0 iOS/12.1.1 model/iPhone9,1 hwp/t8010 build/16C50 (6; dt:137) AMS/1");
         httpGet.setHeader("X-Apple-Store-Front", "143465-19,29");
 

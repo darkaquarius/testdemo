@@ -4,6 +4,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by huishen on 16/12/18.
  *
@@ -289,6 +293,13 @@ public class StringDemo {
         String replace = day.replace("/", "");
         Integer ret = Integer.valueOf(replace);
         System.out.println(ret);
+    }
+
+    @Test
+    public void test22() {
+        List<String> list = Arrays.asList("vivo", "huawei");
+        String collect = list.stream().map(str -> String.format("\'%s\'", str)).collect(Collectors.joining(","));
+        System.out.println(collect);
     }
 
 }

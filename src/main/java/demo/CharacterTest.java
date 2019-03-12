@@ -65,6 +65,26 @@ public class CharacterTest {
     }
 
     @Test
+    public void validSymbols() {
+        char ch1 = '!';
+        char ch2 = '(';
+        char ch3 = ')';
+        char ch4 = '{';
+        char ch5 = '}';
+        char ch6 = '！';
+        char ch7 = '（';
+        char ch8 = '）';
+        char ch9 = '「';
+        char ch10 = '」';
+        char ch11 = '[';
+        char ch12 = ']';
+        char ch13 = '【';
+        char ch14 = '】';
+        char ch15 = '.';
+        char ch16 = '。';
+    }
+
+    @Test
     public void cleanInvalidWord() {
         List<String> words = Arrays.asList(
             "لعبة صالون تلوين الاظافر",

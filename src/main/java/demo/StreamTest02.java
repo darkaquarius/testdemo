@@ -181,8 +181,8 @@ public class StreamTest02 {
      */
     @Test
     public void testLimitAndSkip2() {
-        List<Person> persons = createPersonList1();
-        //        persons.stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).limit(2).forEach(System.out::println);
+        List<Person> persons = createPersonList2();
+        // persons.stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).limit(2).forEach(System.out::println);
         persons.stream().sorted(Comparator.comparingInt(Person::getAge)).limit(2).forEach(System.out::println);
     }
 
@@ -191,10 +191,10 @@ public class StreamTest02 {
      */
     @Test
     public void testLimitAndSkip3() {
-        List<Person> persons = createPersonList1();
+        List<Person> persons = createPersonList2();
         List<Person> persons2 = persons.stream().limit(2).sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
         System.out.println(persons2);
-        System.out.println(persons);
+        // System.out.println(persons);
     }
 
     @Test
@@ -512,7 +512,8 @@ public class StreamTest02 {
 
 
     public List<Person> createPersonList2() {
-        List<Person> list = Arrays.asList(new Person(1, "name1", 10),
+        List<Person> list = Arrays.asList(
+            new Person(1, "name1", 10),
             new Person(2, "name2", 21),
             new Person(3, "name3", 34),
             new Person(4, "name4", 6),

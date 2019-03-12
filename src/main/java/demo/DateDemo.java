@@ -21,4 +21,16 @@ public class DateDemo {
         System.out.println(date);
     }
 
+    @Test
+    public void test2() {
+        Date date = new Date();
+        System.out.println(date);
+    }
+
+    // todo tmp，can delete
+    @Test
+    public void test() {
+        byte[] bytes = "app:1065689885:words:hash:CN".getBytes();
+        System.out.println(bytes);
+    }
 }

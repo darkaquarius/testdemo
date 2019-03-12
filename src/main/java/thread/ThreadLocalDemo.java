@@ -13,6 +13,8 @@ public class ThreadLocalDemo implements Runnable {
      */
     private final static ThreadLocal<Student> studentLocal = new ThreadLocal<>();
 
+    private final static ThreadLocal<Teacher> teacherLcoal = new ThreadLocal<>();
+
     @Override
     public void run() {
         accessStudent();
@@ -30,11 +32,12 @@ public class ThreadLocalDemo implements Runnable {
 
         // 2.获取一个Student对象，并将随机数age插入到对象属性中
         getStudent().setAge(age);
+        getTeacher().setName("zhangsan" + age);
         System.out.println("thread " + currentThreadName + " first read age is:" + getStudent().getAge());
-
+        System.out.println("thread " + currentThreadName + " teacher's name is:" + getTeacher().getName());
         // 3.sleep
         try {
-            Thread.sleep(500);
+            Thread.sleep(2000);
         }
         catch (InterruptedException ex) {
             ex.printStackTrace();
@@ -42,9 +45,12 @@ public class ThreadLocalDemo implements Runnable {
 
         // 4.获取age,看看有没有变化
         System.out.println("thread " + currentThreadName + " second read age is:" + getStudent().getAge());
+        System.out.println("thread " + currentThreadName + " teacher's name is:" + getTeacher().getName());
+
+
     }
 
-    protected Student getStudent() {
+    private Student getStudent() {
         //获取本地线程变量并强制转换为Student类型
         Student student = studentLocal.get();
         //线程首次执行此方法的时候，studentLocal.get()肯定为null
@@ -54,6 +60,15 @@ public class ThreadLocalDemo implements Runnable {
             studentLocal.set(student);
         }
         return student;
+    }
+
+    private Teacher getTeacher() {
+        Teacher teacher = teacherLcoal.get();
+        if (teacher == null) {
+            teacher = new Teacher();
+            teacherLcoal.set(teacher);
+        }
+        return teacher;
     }
 
     public static void main(String[] agrs) {
@@ -66,6 +81,30 @@ public class ThreadLocalDemo implements Runnable {
         t2.start();
         t3.start();
         t4.start();
+    }
+
+    public static class Teacher {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class Student {
+        private int age = 0;   //年龄
+
+        public int getAge() {
+            return this.age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
     }
 
 }
