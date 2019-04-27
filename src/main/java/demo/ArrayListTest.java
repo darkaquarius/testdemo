@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -185,4 +186,116 @@ public class ArrayListTest {
             .limit(100)
             .collect(Collectors.toList());
     }
+
+    @Test
+    public void testRemoveAll() {
+        List<String> bigList = new ArrayList<>();
+        List<String> smallList = new ArrayList<>();
+
+        for (int i = 0; i < 100_000; i++) {
+            bigList.add(String.valueOf(i));
+        }
+
+        for (int i = 90_000; i > 0; i--) {
+            smallList.add(String.valueOf(i));
+        }
+
+
+        System.out.println("a1：" + smallList.size());
+        System.out.println("a2：" + bigList.size());
+
+        long start = System.currentTimeMillis();
+        bigList.removeAll(smallList);
+        long end = System.currentTimeMillis();
+
+        System.out.println(bigList.size());
+        System.out.println("spend time：" + (end - start));
+    }
+
+    @Test
+    public void testLinkedRemoveAll() {
+        List<String> bigList = new LinkedList<>();
+        List<String> smallList = new LinkedList<>();
+
+        for (int i = 0; i < 100_000; i++) {
+            bigList.add(String.valueOf(i));
+        }
+
+        for (int i = 90_000; i > 0; i--) {
+            smallList.add(String.valueOf(i));
+        }
+
+
+        System.out.println("a1：" + smallList.size());
+        System.out.println("a2：" + bigList.size());
+
+        long start = System.currentTimeMillis();
+        bigList.removeAll(smallList);
+        long end = System.currentTimeMillis();
+
+        System.out.println(bigList.size());
+        System.out.println("spend time：" + (end - start));
+    }
+
+    @Test
+    public void testHashSetRemoveAll() {
+        HashSet<String> bigSet = new HashSet<>();
+        HashSet<String> smallSet = new HashSet<>();
+
+        for (int i = 0; i < 100_000; i++) {
+            bigSet.add(String.valueOf(i));
+        }
+
+        for (int i = 90_000; i > 0; i--) {
+            smallSet.add(String.valueOf(i));
+        }
+
+
+        System.out.println("a1：" + smallSet.size());
+        System.out.println("a2：" + bigSet.size());
+
+        long start = System.currentTimeMillis();
+        bigSet.removeAll(smallSet);
+        long end = System.currentTimeMillis();
+
+        System.out.println(bigSet.size());
+        System.out.println("spend time：" + (end - start));
+    }
+
+    @Test
+    public void testArrayListAdd() {
+        List<String> list = new ArrayList<>();
+
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1_000_000; i++) {
+            list.add(String.valueOf(i));
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("spend time：" + (end - start));
+    }
+
+    @Test
+    public void testLinkedListAdd() {
+        List<String> list = new LinkedList<>();
+
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1_000_000; i++) {
+            list.add(String.valueOf(i));
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("spend time：" + (end - start));
+    }
+
+    @Test
+    public void testHashSetAdd() {
+        Set<String> set = new HashSet<>();
+
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1_000_000; i++) {
+            set.add(String.valueOf(i));
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("spend time：" + (end - start));
+    }
+
 }

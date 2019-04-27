@@ -10,13 +10,12 @@ import java.util.stream.Collectors;
 
 /**
  * Created by huishen on 16/12/18.
- *
  */
 public class StringDemo {
 
     //替换字符
     @Test
-    public void test1(){
+    public void test1() {
         String str = "a b c";
         str = str.replace(' ', 'b');
 
@@ -25,7 +24,7 @@ public class StringDemo {
 
     //用正则替换字符串
     @Test
-    public void test2(){
+    public void test2() {
         String str = "a b c";
         str = str.replaceAll(" ", "%20");
         System.out.println(str);
@@ -33,7 +32,7 @@ public class StringDemo {
 
     //String中, 查询那个字符串在什么位置(可以选择从什么位置开始)
     @Test
-    public void test3(){
+    public void test3() {
         String str = "\"iad\": {\n" +
             "                        \"impressionId\": \"90c35757-adb9-4503-a876-7d77577bf3d9\",\n" +
             "                        \"metadata\": \"CiQ5MGMzNTc1Ny1hZGI5LTQ1MDMtYTg3Ni03ZDc3NTc3YmYzZDkSBzk1ODIxMTUZAAAAAAAA8D8iA0NQQyoETVIxMTICUDE5AAAAAAAA8D9CBG51bGxJAAAAAAAA8D9SBzg5MTk5MDJZAAAAAAAA8D9hAAAAAAAA8D9qBGN1YmVyBzk1ODIxMTV6DDAuMzEwMDAwMDAwMIoBEDE1MDAwLjAwMDAwMDAwMDCSAQ41MDAuMDAwMDAwMDAwMJkBAAAA4MqQ7kE=\",\n" +
@@ -52,29 +51,29 @@ public class StringDemo {
         int i1 = str.indexOf("lineItem");
         int i2 = str.indexOf(",", i1);
         System.out.println(i1);
-        String str2 = str.substring(i1 + 12, i2-1);
+        String str2 = str.substring(i1 + 12, i2 - 1);
         System.out.println(str2);
     }
 
     //在String中没有查到对应的字符串的结果
     @Test
-    public void test4(){
+    public void test4() {
         String str = "hello world";
         int shen = str.indexOf("shen");
         System.out.println(shen);
     }
 
     @Test
-    public void test5(){
+    public void test5() {
         String str = null;
-        for(int i=0; i<1; i++){
+        for (int i = 0; i < 1; i++) {
             str = "hello world";
         }
         System.out.println(str);
     }
 
     @Test
-    public void test6(){
+    public void test6() {
         String url = "https://itunes.apple.com/us/genre/id6014";
         int idIndex = url.indexOf("id");
         String genreId = url.substring(idIndex + 2);
@@ -90,7 +89,7 @@ public class StringDemo {
     }
 
     @Test
-    public void test8(){
+    public void test8() {
         String str = "hello\'hello";
         System.out.println(str);
         str = str.replaceAll("\'", "\\\\'");
@@ -103,7 +102,7 @@ public class StringDemo {
 
         String str = "[\"成都的学生党 陈先生 今日借款 3000元 已到账\",\"平顶山的上班族 花女士 今日借款 4000元 已到账\",\"邵阳的学生党 康先生 今日借款 3000元 已到账\"]";
         String[] split = str.split(" ");
-        for (int i = 0; i< split.length; i++) {
+        for (int i = 0; i < split.length; i++) {
             if (i % 2 != 0)
                 split[i] = "<font color='#ff0000'>".concat(split[i]).concat("</font>");
             sb.append(split[i]).append(" ");
@@ -301,5 +300,59 @@ public class StringDemo {
         String collect = list.stream().map(str -> String.format("\'%s\'", str)).collect(Collectors.joining(","));
         System.out.println(collect);
     }
+
+    @Test
+    public void testIntern1() {
+        String s = new String("1");
+        s = s.intern();
+        String s2 = "1";
+        System.out.println(s == s2);
+
+        String s3 = new String("1") + new String("1");
+        s3 = s3.intern();
+        String s4 = "11";
+        System.out.println(s3 == s4);
+    }
+
+    /**
+     * s0==s1==s2
+     */
+    @Test
+    public void testIntern4() {
+        String s0 = "kvill";
+        String s1 = "kvill";
+        String s2 = "kv" + "ill";
+        System.out.println(s0 == s1);
+        System.out.println(s0 == s2);
+    }
+
+    @Test
+    public void testIntern5() {
+        String s0 = "kvill";
+        String s1 = new String("kvill");
+        String s2 = "kv" + new String("ill");
+        System.out.println(s0 == s1);
+        System.out.println(s0 == s2);
+        System.out.println(s1 == s2);
+    }
+
+    @Test
+    public void testIntern6() {
+        String s0 = "kvill";
+        String s1 = new String("kvill");
+        String s2 = new String("kvill");
+        System.out.println(s0 == s1);
+        System.out.println("**********");
+
+        // 虽然执行了s1.intern(),但它的返回值没有赋给s1
+        s1.intern();
+
+        // 把常量池中“kvill”的引用赋给s2
+        s2 = s2.intern();
+        System.out.println(s0 == s1);
+        System.out.println(s0 == s1.intern());
+        System.out.println(s0 == s2);
+    }
+
 
 }

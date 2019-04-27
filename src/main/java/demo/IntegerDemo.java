@@ -2,15 +2,11 @@ package demo;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by huishen on 17/5/24.
- *
  */
 public class IntegerDemo {
 
@@ -88,8 +84,17 @@ public class IntegerDemo {
     public void test7() {
         int i1 = 9111;
         int i2 = 10000;
-        int ret = (int)((float)i1 / i2 * 100);
+        int ret = (int) ((float) i1 / i2 * 100);
         System.out.println(ret);
     }
 
+    @Test
+    public void testMax() {
+        System.out.println(Integer.MAX_VALUE);
+        System.out.println(Integer.MAX_VALUE / 10);
+
+        System.out.println(Integer.MIN_VALUE);
+        System.out.println(Integer.MIN_VALUE / 10);
+
+    }
 }

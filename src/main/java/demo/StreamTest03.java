@@ -68,7 +68,7 @@ public class StreamTest03 {
             .stream()
             .map(Transaction::getTrader)
             .filter(trader -> "Cambridge".equals(trader.getCity()))
-            .sorted(Comparator.comparing(Trader::getName))
+            // .sorted(Comparator.<Trader, Comparable<String>>comparing((Function<Trader, String>) Trader::getName))
             .collect(Collectors.toList());
         for (Trader trader : traders) {
             System.out.println(trader);

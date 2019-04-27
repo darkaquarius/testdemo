@@ -7,6 +7,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**
+ * 并行流性能测试
  * Created by huishen on 17/7/21.
  *
  */

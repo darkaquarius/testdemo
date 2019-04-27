@@ -281,4 +281,13 @@ public class LocalDateTimeDemo {
         System.out.println(ret);
     }
 
+    @Test
+    public void test4() {
+        String text = "20190325:0006";
+        DateTimeFormatter t = DateTimeFormatter.ofPattern("yyyyMMdd:HHmm");
+        // TemporalAccessor parse = LocalDateTime.parse(text, t);
+        LocalDateTime parse = LocalDateTime.parse(text, t);
+    }
+
+
 }

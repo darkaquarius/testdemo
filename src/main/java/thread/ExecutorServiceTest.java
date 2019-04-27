@@ -63,7 +63,12 @@ public class ExecutorServiceTest {
                 0L,
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1024),
-                runnable -> new Thread(runnable, "MyThread"),
+                // new ArrayBlockingQueue<Runnable>(10,true),
+                runnable -> {
+                    Thread thread = new Thread(runnable, "MyThread");
+                    thread.setDaemon(true);
+                    return thread;
+                },
                 new ThreadPoolExecutor.AbortPolicy()
             );
 

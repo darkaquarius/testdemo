@@ -18,8 +18,8 @@ public class ParallelStreamsDemo {
         return Stream.iterate(1L, i -> i + 1)
             .limit(n)
             .reduce(0L, Long::sum);
-            // .mapToLong(Long::longValue)
-            // .sum();
+        // .mapToLong(Long::longValue)
+        // .sum();
     }
 
     // 并行流
@@ -88,9 +88,11 @@ public class ParallelStreamsDemo {
 
     public static class Accumulator {
         private long total = 0;
+
         public void add(long value) {
             total += value;
         }
     }
+
 
 }

@@ -33,7 +33,7 @@ public class HttpClientDemo04 {
 
     private static final Monitor monitor;
 
-    private static final int TIMEOUT = 10000;
+    private static final int TIMEOUT = 5000;
 
     private static final int maxTotal = 300;
 
@@ -81,7 +81,7 @@ public class HttpClientDemo04 {
             .setConnectionManager(cm)
             .setDefaultRequestConfig(requestConfig)
             .setDefaultSocketConfig(socketConfig)
-            .setProxy(new HttpHost("123.134.183.107", 5412, "HTTP"))      // http代理
+            .setProxy(new HttpHost("139.255.113.250", 46577, "HTTP"))      // http代理
             .build();
     }
 
