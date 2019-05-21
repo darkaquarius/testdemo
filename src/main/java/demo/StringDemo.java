@@ -13,6 +13,14 @@ import java.util.stream.Collectors;
  */
 public class StringDemo {
 
+    @Test
+    public void tmp() {
+        String s = "  ";
+        String[] array = s.split(" ");
+        int ret = array[array.length - 1].length();
+        System.out.println(ret);
+    }
+
     //替换字符
     @Test
     public void test1() {

@@ -298,4 +298,15 @@ public class ArrayListTest {
         System.out.println("spend time：" + (end - start));
     }
 
+    @Test
+    public void testAdd() {
+        List<Integer> list = new ArrayList<>();
+        list.add(0);
+        list.add(1);
+        list.add(2);
+
+        list.set(0, 1);
+        list.add(0, 1);
+    }
+
 }

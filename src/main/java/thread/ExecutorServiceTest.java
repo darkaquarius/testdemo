@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -46,10 +47,6 @@ public class ExecutorServiceTest {
         // ExecutorService还有一个子类，ThreadPoolExecutor
         // ExecutorService executorService = Executors.newCachedThreadPool();
         // Executor executorService1 = Executors.newCachedThreadPool();
-
-        // ScheduledExecutorService
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(100);
-
 
         // ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
         //     .setNameFormat("demo-pool-%d").build();
@@ -148,6 +145,29 @@ public class ExecutorServiceTest {
             //  CompletableFutureDemo
         // }
 
+    }
+
+    /**
+     * 每隔2s执行定时任务，10s后取消定时任务
+     */
+    @Test
+    public void testScheduledExecutorService() throws InterruptedException {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
+        ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(
+            () -> {
+                System.out.println("ScheduledExecutorService");
+            },
+            0,
+            2000,
+            TimeUnit.MILLISECONDS
+        );
+
+        Thread.sleep(1000 * 10);
+
+        scheduledFuture.cancel(true);
+        System.out.println("shutdown");
+
+        Thread.sleep(1000 * 10);
     }
 
     static class TaskWithResult implements Callable<String> {

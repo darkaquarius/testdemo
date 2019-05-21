@@ -87,6 +87,7 @@ public class StreamTest05 {
             .reduce(0, Integer::sum);
     }
 
+
     @Test
     public void test6_3() {
         int sum = transactions.stream()

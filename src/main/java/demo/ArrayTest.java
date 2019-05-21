@@ -22,4 +22,11 @@ public class ArrayTest {
         // Integer id = objArray[0].get(0);
     }
 
+    @Test
+    public void testArray() {
+        char[] array = new char[]{'a', 'b'};
+        System.out.println(array[0]);
+        System.out.println(array[1]);
+    }
+
 }

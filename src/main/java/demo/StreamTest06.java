@@ -12,7 +12,9 @@ public class StreamTest06 {
 
     @Test
     public void test() {
-        System.out.println(isPrime(7));
+        long s = System.currentTimeMillis();
+        System.out.println(isPrime(49999));
+        System.out.println("test spends: " + (System.currentTimeMillis() - s));
     }
 
     private boolean isPrime(int candicate) {

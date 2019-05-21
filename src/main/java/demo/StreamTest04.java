@@ -90,7 +90,11 @@ public class StreamTest04 {
         System.out.println("parallelSum spends: " + measureSumPerf(StreamTest04::parallelSum, 10_000_000));
     }
 
-    // 2
+    /**
+     * 并行流，不需要拆箱
+     *
+     * 2
+     */
     @Test
     public void test3_2() {
         System.out.println("parallelSum spends: " + measureSumPerf(StreamTest04::parallelRangedSum, 10_000_000));

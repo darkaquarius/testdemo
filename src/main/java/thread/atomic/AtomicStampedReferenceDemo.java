@@ -6,11 +6,11 @@ import java.util.concurrent.atomic.AtomicStampedReference;
 
 /**
  * @author huishen
- * @date 2019-04-23 10:29
+ * @date 2019-05-21 20:16
  */
-public class ABA {
+public class AtomicStampedReferenceDemo {
     private static AtomicInteger atomicInt = new AtomicInteger(100);
-    private static AtomicStampedReference atomicStampedRef = new AtomicStampedReference(100, 0);
+    private static AtomicStampedReference atomicStampedRef = new AtomicStampedReference<>(100, 0);
 
     public static void main(String[] args) throws InterruptedException {
         Thread intT1 = new Thread(() -> {
@@ -19,7 +19,10 @@ public class ABA {
         });
 
         Thread intT2 = new Thread(() -> {
-            sleep(1);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+            }
             boolean c3 = atomicInt.compareAndSet(100, 101);
             System.out.println(c3); // true
         });
@@ -30,14 +33,20 @@ public class ABA {
         intT2.join();
 
         Thread refT1 = new Thread(() -> {
-            sleep(1);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+            }
             atomicStampedRef.compareAndSet(100, 101, atomicStampedRef.getStamp(), atomicStampedRef.getStamp() + 1);
             atomicStampedRef.compareAndSet(101, 100, atomicStampedRef.getStamp(), atomicStampedRef.getStamp() + 1);
         });
 
         Thread refT2 = new Thread(() -> {
             int stamp = atomicStampedRef.getStamp();
-            sleep(2);
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+            }
             boolean c3 = atomicStampedRef.compareAndSet(100, 101, stamp, stamp + 1);
             System.out.println(c3); // false
         });
@@ -45,12 +54,4 @@ public class ABA {
         refT1.start();
         refT2.start();
     }
-
-    private static void sleep(long timeout) {
-        try {
-            TimeUnit.SECONDS.sleep(timeout);
-        } catch (InterruptedException e) {
-        }
-     }
-
 }

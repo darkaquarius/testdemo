@@ -47,7 +47,9 @@ public class StreamTest02 {
     }
 
 
-    // 不干扰，这里正常
+    /**
+     * 不干扰，这里正常
+     */
     @Test
     public void testNointerference1() {
         List<String> wordList = new ArrayList<>();
@@ -60,6 +62,10 @@ public class StreamTest02 {
         System.out.println(count);
     }
 
+    /**
+     * ConcurrentModificationException
+     * 不能在stream中修改 source
+     */
     @Test
     public void testNointerference2() {
         List<String> wordList = new ArrayList<>();
@@ -69,7 +75,9 @@ public class StreamTest02 {
         wordList.stream().forEach(w -> wordList.remove(w));
     }
 
-    // personList的stream再filter, 没有修改personList本身的数据
+    /**
+     * personList的stream再filter, 没有修改personList本身的数据
+     */
     @Test
     public void testNoModify() {
         Person zhangsan = new Person(0, "zhangsan", 10);
@@ -79,6 +87,9 @@ public class StreamTest02 {
         List<Person> ret = personList.stream().filter(p -> p.getNo() > 0).collect(Collectors.toList());
     }
 
+    /**
+     * 到了终结操作才会开始执行流
+     */
     @Test
     public void testPeek1() {
         //什么都不显示
@@ -87,6 +98,14 @@ public class StreamTest02 {
         Stream.of("one", "two", "three", "four").peek(System.out::println).collect(Collectors.toList());
     }
 
+    /**
+     *
+     * filtered value: three
+     * mapped value: THREE
+     * filtered value: four
+     * mapped value: FOUR
+     *
+     */
     @Test
     public void testPeek2() {
         List<String> collect = Stream.of("one", "two", "three", "four")
@@ -100,57 +119,14 @@ public class StreamTest02 {
     @Test
     public void testFindFirst() {
         Optional<String> first = Stream.of("one", "two", "three", "four")
-            .filter(e -> e.length() > 10)
+            .filter(e -> e.length() > 3)
             .findFirst();
         System.out.println(first);
     }
 
-    @Test
-    public void testOptional1() {
-        String text = "Hello World";
-        //         Pre-Java 8
-        //        if (text != null) {
-        //            System.out.println("Pre-java 8: text = " + text);
-        //        }
-        Optional<String> text1 = Optional.ofNullable(text);
-
-        // ifPresent
-        text1.ifPresent(t -> {
-            System.out.println(t);
-        });
-
-    }
-
     /**
-     *
+     * stream().reduce()方法
      */
-    @Test
-    public void testOptional() {
-        // String text = "Hello World";
-        String text = null;
-        byte[] bytes = Optional.ofNullable(text)
-            .map(t -> {
-                return t.getBytes();
-            }).orElse(new byte[]{});
-    }
-
-    @Test
-    public void testOptional2() {
-        //        Java 8
-        Integer integer = Optional.ofNullable("Hello World").map(String::length).orElse(-1);
-        System.out.println(integer);
-        //        Pre-Java 8
-        //        if (text != null) ? text.length() : -1;
-    }
-
-    @Test
-    public void testOptional3() {
-        // String origin = "hello";
-        String origin = null;
-        String str = Optional.ofNullable(origin).orElse(null);
-        System.out.println(str);
-    }
-
     @Test
     public void testReduce() {
         String reduce = Stream.of("A", "B", "C", "D").reduce("", String::concat);
@@ -166,6 +142,10 @@ public class StreamTest02 {
         System.out.println(r);
     }
 
+    /**
+     * limit()
+     * skip()
+     */
     @Test
     public void testLimitAndSkip1() {
         List<Person> persons = createPersonList1();
@@ -178,16 +158,23 @@ public class StreamTest02 {
      * limit放在sorted操作后,是无法达到short-circuiting目的，
      * 原因跟 sorted 这个 intermediate 操作有关：此时系统并不知道 Stream 排序后的次序如何，
      * 所以 sorted 中的操作看上去就像完全没有被 limit 或者 skip 一样。
+     *
+     * Person(no=4, name=name4, age=6, address=null)
+     * Person(no=4, name=name4, age=6, address=null)
+     *
      */
     @Test
     public void testLimitAndSkip2() {
         List<Person> persons = createPersonList2();
         // persons.stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).limit(2).forEach(System.out::println);
-        persons.stream().sorted(Comparator.comparingInt(Person::getAge)).limit(2).forEach(System.out::println);
+        persons.stream().sorted(Comparator.comparingInt(Person::getAge)).peek(System.out::println).limit(2).forEach(System.out::println);
     }
 
     /**
      * 和上面一个test进行比较,limit放在sorted前面
+     *
+     * Person(no=1, name=name1, age=10, address=null)
+     * Person(no=2, name=name2, age=21, address=null)
      */
     @Test
     public void testLimitAndSkip3() {
@@ -197,6 +184,9 @@ public class StreamTest02 {
         // System.out.println(persons);
     }
 
+    /**
+     * 流不会改变源数据集合
+     */
     @Test
     public void testSorted() {
         List<Integer> list = Arrays.asList(29, 5, 51, 2, 98, 21);
@@ -223,6 +213,9 @@ public class StreamTest02 {
 
     }
 
+    /**
+     * Stream.generate(...)
+     */
     @Test
     public void testSupplier1() {
         Random seed = new Random();
@@ -230,19 +223,28 @@ public class StreamTest02 {
         Stream.generate(random).limit(10).forEach(System.out::println);
     }
 
+    /**
+     * Stream.generate(...)
+     */
     @Test
     public void testSupplier2() {
         Stream.generate(new PersonSupplier()).limit(10)
             .forEach(p -> System.out.println(p.getName() + ", " + p.getAge()));
     }
 
-    //iterate 跟 reduce 操作很像
+    /**
+     * iterate 跟 reduce 操作很像
+     */
     @Test
     public void testIterate() {
         Stream.iterate(0, n -> n + 3).limit(10).forEach(System.out::println);
     }
 
-    // 可以设置分组类型(TreeMap)，和值的类型(ArrayList)
+    /**
+     * 可以设置分组类型(TreeMap)，和值的类型(ArrayList)
+     *
+     * Collectors.groupingBy(...)方法
+     */
     @Test
     public void testGroupingBy1() {
         // Stream.generate，创建Stream
@@ -257,6 +259,9 @@ public class StreamTest02 {
         });
     }
 
+    /**
+     * Collectors.groupingBy(...)方法
+     */
     @Test
     public void testGroupingBy2() {
         // Locale[] availableLocales = Locale.getAvailableLocales();
@@ -266,8 +271,9 @@ public class StreamTest02 {
         List<Locale> locales = countryToLocales.get("CH");
     }
 
-    // 对map中的值进行处理，不再是List，而是Set(downstream)
-    // 还有一些：counting, maxBy, summing
+    /**
+     * Collectors.groupingBy(...)方法
+     */
     @Test
     public void testGroupingBy3() {
         Map<String, Set<Locale>> setMap =
@@ -318,7 +324,9 @@ public class StreamTest02 {
             .collect(Collectors.groupingBy(Person::getAge, Collectors.groupingBy(Person::getName)));
     }
 
-    // mapping
+    /**
+     * Collectors.mapping(...) 方法可以在collect()方法之中，继续转换 stream 中数据的类型
+     */
     @Test
     public void testGroupingBy7() {
         Person zhangsan = new Person(0, "zhangsan", 10);
@@ -349,6 +357,9 @@ public class StreamTest02 {
             .collect(Collectors.groupingBy(Person::getAge, Collectors.summingInt(Person::getAge)));
     }
 
+    /**
+     * Stream.iterate(...)
+     */
     @Test
     public void testSummingInt() {
         int sum = Stream.iterate(0, i -> i + 1)
@@ -358,14 +369,19 @@ public class StreamTest02 {
         System.out.println(sum);
     }
 
-    // 当分类函数是一个predicate函数(即返回一个"boolean类型"的函数)时，partitioningBy会比groupingBy更有效率
-    // 分区
+    /**
+     * 分区
+     * 当分类函数是一个predicate函数(即返回一个"boolean类型"的函数)时，partitioningBy会比groupingBy更有效率
+     */
     @Test
     public void testPartitioningBy() {
         Map<Boolean, List<Locale>> en =
             Stream.of(Locale.getAvailableLocales()).collect(Collectors.partitioningBy(l -> l.getCountry().equals("en")));
     }
 
+    /**
+     * Collectors.toCollection(...)
+     */
     @Test
     public void testToCollection() {
         List<String> list = Arrays.asList("zhangsan", "lisi", "wangwu");
@@ -373,6 +389,9 @@ public class StreamTest02 {
             .stream().collect(Collectors.toCollection(TreeSet::new));
     }
 
+    /**
+     * Collectors.joining(...)
+     */
     @Test
     public void testJoin() {
         final String DELIMITER = "&";
@@ -389,6 +408,9 @@ public class StreamTest02 {
         System.out.println(split);
     }
 
+    /**
+     * Collectors.toMap()
+     */
     @Test
     public void testToMap() {
         Person zhangsan = new Person(0, "zhangsan", 10);
@@ -407,6 +429,10 @@ public class StreamTest02 {
                 (existingValue, newValue) -> newValue,
                 TreeMap::new));
     }
+
+    /**
+     * stream.flatMap(...)
+     */
     @Test
     public void testFlatMap1() {
         Stream<List<Integer>> inputStream = Stream.of(
@@ -418,15 +444,20 @@ public class StreamTest02 {
         List<Integer> collect = inputStream.flatMap(List::stream).collect(Collectors.toList());
     }
 
-    // flatMap()与map()方法的比较
-    // flatMap()方法一定要生成一个Stream对象
+    /**
+     * flatMap()与map()方法的比较
+     * flatMap()方法一定要生成一个Stream对象
+     *
+     */
     @Test
     public void testFlatMap2() {
+        // 加入person1
         List<Person> persons = new ArrayList<>();
         Person person1 = new Person(1, "zhangsan", 20);
         person1.setAddress(Arrays.asList("shanghai", "beijing"));
         persons.add(person1);
 
+        // 加入person2
         Person person2 = new Person(2, "lisi", 21);
         person2.setAddress(Arrays.asList("guangzhou", "shenzhen"));
         persons.add(person2);
@@ -437,7 +468,7 @@ public class StreamTest02 {
         Stream<Stream<String>> streamStream1 = persons.stream().map(p -> p.getAddress().stream());
         List<Stream<String>> ret2 = streamStream1.collect(Collectors.toList());
 
-        // 注意：与streamStream1比较，flatMap()方法生成的stream与父stream合并了,即：map方法产生了Stream<Stream<String>>，而flatMap产生了Stream<String>
+        // 注意：与stream比较，flatMap()方法生成的stream与父stream合并了,即：map方法产生了Stream<Stream<String>>，而flatMap产生了Stream<String>
         Stream<String> stringStream = persons.stream().flatMap(p -> p.getAddress().stream());
         List<String> ret3 = stringStream.collect(Collectors.toList());
         System.out.println(ret1);
@@ -445,7 +476,9 @@ public class StreamTest02 {
         System.out.println(ret3);
     }
 
-    // Stream转换成IntStream
+    /**
+     * Stream转换成IntStream
+     */
     @Test
     public void testMaptoInt1() {
         List<Person> person = createPersonList2();
@@ -454,6 +487,10 @@ public class StreamTest02 {
         intStream.forEach(System.out::println);
     }
 
+    /**
+     * Stream转换成IntStream
+     * stream.reduce(...)
+     */
     @Test
     public void testMapToInt2() {
         List<Person> person = createPersonList2();
@@ -461,6 +498,9 @@ public class StreamTest02 {
         reduce.ifPresent(System.out::println);
     }
 
+    /**
+     * 原始类型流与普通流的相互转换
+     */
     @Test
     public void testIntStream() {
         List<Person> personList = createPersonList2();
@@ -472,6 +512,9 @@ public class StreamTest02 {
         Stream<Integer> boxed = intStream.boxed();
     }
 
+    /**
+     * stream().reduce(...)
+     */
     @Test
     public void testIntBinaryOperator() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
@@ -479,7 +522,11 @@ public class StreamTest02 {
         System.out.println(reduce);
     }
 
-    // 两个Function用andThen()方法连接起来, g(f(x))
+    /**
+     * 两个Function用andThen()方法连接起来, g(f(x))
+     *
+     * 结果是4
+     */
     @Test
     public void testFunction1() {
         Function<Integer, Integer> f = x -> x + 1;
@@ -490,6 +537,8 @@ public class StreamTest02 {
 
     /**
      * f(g(x))
+     *
+     * 结果是3
      */
     @Test
     public void testFunction2() {
@@ -499,8 +548,9 @@ public class StreamTest02 {
         System.out.println(ret);
     }
 
-
-    // 流只能遍历一次
+    /**
+     * 流只能遍历一次
+     */
     @Test
     public void test() {
         List<String> list = Arrays.asList("a", "b", "c");
@@ -530,6 +580,9 @@ public class StreamTest02 {
         return persons;
     }
 
+    /**
+     * Collectors.summarizingInt(...)
+     */
     @Test
     public void testSummarizingInt() {
         List<Person> persons = createPersonList2();
@@ -539,6 +592,9 @@ public class StreamTest02 {
         System.out.println(summaryStatistics);
     }
 
+    /**
+     *  Collectors.reducing(...)
+     */
     @Test
     public void testReducing01() {
         List<Person> persons = createPersonList2();
@@ -550,7 +606,9 @@ public class StreamTest02 {
         System.out.println(s);
     }
 
-
+    /**
+     * stream.reduce(...)
+     */
     @Test
     public void parallelRangedSum1() {
         long reduce = LongStream.rangeClosed(1, Integer.MAX_VALUE)
@@ -558,7 +616,9 @@ public class StreamTest02 {
         System.out.println(reduce);
     }
 
-
+    /**
+     * Collectors.reducing(...)
+     */
     @Test
     public void testReducing02() {
         List<Person> persons = createPersonList2();
