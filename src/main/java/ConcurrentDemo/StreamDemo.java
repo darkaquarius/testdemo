@@ -1,7 +1,10 @@
 package ConcurrentDemo;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StreamDemo
 {
@@ -22,5 +25,12 @@ public class StreamDemo
 		// ls.stream().sorted().forEach(e->System.out.println(e));
 		
 		//ls.stream().distinct().count();去除重复的个数
+	}
+
+	@Test
+	public void test() {
+		List<Integer> list = null;
+		List<Integer> collect = list.stream().skip(1).limit(10).collect(Collectors.toList());
+		System.out.println(collect);
 	}
 }

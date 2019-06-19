@@ -140,15 +140,15 @@ public class HttpClientMainTest {
     @Test
     public void testIOS12() {
         // final RateLimiter rateLimiter = RateLimiter.create(1.5);
-        String uri = "https://api-edge.apps.apple.com/v1/catalog/cn/search?" +
-            "platform=iphone" +
-            "&extend=editorialBadgeInfo,messagesScreenshots,minimumOSVersion,requiredCapabilities,screenshotsByType,supportsFunCamera,videoPreviewsByType" +
-            "&include=apps,top-apps" +
-            "&bubble[search]=apps,developers,groupings,editorial-items,app-bundles,in-apps" +
-            "&l=zh-Hans-CN" +
-            "&term=qq";
+        String uri = "https://api-edge.apps.apple.com/v1/catalog/cn/search?"+
+            "platform=iphone"+
+            "&extend=editorialBadgeInfo%2CmessagesScreenshots%2CminimumOSVersion%2CrequiredCapabilities%2CscreenshotsByType%2CsupportsFunCamera%2CvideoPreviewsByType"+
+            "&include=apps%2Ctop-apps"+
+            "&bubble%5Bsearch%5D=apps%2Cdevelopers%2Cgroupings%2Ceditorial-items%2Capp-bundles%2Cin-apps"+
+            "&l=zh-Hans-CN"+
+            "&term=完美人生";
         HttpGet httpGet = new HttpGet(uri);
-        httpGet.setHeader("Authorization", "Bearer eyJraWQiOiJGNDdEWk4xOEYwIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJBUzI4UjdHMTdNIiwiaWF0IjoxNTUyMzgyNjcwLCJleHAiOjE1NTQ5NzQ2NzB9.Ws1r9fj0lfd97C4XhOs5O7hknIy51QxYavJyOxeZgi28XJxcmDc5n--zfdu3fwMqdnMQmeRLj9xHutL-P7E1Ow");
+        httpGet.setHeader("Authorization", "Bearer eyJraWQiOiJGNDdEWk4xOEYwIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJBUzI4UjdHMTdNIiwiaWF0IjoxNTU3NTgwOTU0LCJleHAiOjE1NjAxNzI5NTR9.3oFGSIzuVjqfDcSoBjeWtP9kq0DTzkSDROARTO62tSZ8hzzXwx07Ukj8qWTaIuhwoSwfFsAOIoTylXW1O43KBg");
         httpGet.setHeader("User-Agent", "AppStore/3.0 iOS/12.1.1 model/iPhone9,1 hwp/t8010 build/16C50 (6; dt:137) AMS/1");
         httpGet.setHeader("X-Apple-Store-Front", "143465-19,29");
 

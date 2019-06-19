@@ -7,9 +7,10 @@ package thread;
  * ExecutorService是线程池的抽象。
  * ScheduledExecutorService可以理解为线程池＋调度的抽象。它在ExecutorService基础上多了schedule的功能。
  * <p>
- * ScheduledExecutorService与ExecutorService接口的实例底层实现都是ThreadPoolExecutor。
- * <p>
  * ExecutorService是Executor子类
+ * ExecutorService接口的底层实现是ThreadPoolExecutor。
+ * ScheduledExecutorService接口的底层实现是ScheduledThreadPoolExecutor，ScheduledThreadPoolExecutor继承了ThreadPoolExecutor。
+ *
  */
 
 import org.junit.Test;
@@ -27,8 +28,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExecutorServiceTest {
+    private static AtomicInteger i = new AtomicInteger(1);
 
     /**
      * Future
@@ -51,7 +54,6 @@ public class ExecutorServiceTest {
         // ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
         //     .setNameFormat("demo-pool-%d").build();
 
-
         // custome Thread Pool 自定义线程池
         ExecutorService executorService =
             new ThreadPoolExecutor(
@@ -62,7 +64,7 @@ public class ExecutorServiceTest {
                 new LinkedBlockingQueue<Runnable>(1024),
                 // new ArrayBlockingQueue<Runnable>(10,true),
                 runnable -> {
-                    Thread thread = new Thread(runnable, "MyThread");
+                    Thread thread = new Thread(runnable, "MyThread" + i.getAndIncrement());
                     thread.setDaemon(true);
                     return thread;
                 },
@@ -180,26 +182,17 @@ public class ExecutorServiceTest {
 
         /**
          * 任务的具体过程，一旦任务传给ExecutorService的submit方法，则该方法自动在一个线程上执行。
-         *
-         * @return String
-         * @throws Exception
          */
         @Override
         public String call() throws Exception {
             System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
             // 模拟一个错误
-            // if (new Random().nextBoolean())
-            //     throw new TaskException("Meet error in task." + Thread.currentThread().getName());
+            // if (new Random().nextBoolean()) {
+            //     throw new RuntimeException("Meet error in task." + Thread.currentThread().getName());
+            // }
             // 一个模拟耗时的操作
-            Thread.sleep(1000);
+            Thread.sleep(2000);
             return "call()方法被自动调用，任务的结果是：" + id + "    " + Thread.currentThread().getName();
-        }
-
-    }
-
-    static class TaskException extends Exception {
-        public TaskException(String message) {
-            super(message);
         }
     }
 

@@ -7,20 +7,35 @@ package demo;
 public class TmpTest {
 
     public static void main(String[] args) {
-        TmpTest test = new TmpTest();
-        int[] array = {};
-        int maxProfit = test.maxProfit(array);
-        System.out.println(maxProfit);
+        TmpTest tmpTest = new TmpTest();
+        int number = tmpTest.test();
+        System.out.println(number);
     }
 
-    public int maxProfit(int[] prices) {
-        int maxprofit = 0;
-        for (int i = 1; i < prices.length; i++) {
-            if (prices[i] > prices[i - 1]) {
-                maxprofit += prices[i] - prices[i - 1];
+    public int test() {
+        int sum = 11;
+        int number = -1;
+        // List<Integer> numbers = new ArrayList<>(16);
+        int[] numbers = new int[12];
+        for (int i = 1; i <= 11; i++) {
+            if (1 == i) {
+                numbers[i] = 1;
+                number = 1;
+            } else if (2 == i) {
+                numbers[i] = 1;
+                number = 1;
+            } else if (5 == i) {
+                numbers[i] = 1;
+                number = 1;
+            } else if (i < 5) {
+                number = Math.min(numbers[i - 1] + 1, numbers[i - 2] + 1);
+                numbers[i] = number;
+            } else {
+                number = Math.min(Math.min(numbers[i - 1] + 1, numbers[i - 2] + 1), numbers[i - 5] + 1);
+                numbers[i] = number;
             }
         }
-        return maxprofit;
+        return number;
     }
 
 }

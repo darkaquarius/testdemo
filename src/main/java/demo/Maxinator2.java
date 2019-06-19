@@ -49,7 +49,7 @@ public class Maxinator2 {
     }
 
     public static <T> T getBest(final QualityFunction<T> qualityFunction, final List<T> population) {
-        return population.parallelStream().collect(Collector.of(
+        return population.parallelStream().collect( Collector.of(
             AccumulateResult<T>::new,
             (a,t) -> a.accept(qualityFunction, t),
             (a, b) -> a.combine(b))

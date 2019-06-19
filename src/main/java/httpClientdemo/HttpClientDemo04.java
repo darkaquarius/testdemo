@@ -1,6 +1,5 @@
 package httpClientdemo;
 
-import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
@@ -81,7 +80,7 @@ public class HttpClientDemo04 {
             .setConnectionManager(cm)
             .setDefaultRequestConfig(requestConfig)
             .setDefaultSocketConfig(socketConfig)
-            .setProxy(new HttpHost("139.255.113.250", 46577, "HTTP"))      // http代理
+            // .setProxy(new HttpHost("139.255.113.250", 46577, "HTTP"))      // http代理
             .build();
     }
 

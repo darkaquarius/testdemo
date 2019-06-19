@@ -109,7 +109,7 @@ public class CompletableFutureDemo02 {
         CompletableFuture<String> cf = CompletableFuture
             .completedFuture("message")
             .thenApplyAsync(s -> {
-                    assertTrue(Thread.currentThread().getName().startsWith("custom-executor-"));
+                    System.out.println(Thread.currentThread().getName());
                     sleep();
                     return s.toUpperCase();
                 },

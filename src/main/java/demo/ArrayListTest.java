@@ -19,6 +19,14 @@ import java.util.stream.Stream;
  */
 public class ArrayListTest {
 
+    @Test
+    public void test() {
+        List<Integer> list = new ArrayList();
+        list.add(1);
+        list = list.subList(list.size(), 1);
+        System.out.println();
+    }
+
     //测试Arrays.asList()的返回值是List还是ArrayList
     //返回值是List类型,此时不能用add()方法,会报错:UnsupportedOperationException
     @Test

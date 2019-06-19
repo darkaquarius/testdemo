@@ -47,6 +47,7 @@ public class CompletableFutureDemo {
 
     /**
      * 并行流调用同步api
+     * parallelStream启动Runtime.getRuntime().availableProcessors()个线程，这里是4个线程
      */
     @Test
     public void test2() {
@@ -116,7 +117,7 @@ public class CompletableFutureDemo {
                 .supplyAsync(car::getPrice, executor)
                 .thenApply(Quote::parse)
                 .thenCompose(quote -> CompletableFuture.supplyAsync(() -> applyDiscount(quote), executor)))
-            // CompletableFuture中的join()方法和Future中的get()方法类似，唯一的不同是join()方法不会抛出checked exception
+            // CompletableFuture中的join()方法和Future中的get()方法类似，都会阻塞，唯一的不同是join()方法不会抛出checked exception
             .map(CompletableFuture::join)
             .collect(Collectors.toList());
     }
@@ -129,7 +130,7 @@ public class CompletableFutureDemo {
             .map(car -> CompletableFuture
                 .supplyAsync(car::getPrice, executor)
                 .thenApply(Quote::parse)
-                .thenCompose(quote -> CompletableFuture.supplyAsync(() -> applyDiscount(quote), executor)))
+                .thenCompose(quote -> CompletableFuture.supplyAsync(() -> applyDiscount(quote), executor))) // 这里会立刻执行，不会延迟执行
             // .map(f -> f.thenAccept(s -> {
             //     System.out.println(s + " (done in) " + (System.currentTimeMillis() - start) + "ms");
             // }))
@@ -150,7 +151,6 @@ public class CompletableFutureDemo {
                     return null;
                 })
                 .collect(Collectors.toList());
-
     }
 
     // sleep 2s
@@ -172,6 +172,7 @@ public class CompletableFutureDemo {
 
     private static String applyDiscount(Quote quote) {
         delay(2000);
+        System.out.println(Thread.currentThread().getName() + ": run applyDiscount()......");
         return quote.getCarName() + " price is " + (quote.getPrice() * (1 - quote.getDiscount()));
     }
 
