@@ -66,4 +66,19 @@ public class MapTest {
 
     }
 
+    /**
+     * a1 = null
+     * a2 = 1
+     * a3 = 1
+     */
+    @Test
+    public void testPutIfAbsent() {
+        Map<String, Integer> map = new HashMap<>();
+        Integer a1 = map.putIfAbsent("a", 1);
+        System.out.println("a1 = " + a1);
+        Integer a2 = map.putIfAbsent("a", 2);
+        System.out.println("a2 = " + a2);
+        Integer a3 = map.putIfAbsent("a", 3);
+        System.out.println("a3 = " + a3);
+    }
 }

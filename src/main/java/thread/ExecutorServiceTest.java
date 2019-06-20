@@ -78,7 +78,8 @@ public class ExecutorServiceTest {
         List<Future<String>> resultList = new ArrayList<>();
 
         // 创建10个任务并执行
-        final int maxThreads = 10;
+        // final int maxThreads = 10;
+        final int maxThreads = 1;
         for (int i = 0; i < maxThreads; i++) {
             Future<String> future = executorService.submit(new TaskWithResult(i));
             resultList.add(future);

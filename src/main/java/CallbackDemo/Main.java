@@ -3,11 +3,14 @@ package CallbackDemo;
 /**
  * @author huishen
  * @date 2019-06-19 10:12
+ *
+ * 模拟java的异步调用
  */
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         Client client = new Client();
+        System.out.println("client send start");
         client.send("我是测试数据", new MyCallback() {
             @Override
             public void onCompletion(Object o, Exception e) {

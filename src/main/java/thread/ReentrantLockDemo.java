@@ -94,7 +94,8 @@ public class ReentrantLockDemo {
             // TODO: handle exception
         } finally {
             System.out.println(thread.getName() + "释放了锁");
-            arrayList.forEach(i -> System.out.print(thread.getName() + ", i: " + i + "\t"));
+            System.out.println("Thread: " + thread.getName());
+            arrayList.forEach(i -> System.out.print( "i: " + i + "\t"));
             System.out.println();
             //  unlock()方法通常放在finally块中，因为出错时候不会自动释放锁，造成死循环。
             lock.unlock();
