@@ -1,17 +1,19 @@
 package thread;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.IntFunction;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static util.Utils.randomSleep;
 import static util.Utils.sleep;
@@ -29,13 +31,13 @@ public class CompletableFutureDemo02 {
      * get方法抛出checked exception
      */
     @Test
-    public void testJoinAndGet() {
+    public void testJoinAndGet() throws ExecutionException, InterruptedException {
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
             int i = 1 / 0;
             return 100;
         });
-        future.join();
-        // future.get();
+        Integer join = future.join();
+        Integer ret = future.get();
     }
 
     /**
@@ -44,8 +46,8 @@ public class CompletableFutureDemo02 {
     @Test
     public void completedFuture() {
         CompletableFuture<String> cf = CompletableFuture.completedFuture("message");
-        assertTrue(cf.isDone());
-        assertEquals("message", cf.getNow(null));
+        System.out.println("cf.isDone(): " + cf.isDone());
+        System.out.println("cf.getNow(null): " + cf.getNow(null));
     }
 
     /**
@@ -60,11 +62,7 @@ public class CompletableFutureDemo02 {
             assertTrue(thread.isDaemon());
             sleep();
         });
-        assertFalse(cf.isDone());
-        System.out.println(cf.isDone());
-        // sleepEnough();
-        sleep();
-        assertTrue(cf.isDone());
+        cf.join();
     }
 
     /**
@@ -72,13 +70,14 @@ public class CompletableFutureDemo02 {
      */
     @Test
     public void thenApply() {
+        // thenApply()会阻塞
         CompletableFuture<String> cf = CompletableFuture
             .completedFuture("message")
             .thenApply(s -> {
                 sleep();
                 return s.toUpperCase();
             });
-        assertEquals("MESSAGE", cf.getNow(null));
+        System.out.println("cf.getNow(null): " + cf.getNow(null));
     }
 
     /**
@@ -86,14 +85,16 @@ public class CompletableFutureDemo02 {
      */
     @Test
     public void thenApplyAsync1() {
+        // thenApplyAsync()不会阻塞
         CompletableFuture<String> cf = CompletableFuture
             .completedFuture("message")
             .thenApplyAsync(s -> {
                 sleep();
                 return s.toUpperCase();
             });
-        assertNull(cf.getNow(null));
-        assertEquals("MESSAGE", cf.join());
+
+        System.out.println("cf.getNow(null): " + cf.getNow(null));
+        System.out.println("cf.join(): " + cf.join());
     }
 
     /**
@@ -106,6 +107,7 @@ public class CompletableFutureDemo02 {
             return new Thread(runnable, "custom-executor-" + count++);
         });
 
+        // thenApplyAsync()不会阻塞
         CompletableFuture<String> cf = CompletableFuture
             .completedFuture("message")
             .thenApplyAsync(s -> {
@@ -114,8 +116,9 @@ public class CompletableFutureDemo02 {
                     return s.toUpperCase();
                 },
                 executor);
-        assertNull(cf.getNow(null));
-        assertEquals("MESSAGE", cf.join());
+
+        System.out.println("cf.getNow(null): " + cf.getNow(null));
+        System.out.println("cf.join(): " + cf.join());
     }
 
     /**
@@ -127,8 +130,9 @@ public class CompletableFutureDemo02 {
         StringBuilder result = new StringBuilder();
         CompletableFuture
             .completedFuture("thenAccept message")
-            .thenAccept(result::append);
-        assertTrue("Result was empty", result.length() > 0);
+            .thenAccept(result::append)
+            .join();
+        System.out.println(result);
     }
 
     /**
@@ -141,87 +145,87 @@ public class CompletableFutureDemo02 {
             .completedFuture("thenAccept message")
             .thenAcceptAsync(result::append);
         cf.join();
-        assertTrue("Result was empty", result.length() > 0);
+        System.out.println(result);
     }
 
     /**
      * 计算过程中的异常示例
-     * CompletableFuture.delayedExecutor jdk11 supported
+     * CompletableFuture.delayedExecutor since java9
      */
-    // @Test
-    // public void completeExceptionally() {
-    //     CompletableFuture<String> cf = CompletableFuture
-    //         .completedFuture("message")
-    //         .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS));
-    //     CompletableFuture<String> exceptionHandler =
-    //         cf.handle((e, th) -> (th != null) ? "message upon cancel" : "");
-    //     cf.completeExceptionally(new RuntimeException("completed exceptionally"));
-    //     assertTrue("Was not completed exceptionally", cf.isCompletedExceptionally());
-    //     try {
-    //         cf.join();
-    //         fail("Should have thrown an exception");
-    //     } catch (CompletionException ex) { // just for testing
-    //         assertEquals("completed exceptionally", ex.getCause().getMessage());
-    //     }
-    //     assertEquals("message upon cancel", exceptionHandler.join());
-    // }
+    @Test
+    public void completeExceptionally() {
+        CompletableFuture<String> cf = CompletableFuture
+            .completedFuture("message")
+            .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS));
+        CompletableFuture<String> exceptionHandler =
+            cf.handle((e, th) -> (th != null) ? "message upon cancel" : "");
+        cf.completeExceptionally(new RuntimeException("completed exceptionally"));
+        System.out.println("cf.isCompletedExceptionally(): " + cf.isCompletedExceptionally());
+        try {
+            cf.join();
+            TestCase.fail("Should have thrown an exception");
+        } catch (CompletionException ex) { // just for testing
+            System.out.println("ex.getCause().getMessage(): " + ex.getCause().getMessage());
+        }
+        System.out.println("exceptionHandler.join(): " + exceptionHandler.join());
+    }
 
     /**
      * cancel()方法与 completeExceptionally(new CancellationException())等价
      * CompletableFuture.delayedExecutor jdk11 supported
      */
-    // @Test
-    // public void cancel() {
-    //     CompletableFuture cf = CompletableFuture
-    //         .completedFuture("message")
-    //         .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS));
-    //     CompletableFuture cf2 = cf.exceptionally(throwable -> "canceled message");
-    //     assertTrue("Was not canceled", cf.cancel(true));
-    //     assertTrue("Was not completed exceptionally", cf.isCompletedExceptionally());
-    //     assertEquals("canceled message", cf2.join());
-    // }
+    @Test
+    public void cancel() {
+        CompletableFuture cf = CompletableFuture
+            .completedFuture("message")
+            .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS));
+        CompletableFuture cf2 = cf.exceptionally(throwable -> "canceled message");
+        assertTrue("Was not canceled", cf.cancel(true));
+        assertTrue("Was not completed exceptionally", cf.isCompletedExceptionally());
+        assertEquals("canceled message", cf2.join());
+    }
 
     /**
      * applyToEither方法是当任意一个CompletionStage完成的时候，fn会被执行，它的返回值会当作新的CompletableFuture<U>的计算结果。
      * CompletableFuture.delayedExecutor jdk11 supported
      */
-    // @Test
+    @Test
     @SuppressWarnings("unchecked")
-    // public void applyToEither() {
-    //     String original = "Message";
-    //     CompletableFuture cf =
-    //         CompletableFuture
-    //             .completedFuture(original)
-    //             .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS))
-    //             .applyToEither(
-    //                 CompletableFuture
-    //                     .completedFuture(original)
-    //                     .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)),
-    //                 s -> s + " from applyToEither"
-    //             );
-    //     assertTrue(((String) cf.join()).endsWith(" from applyToEither"));
-    // }
+    public void applyToEither() {
+        String original = "Message";
+        CompletableFuture cf =
+            CompletableFuture
+                .completedFuture(original)
+                .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS))
+                .applyToEither(
+                    CompletableFuture
+                        .completedFuture(original)
+                        .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)),
+                    s -> s + " from applyToEither"
+                );
+        assertTrue(((String) cf.join()).endsWith(" from applyToEither"));
+    }
 
     /**
      * acceptEither方法是当任意一个CompletionStage完成的时候，action这个消费者就会被执行。这个方法返回CompletableFuture<Void>
      * CompletableFuture.delayedExecutor jdk11 supported
      */
-    // @Test
-    // public void acceptEither() {
-    //     String original = "Message";
-    //     StringBuilder result = new StringBuilder();
-    //     CompletableFuture<Void> cf = CompletableFuture
-    //         .completedFuture(original)
-    //         .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS))
-    //         .acceptEither(
-    //             CompletableFuture
-    //                 .completedFuture(original)
-    //                 .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)),
-    //             s -> result.append(s).append("acceptEither")
-    //         );
-    //     cf.join();
-    //     assertTrue("Result was empty", result.toString().endsWith("acceptEither"));
-    // }
+    @Test
+    public void acceptEither() {
+        String original = "Message";
+        StringBuilder result = new StringBuilder();
+        CompletableFuture<Void> cf = CompletableFuture
+            .completedFuture(original)
+            .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS))
+            .acceptEither(
+                CompletableFuture
+                    .completedFuture(original)
+                    .thenApplyAsync(String::toUpperCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)),
+                s -> result.append(s).append("acceptEither")
+            );
+        cf.join();
+        assertTrue("Result was empty", result.toString().endsWith("acceptEither"));
+    }
 
     /**
      * 两个阶段都完成后执行
@@ -286,22 +290,22 @@ public class CompletableFutureDemo02 {
      * 整合两个异步计算的结果，异步
      * CompletableFuture.delayedExecutor jdk11 supported
      */
-    // @Test
-    // public void thenCombine2() {
-    //     String original = "Message";
-    //     CompletableFuture<String> cf = CompletableFuture.completedFuture(original)
-    //         .thenApplyAsync(
-    //             String::toUpperCase,
-    //             CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)
-    //         )
-    //         .thenCombine(
-    //             CompletableFuture
-    //                 .completedFuture(original)
-    //                 .thenApplyAsync(String::toLowerCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)),
-    //             (s1, s2) -> s1 + s2
-    //         );
-    //     assertEquals("MESSAGEmessage", cf.join());
-    // }
+    @Test
+    public void thenCombine2() {
+        String original = "Message";
+        CompletableFuture<String> cf = CompletableFuture.completedFuture(original)
+            .thenApplyAsync(
+                String::toUpperCase,
+                CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)
+            )
+            .thenCombine(
+                CompletableFuture
+                    .completedFuture(original)
+                    .thenApplyAsync(String::toLowerCase, CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS)),
+                (s1, s2) -> s1 + s2
+            );
+        assertEquals("MESSAGEmessage", cf.join());
+    }
 
     /**
      * todo 有错误
@@ -331,7 +335,7 @@ public class CompletableFutureDemo02 {
             .stream()
             .map(msg -> CompletableFuture.completedFuture(msg).thenApply(this::randomDelayedUpperCase))
             .toArray(size -> (CompletableFuture<String>[]) new CompletableFuture<?>[size]);
-            // .toArray((IntFunction<CompletableFuture<String>[]>) CompletableFuture[]::new);
+        // .toArray((IntFunction<CompletableFuture<String>[]>) CompletableFuture[]::new);
         CompletableFuture
             .anyOf(cfs)
             .whenComplete((res, th) -> {
@@ -340,14 +344,6 @@ public class CompletableFutureDemo02 {
                 }
             });
         System.out.println(result);
-    }
-
-    @Test
-    public void testToArray() {
-        List<String> list = Arrays.asList("a", "b", "c");
-        String[] strings = list
-            .stream()
-            .toArray(size -> new String[size]);
     }
 
     /**
@@ -440,24 +436,13 @@ public class CompletableFutureDemo02 {
     }
 
     /**
-     * 这里为什么会死循环？
+     * 不会死循环
      */
     private void sleepEnough() {
-        int activeCount = Thread.activeCount();
-        while (activeCount > 1) {
-            System.out.println("activeCount: " + activeCount);
+        while (Thread.activeCount() > 1) {
+            System.out.println(Thread.activeCount());
             Thread.yield();
         }
     }
-
-    /**
-     * 不会死循环
-     */
-    // private void sleepEnough() {
-    //     while (Thread.activeCount() > 1) {
-    //         System.out.println(Thread.activeCount());
-    //         Thread.yield();
-    //     }
-    // }
 
 }

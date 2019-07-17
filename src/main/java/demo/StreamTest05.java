@@ -34,6 +34,11 @@ public class StreamTest05 {
     }
 
     @Test
+    public void test() {
+
+    }
+
+    @Test
     public void test1() {
         List<Transaction> collect = transactions.stream()
             .filter(t -> t.getYear() == 2011)

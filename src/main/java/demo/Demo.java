@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 /**
  * Created by huishen on 16/11/25.
- *
  */
 
 @Data
@@ -19,14 +18,14 @@ public class Demo {
     private String name;
     private Integer age;
 
-    public static void main(String[] args){
-        Demo demo=new Demo();
+    public static void main(String[] args) {
+        Demo demo = new Demo();
         demo.setAge(123);
         System.out.println(demo);
     }
 
     @Test
-    public void test(){
+    public void test() {
         Integer integer = 10;
         String str = String.valueOf(integer);
         double aDouble = Double.parseDouble(str);
@@ -36,7 +35,7 @@ public class Demo {
         list.add("10");
         double v = Double.parseDouble(list.get(0));
 
-        if(aDouble == v){
+        if (aDouble == v) {
             System.out.println("true");
         }
     }

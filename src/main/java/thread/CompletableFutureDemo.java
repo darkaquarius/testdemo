@@ -39,79 +39,46 @@ public class CompletableFutureDemo {
 
     /**
      * 顺序流调用同步api
+     * <p>
+     * 10s
      */
     @Test
     public void test1() {
-        System.out.println(findPrices1());
+        List<String> ret = cars
+            .stream()
+            .map(Car::getPrice)
+            .map(Quote::parse)
+            .map(this::applyDiscount)
+            .collect(Collectors.toList());
+        System.out.println(ret);
     }
 
     /**
      * 并行流调用同步api
      * parallelStream启动Runtime.getRuntime().availableProcessors()个线程，这里是4个线程
+     * <p>
+     * 4s
      */
     @Test
     public void test2() {
-        System.out.println(findPrices2());
+        List<String> ret = cars
+            .parallelStream()
+            .map(Car::getPrice)
+            .map(Quote::parse)
+            .map(this::applyDiscount)
+            .collect(Collectors.toList());
+        System.out.println(ret);
     }
 
     /**
      * CompletableFuture
      * 异步方式调用同步api
+     * <p>
+     * 10s
      */
     @Test
     public void test3() {
-        System.out.println(findPrices3());
-    }
-
-    @Test
-    public void test4() {
-        System.out.println(findPrices4());
-    }
-
-    /**
-     *
-     */
-    public static void main(String[] args) {
-        Car car = new Car("BeatCar", 1000, 0.15);
-        long start = System.nanoTime();
-        Future<Double> futurePrice = car.getPriceAsync("my favourite product");
-        long invocationTime = (System.nanoTime() - start) / 1_000_000;
-        System.out.println("Invocation returned after " + invocationTime + " ms");
-
-        doSomeThingElse();
-
-        try {
-            double price = futurePrice.get();
-            System.out.println("Price is " + price);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        long retrivevalTime = (System.nanoTime() - start) / 1_000_000;
-        System.out.println("Price return after " + retrivevalTime + " ms");
-    }
-
-    private List<String> findPrices1() {
-        return cars
-            .stream()
-            .map(Car::getPrice)
-            .map(Quote::parse)
-            .map(CompletableFutureDemo::applyDiscount)
-            .collect(Collectors.toList());
-    }
-
-    private List<String> findPrices2() {
-        return cars
-            .parallelStream()
-            .map(Car::getPrice)
-            .map(Quote::parse)
-            .map(CompletableFutureDemo::applyDiscount)
-            .collect(Collectors.toList());
-    }
-
-    @SuppressWarnings("Duplicates")
-    private List<String> findPrices3() {
-        return cars
+        List<String> ret = cars
             .stream()
             .map(car -> CompletableFuture
                 .supplyAsync(car::getPrice, executor)
@@ -120,10 +87,16 @@ public class CompletableFutureDemo {
             // CompletableFuture中的join()方法和Future中的get()方法类似，都会阻塞，唯一的不同是join()方法不会抛出checked exception
             .map(CompletableFuture::join)
             .collect(Collectors.toList());
+        System.out.println(ret);
     }
 
-    @SuppressWarnings("Duplicates")
-    private List<String> findPrices4() {
+    /**
+     * 异步方式调用同步api
+     * <p>
+     * 2s
+     */
+    @Test
+    public void test4() {
         // long start = System.currentTimeMillis();
         CompletableFuture<String>[] futures = cars
             .stream()
@@ -140,26 +113,19 @@ public class CompletableFutureDemo {
         // 任意一个CompletableFuture对象执行完毕就停止，不再等待
         // Object join1 = CompletableFuture.anyOf(futures).join();
 
-        return Arrays
-                .stream(futures)
-                .map(f -> {
-                    try {
-                        return f.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                })
-                .collect(Collectors.toList());
-    }
+        List<String> ret = Arrays
+            .stream(futures)
+            .map(f -> {
+                try {
+                    return f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            })
+            .collect(Collectors.toList());
 
-    // sleep 2s
-    private static void doSomeThingElse() {
-        try {
-            Thread.sleep(2000L);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println(ret);
     }
 
     private static void delay(long millis) {
@@ -170,7 +136,10 @@ public class CompletableFutureDemo {
         }
     }
 
-    private static String applyDiscount(Quote quote) {
+    /**
+     * 暂停2s
+     */
+    private String applyDiscount(Quote quote) {
         delay(2000);
         System.out.println(Thread.currentThread().getName() + ": run applyDiscount()......");
         return quote.getCarName() + " price is " + (quote.getPrice() * (1 - quote.getDiscount()));

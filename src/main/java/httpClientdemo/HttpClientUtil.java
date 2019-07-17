@@ -62,7 +62,7 @@ public class HttpClientUtil {
             entity = response.getEntity();
             String res = EntityUtils.toString(entity, Charset.defaultCharset());
             // System.out.println(res);
-            System.out.println(httpClient);
+            // System.out.println(httpClient);
             return statusCode;
         } catch (IOException e) {
             e.printStackTrace();
