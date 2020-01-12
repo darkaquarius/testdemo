@@ -98,4 +98,14 @@ public class IntegerDemo {
 
     }
 
+    @Test
+    public void test1() {
+        Long a = 1280L;
+        Long b = 1280L;
+        boolean ret = a.equals(b);
+        boolean ret2 = a == b;
+        System.out.println(ret);
+        System.out.println(ret2);
+    }
+
 }

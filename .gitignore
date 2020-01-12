@@ -66,7 +66,7 @@ crashlytics-build.properties
 .metadata
 .gradle
 bin/
-tmp/
+src/main/java/testtmp/
 *.tmp
 *.bak
 *.swp

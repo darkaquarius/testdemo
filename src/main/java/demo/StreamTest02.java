@@ -2,19 +2,7 @@ package demo;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.IntSummaryStatistics;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -428,6 +416,16 @@ public class StreamTest02 {
                 // 根据已有的值和新值来决定键的值，重写该行为
                 (existingValue, newValue) -> newValue,
                 TreeMap::new));
+    }
+
+    @Test
+    public void tmp2() {
+        Set<Integer> set = new HashSet<>();
+        set.add(5);
+        set.add(2);
+        set.add(8);
+        List<Integer> collect = set.stream().sorted(Integer::compare).collect(Collectors.toList());
+        System.out.println();
     }
 
     /**

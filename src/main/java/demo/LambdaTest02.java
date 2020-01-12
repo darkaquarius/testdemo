@@ -51,6 +51,22 @@ public class LambdaTest02 {
         Stream<int[]> stream1 = numbers2.stream().map(j -> new int[]{j});
     }
 
+    // [1, 3], [1, 4], [2, 3], [2, 4], [3, 3], [3, 4]
+    @Test
+    public void test2_1() {
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> list1 = Arrays.asList(1, 2);
+        List<Integer> list2 = Arrays.asList(3, 4);
+        List<Integer> list3 = Arrays.asList(5, 6);
+        List<Integer> list4 = Arrays.asList(7, 8);
+        list.add(list1);
+        list.add(list2);
+        list.add(list3);
+        list.add(list4);
+        List<Integer> ret = list.stream().flatMap(l -> l.stream()).collect(Collectors.toList());
+        System.out.println(ret);
+    }
+
     @Test
     public void test3() {
         String[] words = {"hello", "world"};

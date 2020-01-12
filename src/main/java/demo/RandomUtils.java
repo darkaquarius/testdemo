@@ -19,7 +19,7 @@ public class RandomUtils {
     /**
      * 使用java.util.Random产生一个长度为expectedNum的随机数组，随机数的范围[min,max)
      */
-    public int[] gerateRandomArrayWithRange1(int min, int max, int expectedNum) {
+    public static int[] gerateRandomArrayWithRange1(int min, int max, int expectedNum) {
         int[] randomArray = new int[expectedNum];
         Random random = new Random();
         for (int i = 0; i < expectedNum; i++) {
@@ -31,7 +31,7 @@ public class RandomUtils {
     /**
      * JDK 7 引入java.util.concurrent.ThreadLocalRandom,使用ThreadLocalRandom可以让产生范围内的随机数变得更加方便。
      */
-    public int[] gerateRandomArrayWithRange2(int min, int max, int expectedNum) {
+    public static int[] gerateRandomArrayWithRange2(int min, int max, int expectedNum) {
         int[] randomArray = new int[expectedNum];
         for (int i = 0; i < expectedNum; i++) {
             randomArray[i] = ThreadLocalRandom.current().nextInt(min, max);
@@ -47,7 +47,7 @@ public class RandomUtils {
      * 那么随机产生和为S的N个整数的问题就变成了在0~20之间产生N-1不同的刻度。这样的话，尺子就被不同的刻度分割成了N段。
      * 第二步：从左到右，计算出每一段的长度，每一段的长度就可以看做是随机数。N段就有了N个随机数。
      */
-    public int[] generateRandomArray(int expectedSum, int expectedNum, boolean ordered) {
+    public static int[] generateRandomArray(int expectedSum, int expectedNum, boolean ordered) {
 
         Set<Integer> set = new TreeSet<Integer>();
         /*
@@ -84,7 +84,7 @@ public class RandomUtils {
     /**
      * 使用Collections的shuffle方法，将已有的List顺序随机打乱。
      */
-    public void shuffle(List<?> list) {
+    public static void shuffle(List<?> list) {
         Collections.shuffle(list);
     }
 
@@ -95,7 +95,7 @@ public class RandomUtils {
      * <p>
      * 如： 53b25837-05f1-4be2-9c81-2f8bc898f6bd
      */
-    public String randomUUID1() {
+    public static String randomUUID1() {
         return UUID.randomUUID().toString();
     }
 
@@ -106,34 +106,33 @@ public class RandomUtils {
      * <p>
      * 如： 97013848ac764487b01d0470cdde3f1a
      */
-    public String randomUUID2() {
+    public static String randomUUID2() {
         return randomUUID1().replaceAll("-", "");
     }
 
     public static void main(String[] args) {
 
-        RandomUtils util = new RandomUtils();
-
         System.out.println("随机产生和为30的5个正整数如下：");
-        printArray(util.generateRandomArray(30, 5, false));
+        int[] randomArray0 = generateRandomArray(30, 5, false);
+        printArray(randomArray0);
         System.out.println();
 
         System.out.println("产生20个[1,100)范围的随机数:");
-        int[] randomArray1 = util.gerateRandomArrayWithRange1(1, 100, 20);
+        int[] randomArray1 = gerateRandomArrayWithRange1(1, 100, 20);
         printArray(randomArray1);
         System.out.println();
 
         System.out.println("产生20个[1,100)范围的随机数:使用JDK 7  的 ThreadRandomLocal");
-        int[] randomArray2 = util.gerateRandomArrayWithRange2(1, 100, 20);
+        int[] randomArray2 = gerateRandomArrayWithRange2(1, 100, 20);
         printArray(randomArray2);
         System.out.println();
 
         System.out.println("使用java.util.UUID产生唯一的标记(包括'-')");
-        System.out.println(util.randomUUID1());
+        System.out.println(randomUUID1());
         System.out.println();
 
         System.out.println("使用java.util.UUID产生唯一的标记(不包括'-')");
-        System.out.println(util.randomUUID2());
+        System.out.println(randomUUID2());
         System.out.println();
 
         System.out.println("使用Collections.shuffle打乱已有List的顺序:");
@@ -146,7 +145,7 @@ public class RandomUtils {
         printArray(intList);
 
         System.out.println("调用shuffle方法之后数组的内容是: ");
-        util.shuffle(intList);
+        shuffle(intList);
         printArray(intList);
     }
 

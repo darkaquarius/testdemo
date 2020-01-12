@@ -362,5 +362,25 @@ public class StringDemo {
         System.out.println(s0 == s2);
     }
 
+    @Test
+    public void testSplit() {
+        String str1 = "a,b";
+        String str2 = "a";
+        String str3 = " ";
+        String str4 = "";
+        String str5 = null;
+        List<String> list = Arrays.asList(str1, str2, str3, str4, str5);
+        for (String str : list) {
+            String[] split = str.split(",");
+            System.out.println(split[0]);
+        }
+    }
+
+    @Test
+    public void tmp2() {
+        String realIp = "";
+        realIp = realIp.split(",")[0];
+        System.out.println(realIp);
+    }
 
 }

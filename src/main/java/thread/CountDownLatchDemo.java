@@ -10,6 +10,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by huishen on 17/7/14.
+ *
+ * 多线程对同一个对象进行操作的时候的正确性
  */
 public class CountDownLatchDemo {
 
@@ -23,7 +25,7 @@ public class CountDownLatchDemo {
      * 2. 在创建的线程（被等待线程）中调用：countDownLatch.countDown();
      * 3. 在主线程（等待线程）中调用：countDownLatch.await();
      */
-    private static CountDownLatch countDownLatch = new CountDownLatch(THREAD_NUM);
+    private static CountDownLatch countDownLatch;
 
     /**
      * 非公平锁
@@ -33,9 +35,12 @@ public class CountDownLatchDemo {
     @Before
     public void init() {
         count = 0;
-        countDownLatch = new CountDownLatch(1000);
+        countDownLatch = new CountDownLatch(THREAD_NUM);
     }
 
+    /**
+     * count++不是原子操作，所以每次执行，count的值都不同，一般都会小于1000
+     */
     private static void inc1() {
         try {
             Thread.sleep(1000);
@@ -46,6 +51,9 @@ public class CountDownLatchDemo {
         count++;
     }
 
+    /**
+     * 使用synchronized把 "count++" 操作变成了同步操作，保证了原子性，所以每次count的结果都是1000，当然执行速度会变慢。
+     */
     private static void inc2() {
         try {
             Thread.sleep(1000);
@@ -58,6 +66,9 @@ public class CountDownLatchDemo {
         }
     }
 
+    /**
+     * 使用Lock加锁，保证原子性
+     */
     private static void inc3() {
         try {
             Thread.sleep(1000);
@@ -75,9 +86,6 @@ public class CountDownLatchDemo {
         }
     }
 
-    /**
-     * count++不是原子操作，所以每次执行，count的值都不同，一般都会小于1000
-     */
     @Test
     public void test1() {
         test(() -> {
@@ -86,9 +94,6 @@ public class CountDownLatchDemo {
         });
     }
 
-    /**
-     * 使用synchronized把 "count++" 操作变成了同步操作，保证了原子性，所以每次count的结果都是1000，当然执行速度会变慢。
-     */
     @Test
     public void test2() {
         test(() -> {
@@ -97,9 +102,6 @@ public class CountDownLatchDemo {
         });
     }
 
-    /**
-     * 使用Lock加锁，保证原子性
-     */
     @Test
     public void test3() {
         test(() -> {

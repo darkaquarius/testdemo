@@ -3,12 +3,9 @@ package demo;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Test;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 
 /**
  * @author huishen
@@ -25,11 +22,17 @@ public class HashMapDemo {
      */
     @Test
     public void test0() {
-        HashMap map = new HashMap(8);
-        map.put("k1", "v1");
-        map.put("k6", "v6");
-        map.put("k8", "v8");
-        map.put("k9", "v9");
+        HashMap map = new HashMap(4);
+        map.put("k1s", "v1");
+        map.put("k2f", "v2");
+        map.put("k3v", "v3");
+        map.put("k4b", "v4");
+        map.put("k5b", "v5");
+        map.put("k6f", "v6");
+        map.put("k7g", "v7");
+        map.put("k8q", "v8");
+        map.put("k9a", "v9");
+        map.put("k10p", "v10");
     }
 
     /**
@@ -77,20 +80,20 @@ public class HashMapDemo {
      * <p>
      * copyOf()生成的对象是不能修改的
      */
-    @Test
-    public void testCopyOf() {
-        HashMap<String, String> map1 = new HashMap<>(4);
-        map1.put("key1", "value1");
-        map1.put("key2", "value2");
-        map1.put("key3", "value3");
-
-        Map<String, String> map2 = Map.copyOf(map1);
-
-        map1.put("key1", "valueX");
-
-        // UnsupportedOperationException
-        // map2.put("key1", "value11");
-    }
+//    @Test
+//    public void testCopyOf() {
+//        HashMap<String, String> map1 = new HashMap<>(4);
+//        map1.put("key1", "value1");
+//        map1.put("key2", "value2");
+//        map1.put("key3", "value3");
+//
+//        Map<String, String> map2 = Map.copyOf(map1);
+//
+//        map1.put("key1", "valueX");
+//
+//        // UnsupportedOperationException
+//        // map2.put("key1", "value11");
+//    }
 
 
     /**
@@ -203,11 +206,10 @@ public class HashMapDemo {
      * 但是迭代器本身没有提供其他诸如add()等方法，因为KeySet, EntrySet, Values这些内部类本身也不提供add()方法。
      * 解决方法2：
      * 将HashMap改成ConcurrentHashMap。见下面的单测
-     *
      */
     @Test
     public void testIterator() {
-        HashMap<String, String> map = new HashMap<>() {
+        HashMap<String, String> map = new HashMap<String, String>() {
             {
                 put("k1", "v1");
                 put("k2", "v2");
@@ -218,18 +220,18 @@ public class HashMapDemo {
         Set<Map.Entry<String, String>> entrySet = map.entrySet();
 
         // error!
-        for (Map.Entry<String, String> entry : entrySet) {
-            if ("v1".equals(entry.getValue())) {
-                // 方法1: error! ConcurrentModificationException
-                map.remove(entry.getKey());
-
-                // 方法2: error! ConcurrentModificationException
-                entrySet.remove(ImmutablePair.of("k1", "v1"));
-            }
-
-            // 这里修改k1, k2, k3的值是可以的，但是不能添加或者
-            map.put("k1", "vX");
-        }
+//        for (Map.Entry<String, String> entry : entrySet) {
+//            if ("v1".equals(entry.getValue())) {
+//                // 方法1: error! ConcurrentModificationException
+//                map.remove(entry.getKey());
+//
+//                // 方法2: error! ConcurrentModificationException
+//                entrySet.remove(ImmutablePair.of("k1", "v1"));
+//            }
+//
+//            // 这里修改k1, k2, k3的值是可以的，但是不能添加或者
+//            map.put("k1", "vX");
+//        }
 
         // 这里只能使用迭代器本身提供的remove()方法，他会修改expectedModCount的值。
         Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
@@ -238,7 +240,6 @@ public class HashMapDemo {
             if ("v1".equals(next.getValue())) {
                 // 方法3, ok!!!
                 iterator.remove();
-                iterator.forEachRemaining(System.out::println);
             }
         }
     }
@@ -248,7 +249,7 @@ public class HashMapDemo {
      */
     @Test
     public void testConcurrentHashMapIterator() {
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>() {
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<String, String>() {
             {
                 put("k1", "v1");
                 put("k2", "v2");
@@ -312,5 +313,34 @@ public class HashMapDemo {
             return this.name.equals(((People) obj).name) && this.age == ((People) obj).age;
         }
     }
+
+    @Test
+    public void computeIfAbsent() {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(10, 5);
+        map.computeIfAbsent(20, key -> key + 1);
+    }
+
+    @Test
+    public void computeIfPresent() {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(10, 5);
+        map.computeIfPresent(10, (key, oldValue) -> key + oldValue + 1);
+    }
+
+    @Test
+    public void compute() {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(10, 5);
+        map.compute(10, remappingFunction);
+        map.compute(20, remappingFunction);
+    }
+
+    private BiFunction<Integer, Integer, Integer> remappingFunction =
+        (key, oldValue) -> {
+            oldValue = null == oldValue ? 0 : oldValue;
+            int newValue = key + oldValue + 1;
+            return newValue;
+        };
 
 }

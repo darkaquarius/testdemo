@@ -18,4 +18,12 @@ public class ObjectDemo {
         System.out.println("str2: " + str2);
     }
 
+    @Test
+    public void test2() {
+        Object[] objects = new Object[128];
+        // 数组中创建出来了128个null
+        System.out.println(objects[0]);
+        System.out.println(objects[1]);
+    }
+
 }

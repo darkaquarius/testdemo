@@ -43,7 +43,7 @@ public class InsertionSortDichotomy {
     }
 
     public static void main(String[] args) {
-        SortHelper.test(InsertionSortDichotomy::sort);
+        SortHelper.sort(InsertionSortDichotomy::sort);
     }
 
 }

@@ -13,10 +13,25 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by huishen on 18/1/6.
- *
  */
 
 public class RandomDemo {
+
+    private final ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    @Test
+    public void test() {
+        for (int i = 0; i < 5; i++) {
+            doTest();
+            System.out.println("\n\n");
+        }
+    }
+
+    private void doTest() {
+        System.out.println(random.nextInt(1000));
+        System.out.println(random.nextInt(1000));
+        System.out.println(random.nextInt(1000));
+    }
 
     /**
      * 生成随机6位数
@@ -24,7 +39,7 @@ public class RandomDemo {
     @Test
     public void test1() {
         for (int i = 0; i < 100; i++) {
-            System.out.println((int)((Math.random() * 9 + 1) * 100000));
+            System.out.println((int) ((Math.random() * 9 + 1) * 100000));
         }
     }
 
@@ -46,7 +61,7 @@ public class RandomDemo {
 
     @Test
     public void test4() throws InterruptedException {
-        long s  = System.currentTimeMillis();
+        long s = System.currentTimeMillis();
         int size = 1000;
         CountDownLatch latch = new CountDownLatch(size);
         ExecutorService executor = Executors.newFixedThreadPool(size);
@@ -69,7 +84,7 @@ public class RandomDemo {
 
     @Test
     public void test5() throws InterruptedException {
-        long s  = System.currentTimeMillis();
+        long s = System.currentTimeMillis();
         int size = 1000;
         CountDownLatch latch = new CountDownLatch(size);
         ExecutorService executor = Executors.newFixedThreadPool(size);
@@ -94,7 +109,7 @@ public class RandomDemo {
      */
     @Test
     public void test6() throws InterruptedException {
-        long s  = System.currentTimeMillis();
+        long s = System.currentTimeMillis();
         int size = 1000;
         CountDownLatch latch = new CountDownLatch(size);
         Random random = new Random();
@@ -115,12 +130,12 @@ public class RandomDemo {
      */
     @Test
     public void test7() throws InterruptedException {
-        long s  = System.currentTimeMillis();
+        long s = System.currentTimeMillis();
         int size = 1000;
         CountDownLatch latch = new CountDownLatch(size);
         for (int i = 0; i < size; i++) {
             new Thread(() -> {
-                ThreadLocalRandom random =ThreadLocalRandom.current();
+                ThreadLocalRandom random = ThreadLocalRandom.current();
                 for (int j = 0; j < 10_000; j++) {
                     random.nextInt(500);
                 }
@@ -133,11 +148,10 @@ public class RandomDemo {
 
     public static void main(String[] args) {
         //(10)获取一个随机数生成器
-        ThreadLocalRandom random =  ThreadLocalRandom.current();
+        ThreadLocalRandom random = ThreadLocalRandom.current();
 
         //(11)输出10个在0-5（包含0，不包含5）之间的随机数
         for (int i = 0; i < 10; ++i) {
-            System.out.println(Thread.currentThread().getName());
             System.out.println(random.nextInt(5));
         }
     }

@@ -23,16 +23,19 @@ public class BinaryTreeTest {
 
     public static void main(String[] args) {
         // List<Integer> list = Arrays.asList(1, 2, 2, 3, null, null, 3, 4, null, null, 4);
-        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+        // List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7);
+        List<Integer> list = Arrays.asList(4, 2, 6, 1, 3, 5, 7);
         TreeNode root = create(list);
-        // bfsRecursion(root);
-        // List<TreeNode> treeNodes = bfsIteration(root);
+        // List<List<Integer>> ret = bfsRecursion(root);
+        // List<TreeNode> ret = bfsIteration(root);
         // dfsRecursion(root);
         // dfsIterationPreOrder(root);
-        List<TreeNode> treeNodes = dfsIterationInOrder(root);
+        // List<TreeNode> ret = dfsIterationInOrder(root);
         // List<TreeNode> treeNodes = dfsIterationPostOrder(root);
+
         System.out.println();
     }
+
 
     /**
      * BFS的递归形式
@@ -41,25 +44,25 @@ public class BinaryTreeTest {
      * 结果返回的是 List<List<TreeNode>> 类型
      * 每当DFS遍历到一个新的节点，就把它加入到所在层的list里面去
      */
-    public static List<List<TreeNode>> bfsRecursion(TreeNode root) {
+    public static List<List<Integer>> bfsRecursion(TreeNode root) {
         if (null == root) {
             return null;
         }
-        List<List<TreeNode>> list = new ArrayList<>();
+        List<List<Integer>> list = new ArrayList<>();
         doBfs(root, 0, list);
         return list;
     }
 
-    private static void doBfs(TreeNode root, int level, List<List<TreeNode>> list) {
+    private static void doBfs(TreeNode root, int level, List<List<Integer>> list) {
         if (root == null) {
             return;
         }
         if (level >= list.size()) {
-            List<TreeNode> internalList = new ArrayList<>();
-            internalList.add(root);
+            List<Integer> internalList = new ArrayList<>();
+            internalList.add(root.getVal());
             list.add(internalList);
         } else {
-            list.get(level).add(root);
+            list.get(level).add(root.getVal());
         }
         doBfs(root.getLeft(), level + 1, list);
         doBfs(root.getRight(), level + 1, list);
@@ -174,14 +177,14 @@ public class BinaryTreeTest {
      * 以preOrder为例
      */
 
-    public static List<TreeNode> dfsRecursion(TreeNode root) {
-        List<TreeNode> ret = new ArrayList<>();
-        if (root != null) {
-            ret.add(root);
-            dfsRecursion(root.getLeft());
-            dfsRecursion(root.getRight());
+    public static void dfsRecursion(TreeNode root) {
+        if (null == root) {
+            return;
         }
-        return ret;
+
+        System.out.println(root.getVal());
+        dfsRecursion(root.getLeft());
+        dfsRecursion(root.getRight());
     }
 
     /**

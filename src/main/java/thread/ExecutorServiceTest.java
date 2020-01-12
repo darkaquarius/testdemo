@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -48,6 +49,7 @@ public class ExecutorServiceTest {
         // ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         // ExecutorService还有一个子类，ThreadPoolExecutor
+        // 创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。
         // ExecutorService executorService = Executors.newCachedThreadPool();
         // Executor executorService1 = Executors.newCachedThreadPool();
 
@@ -65,6 +67,13 @@ public class ExecutorServiceTest {
                 // new ArrayBlockingQueue<Runnable>(10,true),
                 runnable -> {
                     Thread thread = new Thread(runnable, "MyThread" + i.getAndIncrement());
+                    // setUncaughtExceptionHandler
+                    // thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                    //     @Override
+                    //     public void uncaughtException(Thread t, Throwable e) {
+                    //         System.err.println("程序抛出了一个异常，异常类型为 ： " + e);
+                    //     }
+                    // });
                     thread.setDaemon(true);
                     return thread;
                 },
@@ -188,9 +197,9 @@ public class ExecutorServiceTest {
         public String call() throws Exception {
             System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
             // 模拟一个错误
-            // if (new Random().nextBoolean()) {
-            //     throw new RuntimeException("Meet error in task." + Thread.currentThread().getName());
-            // }
+            if (new Random().nextBoolean()) {
+                throw new RuntimeException("Meet error in task." + Thread.currentThread().getName());
+            }
             // 一个模拟耗时的操作
             Thread.sleep(2000);
             return "call()方法被自动调用，任务的结果是：" + id + "    " + Thread.currentThread().getName();

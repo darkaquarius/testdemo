@@ -33,9 +33,13 @@ public class ClassLoaderDemo {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
-
+    @Test
+    public void test1() throws ClassNotFoundException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        Class<?> clazz = classLoader.loadClass("demo.ClassLoaderDemo");
+        System.out.println(clazz.getClassLoader());
     }
 
 }

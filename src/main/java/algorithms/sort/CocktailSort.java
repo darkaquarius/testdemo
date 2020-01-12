@@ -44,7 +44,7 @@ public class CocktailSort {
     }
 
     public static void main(String[] args) {
-        SortHelper.test(CocktailSort::sort);
+        SortHelper.sort(CocktailSort::sort);
     }
 
 

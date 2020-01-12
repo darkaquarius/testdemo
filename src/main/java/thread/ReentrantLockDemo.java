@@ -25,6 +25,7 @@ public class ReentrantLockDemo {
         final ReentrantLockDemo demo = new ReentrantLockDemo();
         new Thread(() -> demo.insertByLock(Thread.currentThread())).start();
         new Thread(() -> demo.insertByLock(Thread.currentThread())).start();
+        new Thread(() -> demo.insertByLock(Thread.currentThread())).start();
 
         while (Thread.activeCount() > 1) {
             Thread.yield();
@@ -36,6 +37,7 @@ public class ReentrantLockDemo {
     @SuppressWarnings("all")
     public void testTryLock() {
         final ReentrantLockDemo demo = new ReentrantLockDemo();
+        new Thread(() -> demo.insertByTryLock(Thread.currentThread())).start();
         new Thread(() -> demo.insertByTryLock(Thread.currentThread())).start();
         new Thread(() -> demo.insertByTryLock(Thread.currentThread())).start();
 
@@ -85,17 +87,16 @@ public class ReentrantLockDemo {
     private void insertByLock(Thread thread) {
         lock.lock();
         try {
-            System.out.println(thread.getName() + "得到了锁");
+            System.out.println(thread.getName() + ":得到了锁");
             for (int i = 0; i < 5; i++) {
                 arrayList.add(i);
             }
-            Thread.sleep(1000);
+            Thread.sleep(1_000);
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         } finally {
-            System.out.println(thread.getName() + "释放了锁");
-            System.out.println("Thread: " + thread.getName());
-            arrayList.forEach(i -> System.out.print( "i: " + i + "\t"));
+            System.out.println(thread.getName() + ":释放了锁");
+            // arrayList.forEach(i -> System.out.print( "i: " + i + "\t"));
             System.out.println();
             //  unlock()方法通常放在finally块中，因为出错时候不会自动释放锁，造成死循环。
             lock.unlock();

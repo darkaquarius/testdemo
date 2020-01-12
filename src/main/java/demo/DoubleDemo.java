@@ -67,4 +67,11 @@ public class DoubleDemo {
         System.out.println(ret);
     }
 
+    @Test
+    public void tetst7() {
+        double d1 = 100.1;
+        int d2 = 100;
+        System.out.println(d1 == d2);
+    }
+
 }

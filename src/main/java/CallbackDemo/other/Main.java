@@ -7,7 +7,7 @@ package CallbackDemo.other;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Func func start");
+        System.out.println("Thread: " + Thread.currentThread().getName() + ", Func func start");
         new Func().func("我是测试数据", new Func.Callback() {
             @Override
             public void onSucceed(String data) {

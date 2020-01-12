@@ -15,11 +15,14 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Person {
+public class Person implements Cloneable {
     private int no;
     private String name;
     private int age;
     private List<String> address;
+
+    private Job job;
+
     public Person (int no, String name, int age) {
         this.no = no;
         this.name = name;
@@ -45,4 +48,26 @@ public class Person {
     public void setAddress(List<String> address) {
         this.address = address;
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Person person = (Person) super.clone();
+        person.setJob((Job) person.getJob().clone());
+        return person;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Job implements Cloneable {
+        private String jobName;
+        private int year;
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+    }
+
 }
