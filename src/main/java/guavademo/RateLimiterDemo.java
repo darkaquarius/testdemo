@@ -52,27 +52,11 @@ public class RateLimiterDemo {
 
     }
 
-
-    RateLimiter rateLimiter = RateLimiter.create(1);
-
     @Test
     public void test3() throws InterruptedException {
-        System.out.println("start");
-        System.out.println("rateLimiter.tryAcquire(): " + rateLimiter.acquire());
-//        Thread.sleep(3_000);
-        System.out.println("rateLimiter.tryAcquire(3): " + rateLimiter.acquire(3));
-        System.out.println("rateLimiter.tryAcquire(3): " + rateLimiter.acquire(3));
-    }
-
-
-
-    private void testRateLimiter() {
-        if (rateLimiter.tryAcquire()) {
-            System.out.println("testRateLimiter");
-        } else {
-            System.out.println("no token");
-        }
-
+        RateLimiter rateLimiter = RateLimiter.create(1);
+        Thread.sleep(3);
+        
     }
 
 

@@ -156,4 +156,12 @@ public class RandomDemo {
         }
     }
 
+    @Test
+    public void test8() {
+        int i1 = new Random().nextInt(3);
+        int i2 = new Random().nextInt(2);
+        int i3 = new Random().nextInt(2);
+        int i4 = new Random().nextInt(2);
+    }
+
 }

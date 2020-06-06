@@ -18,7 +18,7 @@ public class Server implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("server run, message: " + message);
+            System.out.println("Thread:" + Thread.currentThread() + "server run, message: " + message);
             Thread.sleep(2_000);
             callback.onCompletion("succeed, message: " + message, null);
         } catch (Exception e) {

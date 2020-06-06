@@ -12,6 +12,11 @@ public class MySubClass extends MyClass{
         return this.value;
     }
 
+    @Override
+    public Integer testOverride() {
+        return 1;
+    }
+
     public static void main(String[] args){
         MySubClass mySubClass = new MySubClass(10);
         System.out.println(mySubClass.getValue());

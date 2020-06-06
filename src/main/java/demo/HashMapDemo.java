@@ -319,6 +319,7 @@ public class HashMapDemo {
         Map<Integer, Integer> map = new HashMap<>();
         map.put(10, 5);
         map.computeIfAbsent(20, key -> key + 1);
+        map.computeIfAbsent(10, key -> key + 1);
     }
 
     @Test

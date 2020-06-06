@@ -5,4 +5,8 @@ package demo;
  */
 public class MyClass {
     protected int value;
+
+    public Number testOverride() {
+        return 1;
+    }
 }

@@ -5,6 +5,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
+import io.netty.buffer.ByteBuf;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -23,6 +27,24 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class CacheDemo {
+
+    @Test
+    public void testNull() {
+        // 监听器
+        RemovalListener<String, String> listener =
+                notification -> System.out.println(Thread.currentThread().getName() + ": [" + notification.getKey() + ":" + notification.getValue() + "] is removed!");
+        // Cache
+        Cache<String, String> cache = CacheBuilder.newBuilder()
+                .maximumSize(3)    // 添加一个监听器，记录被删除时可以感知到这个事件
+                .removalListener(listener)
+                .build();
+        cache.put("key1", "value1");
+        String key1 = cache.getIfPresent("key1");
+        System.out.println(key1);
+        cache.put("key2", null);
+        String key2 = cache.getIfPresent("key2");
+        System.out.println(key2);
+    }
 
     @Test
     @SuppressWarnings("Duplicates")
@@ -76,11 +98,14 @@ public class CacheDemo {
     /**
      * 监听器
      * <p>
+     *
+     * main: [key0:value0] is removed!    invalidate()方法也会触发listener
      * main: [key1:value1] is removed!
      * main: [key2:value2] is removed!
      * main: [key3:value3] is removed!
      * main: [key4:value4] is removed!
      * main: [key5:value5] is removed!
+     *
      */
     @Test
     public void test3() {
@@ -91,7 +116,11 @@ public class CacheDemo {
             .maximumSize(3)    // 添加一个监听器，记录被删除时可以感知到这个事件
             .removalListener(listener)
             .build();
-        Object value = new Object();
+
+        // invalidate()方法也会触发listener！！！
+        cache.put("key0", "value0");
+        cache.invalidate("key0");
+
         cache.put("key1", "value1");
         cache.put("key2", "value2");
         cache.put("key3", "value3");
@@ -172,11 +201,6 @@ public class CacheDemo {
         String key1 = loadingCache.get("key1");
         String key2 = loadingCache.get("key2");
         String key3 = loadingCache.get("key3");
-    }
-
-    public static void main(String[] args) {
-        int maxValue = Integer.MAX_VALUE;
-        System.out.println(maxValue);
     }
 
 }

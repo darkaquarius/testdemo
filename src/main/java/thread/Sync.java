@@ -18,32 +18,32 @@ public class Sync {
     // 方法1：比较多的做法是让synchronized锁这个类对应的Class对象
     // 方法2：static synchronized方法也相当于全局锁，相当于锁住了代码段
 
-    // 方法1,详见Sync2
-    // public static synchronized void test(){
-    //     System.out.println("start");
-    //     try {
-    //         Thread.sleep(1000);
-    //     } catch (InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
-    //     System.out.println("end");
-    // }
+//     方法1,详见Sync2
+     public static synchronized void test(){
+         System.out.println("start");
+         try {
+             Thread.sleep(1000);
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+         System.out.println("end");
+     }
 
-    // 方法2
-    public synchronized void test() {
-        synchronized (Sync.class) {
-            System.out.println("start");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("end");
-        }
-    }
+//    // 方法2
+//    public void test() {
+//        synchronized (Sync.class) {       // this锁住的是对象，Sync.class锁住的是类
+//            System.out.println("start");
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println("end");
+//        }
+//    }
 
     public static void main(String args[]){
-        // Sync sync = new Sync();
+//         Sync sync = new Sync();
         for (int i = 0; i < 3; i++){
             Sync sync = new Sync();
             new MyThread(sync).start();

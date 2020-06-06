@@ -12,7 +12,7 @@ public class Sync3 implements Runnable {
         test();
     }
 
-    public synchronized void test() {
+    public static synchronized void test() {
         System.out.println("start");
         try {
             Thread.sleep(1000);

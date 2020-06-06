@@ -10,29 +10,19 @@ package thread;
  * ExecutorService是Executor子类
  * ExecutorService接口的底层实现是ThreadPoolExecutor。
  * ScheduledExecutorService接口的底层实现是ScheduledThreadPoolExecutor，ScheduledThreadPoolExecutor继承了ThreadPoolExecutor。
- *
  */
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExecutorServiceTest {
-    private static AtomicInteger i = new AtomicInteger(1);
+//    private static AtomicInteger i = new AtomicInteger(1);
 
     /**
      * Future
@@ -42,43 +32,53 @@ public class ExecutorServiceTest {
     public void test() {
 
         // 创建单个线程
-        // ExecutorService executorService = Executors.newSingleThreadExecutor();
+//         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         // 创建一个固定大小的线程执行器，有最大线程数，
         // 超过这个最大线程数，执行器不再创建额外的线程，剩下的任务将被阻塞直到执行器有空闲的线程
-        // ExecutorService executorService = Executors.newFixedThreadPool(10);
+//         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         // ExecutorService还有一个子类，ThreadPoolExecutor
         // 创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。
         // ExecutorService executorService = Executors.newCachedThreadPool();
         // Executor executorService1 = Executors.newCachedThreadPool();
 
-        // ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
-        //     .setNameFormat("demo-pool-%d").build();
-
-        // custome Thread Pool 自定义线程池
+        // custome Thread Pool 自定义线程池，前面的Executors.xxx()方法都是工具类，最后还是调用的该方法创建线程池。
         ExecutorService executorService =
-            new ThreadPoolExecutor(
-                5,
-                200,
-                0L,
-                TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>(1024),
-                // new ArrayBlockingQueue<Runnable>(10,true),
-                runnable -> {
-                    Thread thread = new Thread(runnable, "MyThread" + i.getAndIncrement());
-                    // setUncaughtExceptionHandler
-                    // thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-                    //     @Override
-                    //     public void uncaughtException(Thread t, Throwable e) {
-                    //         System.err.println("程序抛出了一个异常，异常类型为 ： " + e);
-                    //     }
-                    // });
-                    thread.setDaemon(true);
-                    return thread;
-                },
-                new ThreadPoolExecutor.AbortPolicy()
-            );
+                new ThreadPoolExecutor(
+                        5,
+                        200,
+                        0L,
+                        TimeUnit.MILLISECONDS,
+
+                        /**
+                         * LinkedBlockingQueue,ArrayBlockingQueue二选一
+                         */
+//                        new LinkedBlockingQueue<Runnable>(1024),
+                        new ArrayBlockingQueue<Runnable>(10, true),
+
+                        /**
+                         * ThreadFactory的原始创建方式，并不好用，因为Thread的名字不好起。
+                         */
+//                        runnable -> {
+//                            Thread thread = new Thread(runnable, "MyThread" + i.getAndIncrement());
+//                            // setUncaughtExceptionHandler
+//                            thread.setUncaughtExceptionHandler((t, e) -> System.err.println("程序抛出了一个异常，异常类型为 ： " + e));
+//                            thread.setDaemon(true);
+//                            return thread;
+//                        },
+                        // 用guava包的ThreadFactoryBuilder创建ThreadFactory更方便
+                        new ThreadFactoryBuilder()
+                                .setNameFormat("demo-pool-%d")
+                                .setDaemon(true)
+                                .setUncaughtExceptionHandler((t, e) -> System.err.println("程序抛出了一个异常，异常类型为 ： " + e))
+                                .build(),
+
+                        /**
+                         * 拒绝服务方法
+                         */
+                        new ThreadPoolExecutor.AbortPolicy()
+                );
 
 
         // newWorkStealingPool
@@ -87,8 +87,8 @@ public class ExecutorServiceTest {
         List<Future<String>> resultList = new ArrayList<>();
 
         // 创建10个任务并执行
-        // final int maxThreads = 10;
-        final int maxThreads = 1;
+        final int maxThreads = 10;
+//        final int maxThreads = 1;
         for (int i = 0; i < maxThreads; i++) {
             Future<String> future = executorService.submit(new TaskWithResult(i));
             resultList.add(future);
@@ -154,7 +154,7 @@ public class ExecutorServiceTest {
 
         // todo
         // for () {
-            //  CompletableFutureDemo
+        //  CompletableFutureDemo
         // }
 
     }
@@ -166,12 +166,12 @@ public class ExecutorServiceTest {
     public void testScheduledExecutorService() throws InterruptedException {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
         ScheduledFuture<?> scheduledFuture = executor.scheduleAtFixedRate(
-            () -> {
-                System.out.println("ScheduledExecutorService");
-            },
-            0,
-            2000,
-            TimeUnit.MILLISECONDS
+                () -> {
+                    System.out.println("ScheduledExecutorService");
+                },
+                0,
+                2000,
+                TimeUnit.MILLISECONDS
         );
 
         Thread.sleep(1000 * 10);
@@ -180,6 +180,31 @@ public class ExecutorServiceTest {
         System.out.println("shutdown");
 
         Thread.sleep(1000 * 10);
+    }
+
+    @Test
+    public void testScheduledExecutorService2() throws InterruptedException {
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        // 第一个定时任务
+        executor.scheduleAtFixedRate(() -> {
+            System.out.println("first task");
+        }, 1, 2, TimeUnit.SECONDS);
+
+        // 第二个定时任务
+        executor.scheduleAtFixedRate(() -> {
+            System.out.println("second task");
+        }, 1, 3, TimeUnit.SECONDS);
+
+        // 第二个定时任务
+        executor.scheduleAtFixedRate(() -> {
+            System.out.println("third task");
+        }, 2, 5, TimeUnit.SECONDS);
+
+        while (Thread.activeCount() > 1) {
+            Thread.yield();
+            Thread.sleep(100);
+        }
     }
 
     static class TaskWithResult implements Callable<String> {
@@ -197,14 +222,29 @@ public class ExecutorServiceTest {
         public String call() throws Exception {
             System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
             // 模拟一个错误
-            if (new Random().nextBoolean()) {
-                throw new RuntimeException("Meet error in task." + Thread.currentThread().getName());
-            }
+//            if (new Random().nextBoolean()) {
+//                throw new RuntimeException("Meet error in task." + Thread.currentThread().getName());
+//            }
             // 一个模拟耗时的操作
             Thread.sleep(2000);
             return "call()方法被自动调用，任务的结果是：" + id + "    " + Thread.currentThread().getName();
         }
     }
+
+    private Runnable runnable = () -> {
+        System.out.println("call()方法被自动调用,干活！！！" + Thread.currentThread().getName());
+        // 模拟一个错误
+//            if (new Random().nextBoolean()) {
+//                throw new RuntimeException("Meet error in task." + Thread.currentThread().getName());
+//            }
+        // 一个模拟耗时的操作
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("call()方法被自动调用，任务的结果是:" + Thread.currentThread().getName());
+    };
 
 }
 

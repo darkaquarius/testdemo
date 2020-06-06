@@ -346,6 +346,33 @@ public class ArrayListTest {
     }
 
     /**
+     * addAll只是把多个了引用，没有复制对象
+     */
+    @Test
+    public void testAddAll() {
+        Person person1 = new Person(1,"shen1", 1);
+        Person person2 = new Person(2,"shen2", 2);
+        Set<Person> set = new HashSet<>();
+        set.add(person1);
+        set.add(person2);
+
+        List<Person> list = new ArrayList<>();
+
+        // 1.把set塞进list
+        list.addAll(set);
+
+        // 2.修改set里面某个元素的值，list也会改变，说明是引用
+        person1.setName("zhao1");
+
+        // 3.set增加元素，list不会增加元素，还是2个
+        set.add(new Person(3, "shen3", 3));
+
+        System.out.println();
+
+        set.clear();
+    }
+
+    /**
      * ArrayList的序列化
      * https://www.cnblogs.com/aoguren/p/4767309.html
      *

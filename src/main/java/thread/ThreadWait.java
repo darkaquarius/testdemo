@@ -52,11 +52,12 @@ public class ThreadWait {
      */
     @Test
     public void test2() throws ExecutionException, InterruptedException {
+        long s = System.currentTimeMillis();
         System.out.println("main thread started!!");
         final int threadNumber = 10;
         ExecutorService executorService =
-            new ThreadPoolExecutor(threadNumber,
-                threadNumber,
+            new ThreadPoolExecutor(5,
+                5,
                 0L,
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1024),
@@ -72,11 +73,12 @@ public class ThreadWait {
         }
         executorService.shutdown();
 
+        List ret = new ArrayList();
         for (Future<?> future : list) {
-            future.get();
+            ret.add(future.get());
         }
-
-        System.out.println("main thread finished!!");
+        System.out.println("main thread finished!!" + (System.currentTimeMillis() - s));
+        System.out.println(ret);
     }
 
     /**

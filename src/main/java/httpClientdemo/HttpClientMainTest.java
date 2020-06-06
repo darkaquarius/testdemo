@@ -16,6 +16,7 @@ import org.junit.Test;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,13 @@ import java.util.concurrent.Executors;
  */
 @Slf4j
 public class HttpClientMainTest {
+
+    @Test
+    public void test100() {
+        execGet("http://192.168.3.44:10102/southgate-admin/admin/selector/api/query?id=42");
+    }
+
+
 
     public static void main(String[] args) {
 
@@ -47,7 +55,14 @@ public class HttpClientMainTest {
         // httpGet.setHeader("Referer", url);
         // httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:46.0) Gecko/20100101 Firefox/46.0");
 
-        HttpClientUtil.execute(httpGet);
+        int execute = HttpClientUtil.execute(httpGet);
+
+        URI uri = httpGet.getURI();
+
+        String host = uri.getPort() == -1 ? uri.getHost() : uri.getHost()+":"+uri.getPort();
+        String url2 = uri.toString().replace(host, "192.168.3.52");
+        HttpGet httpGet2 = new HttpGet(url2);
+        int execute2 = HttpClientUtil.execute(httpGet2);
     }
 
     private static void execPost2(String url) throws UnsupportedEncodingException {

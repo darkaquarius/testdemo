@@ -1,13 +1,6 @@
 package demo;
 
-import lombok.Data;
 import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * Created by huishen on 16/11/25.
@@ -15,5 +8,26 @@ import java.util.stream.Stream;
 
 public class Demo {
 
+    @Test
+    public void test1() {
+        try {
+            int ret = test2();
+            System.out.println("result is:" + ret);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public int test2() {
+        int ret;
+        try {
+            ret = 10 / 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return ret;
+    }
 
 }

@@ -1,11 +1,12 @@
 package demo;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -377,10 +378,28 @@ public class StringDemo {
     }
 
     @Test
+    public void testCmp() {
+        String str1 = "hello";
+        String str2 = "hello";
+        String str3 = "hello2";
+
+        System.out.println(str1.equals(str2));
+        System.out.println(str1.compareTo(str2));
+    }
+
+    @Test
     public void tmp2() {
         String realIp = "";
         realIp = realIp.split(",")[0];
         System.out.println(realIp);
     }
+
+    @Test
+    public void testSubString() {
+        String str = "/southgate-test/southgate-demo1";
+        String substring = str.substring(15);
+        System.out.println(substring);
+    }
+
 
 }

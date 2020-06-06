@@ -1,5 +1,6 @@
 package demo;
 
+import com.google.common.collect.Maps;
 import org.junit.Test;
 
 import java.util.*;
@@ -137,8 +138,8 @@ public class StreamTest02 {
     @Test
     public void testLimitAndSkip1() {
         List<Person> persons = createPersonList1();
-        List<String> personList2 = persons.stream().
-            map(Person::getName).limit(10).skip(3).collect(Collectors.toList());
+        List<String> personList2 = persons.stream()
+                .map(Person::getName).limit(10).skip(3).collect(Collectors.toList());
         System.out.println(personList2);
     }
 
@@ -147,15 +148,17 @@ public class StreamTest02 {
      * 原因跟 sorted 这个 intermediate 操作有关：此时系统并不知道 Stream 排序后的次序如何，
      * 所以 sorted 中的操作看上去就像完全没有被 limit 或者 skip 一样。
      *
-     * Person(no=4, name=name4, age=6, address=null)
-     * Person(no=4, name=name4, age=6, address=null)
+     * peak:Person(no=4, name=name4, age=6, address=null, job=null)
+     * Person(no=4, name=name4, age=6, address=null, job=null)
+     * peak:Person(no=1, name=name1, age=10, address=null, job=null)
+     * Person(no=1, name=name1, age=10, address=null, job=null)
      *
      */
     @Test
     public void testLimitAndSkip2() {
         List<Person> persons = createPersonList2();
         // persons.stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).limit(2).forEach(System.out::println);
-        persons.stream().sorted(Comparator.comparingInt(Person::getAge)).peek(System.out::println).limit(2).forEach(System.out::println);
+        persons.stream().sorted(Comparator.comparingInt(Person::getAge)).peek(x -> System.out.println("peak:" + x)).limit(2).forEach(System.out::println);
     }
 
     /**
@@ -170,6 +173,12 @@ public class StreamTest02 {
         List<Person> persons2 = persons.stream().limit(2).sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
         System.out.println(persons2);
         // System.out.println(persons);
+    }
+
+    @Test
+    public void testLimit4() {
+        List<Person> persons = createPersonList2();
+        List<Person> collect = persons.stream().filter(p -> p.getAge() > 0).limit(1).collect(Collectors.toList());
     }
 
     /**
@@ -666,6 +675,14 @@ public class StreamTest02 {
             // .distinct()
             .boxed()
             .collect(Collectors.toList());
+    }
+
+    @Test
+    public void testNullable() {
+        List<String> list = Collections.emptyList();
+        List<String> collect = list.stream()
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
     }
 
     public static class PersonSupplier implements Supplier<Person> {

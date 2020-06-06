@@ -171,7 +171,7 @@ public class RegexDemo {
 
     @Test
     public void test9() {
-        String urlPath1 = "/business-open-web/*";
+        String urlPath1 = "/business-album-presale-web/v1/album/.+/detail/ts-.+";
         Pattern compile1 = Pattern.compile(urlPath1, Pattern.CASE_INSENSITIVE);
         System.out.println("compile1: " + (compile1.matcher("/business-open-web/recharge").find()));
     }
